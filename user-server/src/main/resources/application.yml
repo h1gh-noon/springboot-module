@@ -1,0 +1,8 @@
+spring:
+  profiles:
+    active: dev
+mybatis:
+  mapper-locations: classpath:mapping/*Mapper.xml
+  type-aliases-package: com.project.discerncamera.entity
+  configuration:
+    map-underscore-to-camel-case: true
