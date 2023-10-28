@@ -55,6 +55,17 @@ public class UserController {
         return ResponseTool.getSuccessResponse(p);
     }
 
+    /**
+     * add
+     *
+     * @param user {
+     *             username: String, 用户名 必须**
+     *             password: String, 密码 必须**
+     *             phone: String, 手机号
+     *             permissions: String, 权限
+     *             }
+     * @return CommonResponse
+     */
     @PostMapping("/userAdd")
     public CommonResponse userAdd(@RequestBody User user) {
 
@@ -66,6 +77,18 @@ public class UserController {
         }
     }
 
+    /**
+     * update
+     *
+     * @param user {
+     *             id: String,  id必须**
+     *             username: String, 用户名
+     *             password: String, 密码
+     *             phone: String, 手机号
+     *             permissions: String, 权限
+     *             }
+     * @return CommonResponse
+     */
     @PostMapping("/userUpdate")
     public CommonResponse userUpdate(@RequestBody User user) {
 
@@ -77,6 +100,11 @@ public class UserController {
         }
     }
 
+
+    /**
+     * @param user { status: 1 } 1启用 0禁用
+     * @return CommonResponse
+     */
     @PostMapping("/userUpdateStatus")
     public CommonResponse userUpdateStatus(@RequestBody User user) {
 
@@ -88,6 +116,10 @@ public class UserController {
         }
     }
 
+    /**
+     * @param user { id: Integer } || { username: String } id和username二选一
+     * @return CommonResponse
+     */
     @PostMapping("/userDelete")
     public CommonResponse userDelete(@RequestBody User user) {
 
