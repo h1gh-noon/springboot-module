@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -30,8 +31,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getUserPageList(User user) {
-        return userMapper.getUserPageList(user);
+    public List<User> getUserPageList(Map<String, Object> map) {
+        return userMapper.getUserPageList(map);
+    }
+
+    @Override
+    public Long userCount(Map<String, Object> map) {
+        return userMapper.userCount(map);
     }
 
 
