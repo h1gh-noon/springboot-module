@@ -9,6 +9,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -25,5 +27,31 @@ public class UserServiceImpl implements UserService {
             BeanUtils.copyProperties(u, userInfo);
         }
         return userInfo;
+    }
+
+    @Override
+    public List<User> getUserPageList(User user) {
+        return userMapper.getUserPageList(user);
+    }
+
+
+    @Override
+    public int userAdd(User user) {
+        return userMapper.userAdd(user);
+    }
+
+    @Override
+    public int userUpdate(User user) {
+        return userMapper.userUpdate(user);
+    }
+
+    @Override
+    public int userUpdateStatus(User user) {
+        return userMapper.userUpdateStatus(user);
+    }
+
+    @Override
+    public int userDelete(User user) {
+        return userMapper.userDelete(user);
     }
 }

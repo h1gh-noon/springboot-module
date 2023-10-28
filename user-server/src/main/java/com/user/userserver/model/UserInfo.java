@@ -1,5 +1,6 @@
 package com.user.userserver.model;
 
+
 public class UserInfo {
     private Long id;
     private String username;
