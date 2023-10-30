@@ -77,7 +77,7 @@ public class UserController {
      *
      * @param user {
      *             username: String, 用户名 必须**
-     *             password: String, 密码 必须** 接收md5密文**
+     *             password: String, 密码 必须** 接收md5大写32位密文**
      *             phone: String, 手机号
      *             permissions: String, 权限
      *             }
@@ -100,7 +100,7 @@ public class UserController {
      * @param user {
      *             id: String,  id必须**
      *             username: String, 用户名
-     *             password: String, 密码 接收md5密文**
+     *             password: String, 密码 接收md5大写32位密文**
      *             phone: String, 手机号
      *             permissions: String, 权限
      *             }

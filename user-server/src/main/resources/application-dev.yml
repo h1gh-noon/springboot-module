@@ -6,3 +6,16 @@ spring:
     url: jdbc:mysql://127.0.0.1:3306/user_db?serverTimezone=UTC
     username: user
     password: user
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      database: 0
+      lettuce:
+        pool:
+          max-idle: 16
+          max-active: 32
+          min-idle: 8
+logging:
+  level:
+    com.user: debug

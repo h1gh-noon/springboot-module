@@ -18,6 +18,12 @@ public class LoginController {
     @Autowired
     private UserService userService;
 
+    /**
+     * 登录
+     *
+     * @param data { username: String, password: String 接收md5大写32位密文** }
+     * @return CommonResponse
+     */
     @PostMapping("/userLogin")
     public CommonResponse userLogin(@RequestBody Map<String, String> data) {
         if (data.containsKey("username") && data.containsKey("password")) {

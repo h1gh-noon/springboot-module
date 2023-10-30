@@ -6,6 +6,7 @@ import com.user.userserver.mapper.UserMapper;
 import com.user.userserver.model.UserInfo;
 import com.user.userserver.service.UserService;
 import com.user.userserver.util.PBKDF2Util;
+import com.user.userserver.util.RedisUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private RedisUtil redisUtil;
 
     @Override
     public UserInfo getUserById(Long id) {
@@ -99,7 +103,8 @@ public class UserServiceImpl implements UserService {
         User user = getUserByName(map.get("username"));
         if (PBKDF2Util.verification(map.get("password"), user.getPassword())) {
             String token = UUID.randomUUID().toString().replace("-", "");
-            System.out.println(token);
+            redisUtil.set(user.getUsername(), token);
+            redisUtil.expire(user.getUsername(), 3600 * 24);
             return token;
         }
         return null;
