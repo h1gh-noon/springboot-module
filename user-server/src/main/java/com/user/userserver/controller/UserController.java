@@ -3,12 +3,14 @@ package com.user.userserver.controller;
 import com.user.userserver.entity.User;
 import com.user.userserver.model.CommonResponse;
 import com.user.userserver.model.PaginationData;
+import com.user.userserver.model.UserInfo;
 import com.user.userserver.service.UserService;
 import com.user.userserver.util.ResponseTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 
 @RestController
 @RequestMapping("/user")
@@ -48,10 +50,9 @@ public class UserController {
         data.put("pageSize", pageSize);
         data.put("limitRows", (currentPage - 1) * pageSize);
 
-        System.out.println(data);
-        PaginationData p = new PaginationData(currentPage, pageSize);
-        p.setData(userService.getUserPageList(data));
-        p.setTotal(userService.userCount(data));
+        PaginationData<List<UserInfo>> p = userService.getUserPageList(data);
+        p.setCurrentPage(currentPage);
+        p.setPageSize(pageSize);
         return ResponseTool.getSuccessResponse(p);
     }
 

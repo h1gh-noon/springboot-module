@@ -4,7 +4,7 @@ import jakarta.annotation.Resource;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Component
@@ -25,7 +25,7 @@ public class RedisUtil {
         return Boolean.TRUE.equals(stringRedisTemplate.expire(key, time, TimeUnit.SECONDS));
     }
 
-    public void set(String key, HashMap<String, String> value) {
+    public void set(String key, Map<String, String> value) {
         stringRedisTemplate.opsForHash().putAll(key, value);
     }
 }

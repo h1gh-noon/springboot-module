@@ -1,14 +1,11 @@
 package com.user.userserver.model;
 
-import org.springframework.boot.context.properties.bind.DefaultValue;
-
-public class PaginationData {
-
+public class PaginationData<T> {
 
     private Integer currentPage;
     private Integer pageSize;
     private Long total;
-    private Object data;
+    private T data;
 
     public PaginationData() {
     }
@@ -18,7 +15,7 @@ public class PaginationData {
         this.pageSize = pageSize;
     }
 
-    public PaginationData(Integer currentPage, Integer pageSize, Long total, Object data) {
+    public PaginationData(Integer currentPage, Integer pageSize, Long total, T data) {
         this.currentPage = currentPage;
         this.pageSize = pageSize;
         this.total = total;
@@ -49,11 +46,11 @@ public class PaginationData {
         this.pageSize = pageSize;
     }
 
-    public Object getData() {
+    public T getData() {
         return data;
     }
 
-    public void setData(Object data) {
+    public void setData(T data) {
         this.data = data;
     }
 

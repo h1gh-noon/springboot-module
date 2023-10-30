@@ -51,4 +51,15 @@ public class UserInfo {
     public void setCreateTime(String createTime) {
         this.createTime = createTime;
     }
+
+    @Override
+    public String toString() {
+        return "UserInfo{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", phone='" + phone + '\'' +
+                ", status=" + status +
+                ", createTime='" + createTime + '\'' +
+                '}';
+    }
 }

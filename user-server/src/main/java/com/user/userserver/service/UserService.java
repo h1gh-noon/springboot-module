@@ -2,6 +2,7 @@ package com.user.userserver.service;
 
 
 import com.user.userserver.entity.User;
+import com.user.userserver.model.PaginationData;
 import com.user.userserver.model.UserInfo;
 
 import java.util.List;
@@ -13,9 +14,11 @@ public interface UserService {
 
     User getUserByName(String username);
 
-    List<User> getUserPageList(Map<String, Object> map);
+    UserInfo getUserInfoByToken(String token);
 
-    Long userCount(Map<String, Object> map);
+    boolean authUserByToken(String token);
+
+    PaginationData<List<UserInfo>> getUserPageList(Map<String, Object> map);
 
     int hasUserByName(String username);
 

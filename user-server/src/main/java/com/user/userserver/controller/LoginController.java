@@ -3,7 +3,7 @@ package com.user.userserver.controller;
 import com.user.userserver.model.CommonResponse;
 import com.user.userserver.service.UserService;
 import com.user.userserver.util.ResponseTool;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,7 +15,7 @@ import java.util.Map;
 @RequestMapping("/auth")
 public class LoginController {
 
-    @Autowired
+    @Resource
     private UserService userService;
 
     /**

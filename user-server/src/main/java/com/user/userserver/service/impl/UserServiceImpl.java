@@ -1,14 +1,17 @@
 package com.user.userserver.service.impl;
 
 
+import com.alibaba.fastjson2.JSON;
 import com.user.userserver.entity.User;
 import com.user.userserver.mapper.UserMapper;
+import com.user.userserver.model.PaginationData;
 import com.user.userserver.model.UserInfo;
 import com.user.userserver.service.UserService;
 import com.user.userserver.util.PBKDF2Util;
 import com.user.userserver.util.RedisUtil;
+import jakarta.annotation.Resource;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,10 +22,10 @@ import java.util.UUID;
 @Service
 public class UserServiceImpl implements UserService {
 
-    @Autowired
+    @Resource
     private UserMapper userMapper;
 
-    @Autowired
+    @Resource
     private RedisUtil redisUtil;
 
     @Override
@@ -43,13 +46,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getUserPageList(Map<String, Object> map) {
-        return userMapper.getUserPageList(map);
-    }
-
-    @Override
-    public Long userCount(Map<String, Object> map) {
-        return userMapper.userCount(map);
+    public PaginationData<List<UserInfo>> getUserPageList(Map<String, Object> map) {
+        PaginationData<List<UserInfo>> paginationData = new PaginationData<>();
+        paginationData.setData(userMapper.getUserPageList(map));
+        paginationData.setTotal(userMapper.userCount(map));
+        return paginationData;
     }
 
     @Override
@@ -103,10 +104,40 @@ public class UserServiceImpl implements UserService {
         User user = getUserByName(map.get("username"));
         if (PBKDF2Util.verification(map.get("password"), user.getPassword())) {
             String token = UUID.randomUUID().toString().replace("-", "");
-            redisUtil.set(user.getUsername(), token);
-            redisUtil.expire(user.getUsername(), 3600 * 24);
+            redisUtil.set(token, JSON.toJSONString(user));
+            redisUtil.expire(token, 3600 * 24);
             return token;
         }
         return null;
+    }
+
+    // 返回UserInfo 不包含密码等信息 对外提供
+    @Override
+    public UserInfo getUserInfoByToken(String token) {
+        if (Strings.isEmpty(token)) {
+            return null;
+        }
+        Object obj = redisUtil.get(token);
+        if (obj != null) {
+            return JSON.parseObject((String) obj, UserInfo.class);
+        }
+        return null;
+    }
+
+    // 返回User 包含密码等信息 对内提供
+    public User getUserByToken(String token) {
+        if (Strings.isEmpty(token)) {
+            return null;
+        }
+        Object obj = redisUtil.get(token);
+        if (obj != null) {
+            return JSON.parseObject((String) obj, User.class);
+        }
+        return null;
+    }
+
+    @Override
+    public boolean authUserByToken(String token) {
+        return getUserByToken(token) != null;
     }
 }
