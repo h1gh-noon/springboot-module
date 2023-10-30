@@ -18,6 +18,21 @@
           and is_del = 0
     </select>
 
+    <select id="getUserByName">
+        select id,
+               username,
+               password,
+               phone,
+               permissions,
+               status,
+               is_del,
+               create_time,
+               update_time
+        from user
+        where username = '${username}'
+          and is_del = 0
+    </select>
+
     <select id="getUserPageList">
         select id,
         username,

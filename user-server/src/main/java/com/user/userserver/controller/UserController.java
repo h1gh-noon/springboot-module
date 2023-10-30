@@ -56,11 +56,28 @@ public class UserController {
     }
 
     /**
+     * hasUserByName 查询username用户名是否已存在
+     *
+     * @param user {
+     *             username: String, 用户名 必须**
+     *             }
+     * @return CommonResponse
+     */
+    @PostMapping("/hasUserByName")
+    public CommonResponse hasUserByName(@RequestBody User user) {
+        if (user.getUsername() != null) {
+            int n = userService.hasUserByName(user.getUsername());
+            return ResponseTool.getSuccessResponse(n > 0);
+        }
+        return ResponseTool.getErrorResponse();
+    }
+
+    /**
      * add
      *
      * @param user {
      *             username: String, 用户名 必须**
-     *             password: String, 密码 必须**
+     *             password: String, 密码 必须** 接收md5密文**
      *             phone: String, 手机号
      *             permissions: String, 权限
      *             }
@@ -68,13 +85,13 @@ public class UserController {
      */
     @PostMapping("/userAdd")
     public CommonResponse userAdd(@RequestBody User user) {
-
-        int n = userService.userAdd(user);
-        if (n > 0) {
-            return ResponseTool.getSuccessResponse(user.getId());
-        } else {
-            return ResponseTool.getErrorResponse();
+        if (user.getUsername() != null && user.getPassword() != null) {
+            int n = userService.userAdd(user);
+            if (n > 0) {
+                return ResponseTool.getSuccessResponse(user.getId());
+            }
         }
+        return ResponseTool.getErrorResponse();
     }
 
     /**
@@ -83,7 +100,7 @@ public class UserController {
      * @param user {
      *             id: String,  id必须**
      *             username: String, 用户名
-     *             password: String, 密码
+     *             password: String, 密码 接收md5密文**
      *             phone: String, 手机号
      *             permissions: String, 权限
      *             }
@@ -91,29 +108,32 @@ public class UserController {
      */
     @PostMapping("/userUpdate")
     public CommonResponse userUpdate(@RequestBody User user) {
-
-        int n = userService.userUpdate(user);
-        if (n > 0) {
-            return ResponseTool.getSuccessResponse(user);
-        } else {
-            return ResponseTool.getErrorResponse();
+        if (user.getId() != null) {
+            int n = userService.userUpdate(user);
+            if (n > 0) {
+                return ResponseTool.getSuccessResponse(user);
+            }
         }
+        return ResponseTool.getErrorResponse();
     }
 
 
     /**
-     * @param user { status: 1 } 1启用 0禁用
+     * @param user { id: Integer 必须**, status: 1 } 1启用 0禁用
      * @return CommonResponse
      */
     @PostMapping("/userUpdateStatus")
     public CommonResponse userUpdateStatus(@RequestBody User user) {
-
-        int n = userService.userUpdateStatus(user);
-        if (n > 0) {
-            return ResponseTool.getSuccessResponse();
-        } else {
-            return ResponseTool.getErrorResponse();
+        if (user.getId() != null) {
+            if (user.getStatus() == null) {
+                user.setStatus(0);
+            }
+            int n = userService.userUpdateStatus(user);
+            if (n > 0) {
+                return ResponseTool.getSuccessResponse();
+            }
         }
+        return ResponseTool.getErrorResponse();
     }
 
     /**
@@ -122,12 +142,12 @@ public class UserController {
      */
     @PostMapping("/userDelete")
     public CommonResponse userDelete(@RequestBody User user) {
-
-        int n = userService.userDelete(user);
-        if (n > 0) {
-            return ResponseTool.getSuccessResponse();
-        } else {
-            return ResponseTool.getErrorResponse();
+        if (user.getId() != null || user.getUsername() != null) {
+            int n = userService.userDelete(user);
+            if (n > 0) {
+                return ResponseTool.getSuccessResponse();
+            }
         }
+        return ResponseTool.getErrorResponse();
     }
 }

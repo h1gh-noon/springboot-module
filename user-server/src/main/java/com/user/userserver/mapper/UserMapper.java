@@ -11,6 +11,8 @@ public interface UserMapper {
 
     User getUserById(Long id);
 
+    User getUserByName(String username);
+
     List<User> getUserPageList(Map<String, Object> map);
 
     Long userCount(Map<String, Object> map);

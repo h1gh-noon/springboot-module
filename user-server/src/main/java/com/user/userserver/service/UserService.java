@@ -11,9 +11,13 @@ public interface UserService {
 
     UserInfo getUserById(Long id);
 
+    User getUserByName(String username);
+
     List<User> getUserPageList(Map<String, Object> map);
 
     Long userCount(Map<String, Object> map);
+
+    int hasUserByName(String username);
 
     int userAdd(User user);
 
@@ -22,5 +26,7 @@ public interface UserService {
     int userUpdateStatus(User user);
 
     int userDelete(User user);
+
+    String userLogin(Map<String, String> map);
 
 }

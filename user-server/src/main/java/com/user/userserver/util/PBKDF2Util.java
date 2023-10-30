@@ -85,6 +85,9 @@ public class PBKDF2Util {
      * @return String
      */
     public static String encode(String password, String salt) {
+        if (password == null) {
+            throw new NullPointerException("password is null");
+        }
         // 返回 salt&密文
         return String.format("%s$%s", salt, getEncodedHash(password, salt));
     }
@@ -97,6 +100,9 @@ public class PBKDF2Util {
      * @return boolean
      */
     public static boolean verification(String password, String hashedPassword) {
+        if (password == null) {
+            return false;
+        }
         String[] parts = hashedPassword.split("\\$");
         if (parts.length != 2) {
             // 格式错误
