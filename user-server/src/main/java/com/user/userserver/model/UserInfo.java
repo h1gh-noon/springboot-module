@@ -5,6 +5,7 @@ public class UserInfo {
     private Long id;
     private String username;
     private String phone;
+    private String permissions;
     private Integer status;
     private String createTime;
 
@@ -52,12 +53,21 @@ public class UserInfo {
         this.createTime = createTime;
     }
 
+    public String getPermissions() {
+        return permissions;
+    }
+
+    public void setPermissions(String permissions) {
+        this.permissions = permissions;
+    }
+
     @Override
     public String toString() {
         return "UserInfo{" +
                 "id=" + id +
                 ", username='" + username + '\'' +
                 ", phone='" + phone + '\'' +
+                ", permissions='" + permissions + '\'' +
                 ", status=" + status +
                 ", createTime='" + createTime + '\'' +
                 '}';

@@ -14,10 +14,7 @@ import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -27,6 +24,10 @@ public class UserServiceImpl implements UserService {
 
     @Resource
     private RedisUtil redisUtil;
+
+    public static final String REDIS_USER_ID = "TOKEN_LIST_USER_ID_"; // 前缀(+用户id) redis存储每个用户的token列表key
+
+    public static final Long REDIS_USER_MAX_TOKEN_COUNT = 5L; // 用户登录的最多设备数量
 
     @Override
     public UserInfo getUserById(Long id) {
@@ -104,9 +105,32 @@ public class UserServiceImpl implements UserService {
         User user = getUserByName(map.get("username"));
         if (PBKDF2Util.verification(map.get("password"), user.getPassword())) {
             String token = UUID.randomUUID().toString().replace("-", "");
-            redisUtil.set(token, JSON.toJSONString(user));
-            redisUtil.expire(token, 3600 * 24);
-            return token;
+
+            // 开启事务
+            // redisUtil.MULTI();
+            try {
+                redisUtil.set(token, JSON.toJSONString(user));
+                redisUtil.expire(token, 3600 * 24);
+                String userKey = REDIS_USER_ID + user.getId();
+                List<String> list = new ArrayList<>();
+                list.add(token);
+                redisUtil.rPush(userKey, list);
+                Long tokenCount = redisUtil.lLen(userKey);
+                if (tokenCount > REDIS_USER_MAX_TOKEN_COUNT) {
+                    // int a = 0;
+                    // System.out.println(10 / a);
+                    // 控制每个用户最多登录的设备数
+                    String oldToken = redisUtil.lPop(userKey);
+                    redisUtil.del(oldToken);
+                }
+                // 提交事务
+                // redisUtil.EXEC();
+                return token;
+            } catch (Exception e) {
+                // 回滚
+                // redisUtil.DISCARD();
+            }
+
         }
         return null;
     }

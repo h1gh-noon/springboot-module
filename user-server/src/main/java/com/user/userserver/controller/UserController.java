@@ -112,6 +112,7 @@ public class UserController {
         if (user.getId() != null) {
             int n = userService.userUpdate(user);
             if (n > 0) {
+                // RedisUtil.
                 return ResponseTool.getSuccessResponse(user);
             }
         }

@@ -14,7 +14,7 @@
                create_time,
                update_time
         from user
-        where id = ${id}
+        where id = #{id}
           and is_del = 0
     </select>
 
@@ -29,7 +29,7 @@
                create_time,
                update_time
         from user
-        where username = '${username}'
+        where username = #{username}
           and is_del = 0
     </select>
 
