@@ -14,20 +14,9 @@ public class RedisUtil {
     @Resource
     private StringRedisTemplate stringRedisTemplate;
 
-    // 开启事务
-    public void MULTI() {
-        stringRedisTemplate.setEnableTransactionSupport(true);
-        stringRedisTemplate.multi();
-    }
 
-    // 提交事务
-    public void EXEC() {
-        stringRedisTemplate.exec();
-    }
-
-    // 回滚事务
-    public void DISCARD() {
-        stringRedisTemplate.discard();
+    public StringRedisTemplate getStringRedisTemplate() {
+        return stringRedisTemplate;
     }
 
     public boolean expire(String key, long time) {

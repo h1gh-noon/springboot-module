@@ -12,6 +12,10 @@ import com.user.userserver.util.RedisUtil;
 import jakarta.annotation.Resource;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.BeanUtils;
+import org.springframework.dao.DataAccessException;
+import org.springframework.data.redis.core.RedisOperations;
+import org.springframework.data.redis.core.SessionCallback;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -107,29 +111,62 @@ public class UserServiceImpl implements UserService {
             String token = UUID.randomUUID().toString().replace("-", "");
 
             // 开启事务
-            // redisUtil.MULTI();
+
             try {
-                redisUtil.set(token, JSON.toJSONString(user));
-                redisUtil.expire(token, 3600 * 24);
-                String userKey = REDIS_USER_ID + user.getId();
-                List<String> list = new ArrayList<>();
-                list.add(token);
-                redisUtil.rPush(userKey, list);
-                Long tokenCount = redisUtil.lLen(userKey);
-                if (tokenCount > REDIS_USER_MAX_TOKEN_COUNT) {
-                    // int a = 0;
-                    // System.out.println(10 / a);
-                    // 控制每个用户最多登录的设备数
-                    String oldToken = redisUtil.lPop(userKey);
-                    redisUtil.del(oldToken);
-                }
-                // 提交事务
-                // redisUtil.EXEC();
+
+                SessionCallback<Object> callback = new SessionCallback<>() {
+                    @Override
+                    public Object execute(RedisOperations operations) throws DataAccessException {
+                        operations.multi();
+
+                        operations.opsForValue().set(token, JSON.toJSONString(user));
+                        operations.opsForValue().set(token, JSON.toJSONString(user));
+
+                        String userKey = REDIS_USER_ID + user.getId();
+                        List<String> list = new ArrayList<>();
+                        list.add(token);
+                        // redisUtil.rPush(userKey, list);
+                        operations.opsForList().rightPushAll(userKey, list);
+                        // Long tokenCount = redisUtil.lLen(userKey);
+                        Long tokenCount = operations.opsForList().size(userKey);
+                        if (tokenCount != null && tokenCount > REDIS_USER_MAX_TOKEN_COUNT) {
+                            // int a = 0;
+                            // System.out.println(10 / a);
+                            // 控制每个用户最多登录的设备数
+                            // String oldToken = redisUtil.lPop(userKey);
+                            String oldToken = (String) operations.opsForList().leftPop(userKey);
+                            // redisUtil.del(oldToken);
+                            operations.delete(oldToken);
+                        }
+
+                        return operations.exec();
+                    }
+                };
+
+                StringRedisTemplate stringRedisTemplate = redisUtil.getStringRedisTemplate();
+                stringRedisTemplate.execute(callback);
+
                 return token;
             } catch (Exception e) {
-                // 回滚
-                // redisUtil.DISCARD();
+                e.printStackTrace();
             }
+            // stringRedisTemplate.setEnableTransactionSupport(true);
+            // stringRedisTemplate.multi();
+
+            // redisUtil.MULTI();
+            // try {
+            //     // redisUtil.set(token, JSON.toJSONString(user));
+            //     // redisUtil.expire(token, 3600 * 24);
+            //
+            //     // 提交事务
+            //     stringRedisTemplate.exec();
+            //     // redisUtil.EXEC();
+            //     return token;
+            // } catch (Exception e) {
+            //     // 回滚
+            //     stringRedisTemplate.discard();
+            //     // redisUtil.DISCARD();
+            // }
 
         }
         return null;
