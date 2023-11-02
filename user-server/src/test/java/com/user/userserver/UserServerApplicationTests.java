@@ -1,5 +1,6 @@
 package com.user.userserver;
 
+import com.user.userserver.util.RedisUtil;
 import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,10 +16,18 @@ class UserServerApplicationTests {
     @Resource
     private StringRedisTemplate stringRedisTemplate;
 
+    @Resource
+    private RedisUtil redisUtil;
+
     @Test
     void contextLoads() {
-        String s = stringRedisTemplate.opsForList().leftPop("TOKEN_LIST_USER_ID_10");
-        System.out.println(s);
+
+        String userKey = "TOKEN_LIST_USER_ID_1";
+
+        List<String> removeKeys = new ArrayList<>();
+        removeKeys.add(userKey);
+        removeKeys.addAll(redisUtil.lRange(userKey));
+        System.out.println(redisUtil.del(removeKeys));
     }
 
     @Test
@@ -26,13 +35,6 @@ class UserServerApplicationTests {
 
         List<String> stringList = new ArrayList<>();
         stringList.add("s");
-
-        // SessionCallback<List<Object>> callback = (operations) -> {
-        //     operations.multi();
-        //     operations.opsForValue().set("token", "aa");
-        //     operations.opsForList().rightPushAll("userKey", stringList);
-        //     return operations.exec();
-        // };
 
         SessionCallback<List<Object>> callback = new SessionCallback<>() {
             @Override

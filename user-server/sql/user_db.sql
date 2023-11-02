@@ -11,7 +11,7 @@
  Target Server Version : 50743 (5.7.43-log)
  File Encoding         : 65001
 
- Date: 28/10/2023 10:24:08
+ Date: 02/11/2023 16:23:35
 */
 
 SET NAMES utf8mb4;
@@ -37,6 +37,11 @@ CREATE TABLE `user`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Dynamic;
 
 -- ----------------------------
+-- Records of user
+-- ----------------------------
+INSERT INTO `user` VALUES (1, 'admin', 'W15T8FS3s534XGrszv2a63799rs7iVqq$GDnvceOERD0cmDmLQxnpXb3xwlc3G1X/r4r5rogGgYUnB1Qb1sArvtDSLlcP4hUvOOcRsEgwITvyLIz7VtlpMg==', NULL, 'admin', 1, 0, '2023-10-27 16:35:48', '2023-10-30 11:06:15');
+
+-- ----------------------------
 -- Table structure for user_del
 -- ----------------------------
 DROP TABLE IF EXISTS `user_del`;
@@ -57,5 +62,9 @@ CREATE TABLE `user_del`  (
   UNIQUE INDEX `old_id`(`old_id`) USING BTREE,
   INDEX `phone`(`phone`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of user_del
+-- ----------------------------
 
 SET FOREIGN_KEY_CHECKS = 1;

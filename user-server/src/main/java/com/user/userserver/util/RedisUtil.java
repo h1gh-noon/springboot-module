@@ -4,6 +4,7 @@ import jakarta.annotation.Resource;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -21,6 +22,11 @@ public class RedisUtil {
 
     public boolean del(String key) {
         return Boolean.TRUE.equals(stringRedisTemplate.delete(key));
+    }
+
+    public boolean del(Collection<String> collection) {
+        Long n = stringRedisTemplate.delete(collection);
+        return n != null && n > 0;
     }
 
 
@@ -45,6 +51,13 @@ public class RedisUtil {
 
     public Long lLen(String key) {
         return stringRedisTemplate.opsForList().size(key);
+    }
+
+    public List<String> lRange(String key) {
+        return lRange(key, 0, -1);
+    }
+    public List<String> lRange(String key, long start, long end) {
+        return stringRedisTemplate.opsForList().range(key, start, end);
     }
 
     public void lRem(String key, long count, Object obj) {

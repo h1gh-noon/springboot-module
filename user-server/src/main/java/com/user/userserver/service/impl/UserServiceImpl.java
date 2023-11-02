@@ -175,4 +175,31 @@ public class UserServiceImpl implements UserService {
     public boolean authUserByToken(String token) {
         return getUserByToken(token) != null;
     }
+
+    @Override
+    public boolean loginOut(String token, User user) {
+        String userKey = REDIS_USER_ID + user.getId();
+        // 开启事务
+        SessionCallback<Object> callback = new SessionCallback<>() {
+            @Override
+            public Object execute(RedisOperations operations) throws DataAccessException {
+                operations.multi();
+                operations.delete(token);
+                operations.opsForList().remove(userKey, 1, token);
+                return operations.exec();
+            }
+        };
+        stringRedisTemplate.execute(callback);
+        return true;
+    }
+
+    @Override
+    public boolean loginOutAll(String token, User user) {
+        String userKey = REDIS_USER_ID + user.getId();
+        List<String> removeKeys = new ArrayList<>();
+        removeKeys.add(userKey);
+        removeKeys.addAll(redisUtil.lRange(userKey));
+
+        return redisUtil.del(removeKeys);
+    }
 }

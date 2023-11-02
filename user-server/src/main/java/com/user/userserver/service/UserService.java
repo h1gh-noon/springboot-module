@@ -18,6 +18,11 @@ public interface UserService {
 
     boolean authUserByToken(String token);
 
+    boolean loginOut(String token, User user);
+
+    boolean loginOutAll(String toke, User usern);
+
+
     PaginationData<List<UserInfo>> getUserPageList(Map<String, Object> map);
 
     int hasUserByName(String username);

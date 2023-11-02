@@ -52,4 +52,36 @@ public class LoginController {
         }
         return ResponseTool.getErrorResponse(200);
     }
+
+    /**
+     * 退出登录 (销毁携带的token)
+     *
+     * @return CommonResponse
+     * @RequestHeader token
+     */
+    @RequestMapping("/loginOut")
+    public CommonResponse loginOut(@RequestHeader(name = "token") String token) {
+        UserInfo userInfo = userService.getUserInfoByToken(token);
+        if (userInfo != null) {
+            // success
+            return ResponseTool.getSuccessResponse(userInfo);
+        }
+        return ResponseTool.getErrorResponse(200);
+    }
+
+    /**
+     * 退出所有设备(清除所有token)
+     *
+     * @return CommonResponse
+     * @RequestHeader token
+     */
+    @RequestMapping("/loginOutAll")
+    public CommonResponse loginOutAll(@RequestHeader(name = "token") String token) {
+        UserInfo userInfo = userService.getUserInfoByToken(token);
+        if (userInfo != null) {
+            // success
+            return ResponseTool.getSuccessResponse(userInfo);
+        }
+        return ResponseTool.getErrorResponse(200);
+    }
 }
