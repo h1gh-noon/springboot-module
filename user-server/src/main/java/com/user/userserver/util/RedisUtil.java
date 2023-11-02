@@ -15,10 +15,6 @@ public class RedisUtil {
     private StringRedisTemplate stringRedisTemplate;
 
 
-    public StringRedisTemplate getStringRedisTemplate() {
-        return stringRedisTemplate;
-    }
-
     public boolean expire(String key, long time) {
         return Boolean.TRUE.equals(stringRedisTemplate.expire(key, time, TimeUnit.SECONDS));
     }

@@ -29,6 +29,9 @@ public class UserServiceImpl implements UserService {
     @Resource
     private RedisUtil redisUtil;
 
+    @Resource
+    private StringRedisTemplate stringRedisTemplate;
+
     public static final String REDIS_USER_ID = "TOKEN_LIST_USER_ID_"; // 前缀(+用户id) redis存储每个用户的token列表key
 
     public static final Long REDIS_USER_MAX_TOKEN_COUNT = 5L; // 用户登录的最多设备数量
@@ -109,64 +112,35 @@ public class UserServiceImpl implements UserService {
         User user = getUserByName(map.get("username"));
         if (PBKDF2Util.verification(map.get("password"), user.getPassword())) {
             String token = UUID.randomUUID().toString().replace("-", "");
+            List<String> list = new ArrayList<>();
+            list.add(token);
+
+            String userKey = REDIS_USER_ID + user.getId();
+            Long tokenCount = stringRedisTemplate.opsForList().size(userKey);
+            String oldToken = null;
+            if (tokenCount != null && REDIS_USER_MAX_TOKEN_COUNT <= tokenCount) {
+                // 控制每个用户最多登录的设备数
+                oldToken = stringRedisTemplate.opsForList().leftPop(userKey);
+            }
 
             // 开启事务
-
-            try {
-
-                SessionCallback<Object> callback = new SessionCallback<>() {
-                    @Override
-                    public Object execute(RedisOperations operations) throws DataAccessException {
-                        operations.multi();
-
-                        operations.opsForValue().set(token, JSON.toJSONString(user));
-                        operations.opsForValue().set(token, JSON.toJSONString(user));
-
-                        String userKey = REDIS_USER_ID + user.getId();
-                        List<String> list = new ArrayList<>();
-                        list.add(token);
-                        // redisUtil.rPush(userKey, list);
-                        operations.opsForList().rightPushAll(userKey, list);
-                        // Long tokenCount = redisUtil.lLen(userKey);
-                        Long tokenCount = operations.opsForList().size(userKey);
-                        if (tokenCount != null && tokenCount > REDIS_USER_MAX_TOKEN_COUNT) {
-                            // int a = 0;
-                            // System.out.println(10 / a);
-                            // 控制每个用户最多登录的设备数
-                            // String oldToken = redisUtil.lPop(userKey);
-                            String oldToken = (String) operations.opsForList().leftPop(userKey);
-                            // redisUtil.del(oldToken);
-                            operations.delete(oldToken);
-                        }
-
-                        return operations.exec();
+            String finalOldToken = oldToken;
+            SessionCallback<Object> callback = new SessionCallback<>() {
+                @Override
+                public Object execute(RedisOperations operations) throws DataAccessException {
+                    operations.multi();
+                    operations.opsForValue().set(token, JSON.toJSONString(user));
+                    operations.opsForList().rightPushAll(userKey, list);
+                    if (finalOldToken != null) {
+                        operations.delete(finalOldToken);
                     }
-                };
+                    return operations.exec();
+                }
+            };
 
-                StringRedisTemplate stringRedisTemplate = redisUtil.getStringRedisTemplate();
-                stringRedisTemplate.execute(callback);
+            stringRedisTemplate.execute(callback);
 
-                return token;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            // stringRedisTemplate.setEnableTransactionSupport(true);
-            // stringRedisTemplate.multi();
-
-            // redisUtil.MULTI();
-            // try {
-            //     // redisUtil.set(token, JSON.toJSONString(user));
-            //     // redisUtil.expire(token, 3600 * 24);
-            //
-            //     // 提交事务
-            //     stringRedisTemplate.exec();
-            //     // redisUtil.EXEC();
-            //     return token;
-            // } catch (Exception e) {
-            //     // 回滚
-            //     stringRedisTemplate.discard();
-            //     // redisUtil.DISCARD();
-            // }
+            return token;
 
         }
         return null;

@@ -1,13 +1,11 @@
 package com.user.userserver.controller;
 
 import com.user.userserver.model.CommonResponse;
+import com.user.userserver.model.UserInfo;
 import com.user.userserver.service.UserService;
 import com.user.userserver.util.ResponseTool;
 import jakarta.annotation.Resource;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -37,5 +35,21 @@ public class LoginController {
         }
 
         return ResponseTool.getErrorResponse();
+    }
+
+    /**
+     * 通过token获取用户信息
+     *
+     * @return CommonResponse
+     * @RequestHeader token
+     */
+    @RequestMapping("/userInfo")
+    public CommonResponse userInfo(@RequestHeader(name = "token") String token) {
+        UserInfo userInfo = userService.getUserInfoByToken(token);
+        if (userInfo != null) {
+            // success
+            return ResponseTool.getSuccessResponse(userInfo);
+        }
+        return ResponseTool.getErrorResponse(200);
     }
 }
