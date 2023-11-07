@@ -1,4 +1,4 @@
-package com.user.userserver.model;
+package com.store.jdstore.model;
 
 
 import lombok.Data;

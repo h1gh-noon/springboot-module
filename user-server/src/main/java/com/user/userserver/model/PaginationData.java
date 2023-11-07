@@ -1,5 +1,8 @@
 package com.user.userserver.model;
 
+import lombok.Data;
+
+@Data
 public class PaginationData<T> {
 
     private Integer currentPage;
@@ -22,44 +25,4 @@ public class PaginationData<T> {
         this.data = data;
     }
 
-    public Long getTotal() {
-        return total;
-    }
-
-    public void setTotal(Long total) {
-        this.total = total;
-    }
-
-    public Integer getCurrentPage() {
-        return currentPage;
-    }
-
-    public void setCurrentPage(Integer currentPage) {
-        this.currentPage = currentPage;
-    }
-
-    public Integer getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(Integer pageSize) {
-        this.pageSize = pageSize;
-    }
-
-    public T getData() {
-        return data;
-    }
-
-    public void setData(T data) {
-        this.data = data;
-    }
-
-    @Override
-    public String toString() {
-        return "Pagination{" +
-                "currentPage=" + currentPage +
-                ", pageSize=" + pageSize +
-                ", data=" + data +
-                '}';
-    }
 }

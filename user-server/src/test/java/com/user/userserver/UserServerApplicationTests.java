@@ -5,7 +5,9 @@ import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataAccessException;
-import org.springframework.data.redis.core.*;
+import org.springframework.data.redis.core.RedisOperations;
+import org.springframework.data.redis.core.SessionCallback;
+import org.springframework.data.redis.core.StringRedisTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,4 +52,7 @@ class UserServerApplicationTests {
         System.out.println(stringRedisTemplate.execute(callback));
     }
 
+    @Test
+    void contextLoads2() {
+    }
 }
