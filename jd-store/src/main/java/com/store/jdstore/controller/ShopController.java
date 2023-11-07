@@ -2,17 +2,16 @@ package com.store.jdstore.controller;
 
 import com.store.jdstore.entity.HanmaShopEntity;
 import com.store.jdstore.model.CommonResponse;
+import com.store.jdstore.model.Pagination;
 import com.store.jdstore.model.ShopModel;
 import com.store.jdstore.service.ShopService;
 import com.store.jdstore.util.ResponseUtil;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,19 +56,25 @@ public class ShopController {
     }
 
     @PostMapping("/getShopPageList")
-    public CommonResponse getShopPageList(@RequestBody(required = false) ShopModel shopModel) {
+    public CommonResponse getShopPageList(@RequestParam(required = false) Pagination<ShopModel> pagination,
+                                          @RequestBody(required = false) ShopModel shopModel) {
+
+        if (pagination == null || pagination.getPageSize() == null || pagination.getCurrentPage() == null) {
+            pagination = new Pagination();
+        }
+        Page<HanmaShopEntity> hanmaShopList = shopService.getShopPageList(pagination, shopModel);
+        log.info("hanmaShopList={}", hanmaShopList);
 
         List<ShopModel> list = new ArrayList<>();
-        List<HanmaShopEntity> hanmaShopList = shopService.getShopPageList(shopModel);
-        log.info("hanmaShopList={}", hanmaShopList);
-        hanmaShopList.forEach(h -> {
+        hanmaShopList.getContent().forEach(h -> {
             ShopModel sm = new ShopModel();
             BeanUtils.copyProperties(h, sm);
             list.add(sm);
         });
 
-
-        return ResponseUtil.getSuccessResponse(list);
+        pagination.setTotal(hanmaShopList.getTotalElements());
+        pagination.setList(list);
+        return ResponseUtil.getSuccessResponse(pagination);
     }
 
 }

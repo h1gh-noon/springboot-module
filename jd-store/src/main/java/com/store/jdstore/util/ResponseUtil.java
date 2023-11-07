@@ -9,6 +9,14 @@ public class ResponseUtil {
         return new CommonResponse(200, true, null, null);
     }
 
+    // public static <T> CommonResponse getSuccessResponse(Page<T> page) {
+    //
+    //     Pageable p = page.getPageable();
+    //
+    //     return new CommonResponse(200, true, new Pagination<>(p.getPageNumber(), p.getPageSize(),
+    //             page.getTotalElements(), page.getContent()), null);
+    // }
+
     public static CommonResponse getSuccessResponse(Object data) {
         return new CommonResponse(200, true, data, null);
     }

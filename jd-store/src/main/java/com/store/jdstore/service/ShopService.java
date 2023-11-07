@@ -1,9 +1,9 @@
 package com.store.jdstore.service;
 
 import com.store.jdstore.entity.HanmaShopEntity;
+import com.store.jdstore.model.Pagination;
 import com.store.jdstore.model.ShopModel;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
 
 public interface ShopService {
 
@@ -14,6 +14,6 @@ public interface ShopService {
 
     HanmaShopEntity findById(Long id);
 
-    List<HanmaShopEntity> getShopPageList(ShopModel shopModel);
+    Page<HanmaShopEntity> getShopPageList(Pagination pagination, ShopModel shopModel);
 
 }

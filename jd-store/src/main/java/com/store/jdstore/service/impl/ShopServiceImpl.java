@@ -2,14 +2,12 @@ package com.store.jdstore.service.impl;
 
 import com.store.jdstore.dao.ShopDao;
 import com.store.jdstore.entity.HanmaShopEntity;
+import com.store.jdstore.model.Pagination;
 import com.store.jdstore.model.ShopModel;
 import com.store.jdstore.service.ShopService;
 import lombok.Data;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @Data
@@ -37,7 +35,7 @@ public class ShopServiceImpl implements ShopService {
     }
 
     @Override
-    public List<HanmaShopEntity> getShopPageList(ShopModel shopModel) {
+    public Page<HanmaShopEntity> getShopPageList(Pagination pagination, ShopModel shopModel) {
         HanmaShopEntity h = new HanmaShopEntity();
         if (shopModel != null) {
             h.setCateId(shopModel.getCateId());
@@ -45,6 +43,8 @@ public class ShopServiceImpl implements ShopService {
         }
         Example<HanmaShopEntity> example = Example.of(h);
         Sort sort = Sort.by(Sort.Direction.DESC, "sales");
-        return shopDao.findAll(example, sort);
+
+        Pageable pageable = PageRequest.of(pagination.getCurrentPage() - 1, pagination.getPageSize(), sort);
+        return shopDao.findAll(example, pageable);
     }
 }
