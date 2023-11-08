@@ -6,6 +6,7 @@ import com.store.jdstore.model.Pagination;
 import com.store.jdstore.model.ShopModel;
 import com.store.jdstore.service.ShopService;
 import com.store.jdstore.util.ResponseUtil;
+import com.store.jdstore.util.Utils;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -28,6 +29,9 @@ public class ShopController {
     @PostMapping("/shopAdd")
     public CommonResponse shopAdd(@RequestBody HanmaShopEntity hanmaShop) {
         hanmaShop.setId(null);
+        String time = Utils.getTimestampStr();
+        hanmaShop.setCreateTime(time);
+        hanmaShop.setUpdateTime(time);
         return ResponseUtil.getSuccessResponse(shopService.update(hanmaShop));
     }
 
@@ -41,6 +45,8 @@ public class ShopController {
 
     @PostMapping("/shopUpdate")
     public CommonResponse shopUpdate(@RequestBody HanmaShopEntity hanmaShop) {
+        hanmaShop.setCreateTime(null);
+        hanmaShop.setUpdateTime(Utils.getTimestampStr());
         return ResponseUtil.getSuccessResponse(shopService.update(hanmaShop));
     }
 
@@ -60,7 +66,7 @@ public class ShopController {
                                           @RequestBody(required = false) ShopModel shopModel) {
 
         if (pagination == null || pagination.getPageSize() == null || pagination.getCurrentPage() == null) {
-            pagination = new Pagination();
+            pagination = new Pagination<>();
         }
         Page<HanmaShopEntity> hanmaShopList = shopService.getShopPageList(pagination, shopModel);
         log.info("hanmaShopList={}", hanmaShopList);
@@ -77,4 +83,9 @@ public class ShopController {
         return ResponseUtil.getSuccessResponse(pagination);
     }
 
+    @RequestMapping("/getShopInfoProductList/{shopId}")
+    public CommonResponse getShopInfoProductList(@PathVariable Long shopId) {
+
+        return ResponseUtil.getSuccessResponse(shopService.getShopInfoProductList(shopId));
+    }
 }

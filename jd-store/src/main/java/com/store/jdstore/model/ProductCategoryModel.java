@@ -1,4 +1,4 @@
-package com.store.jdstore.entity;
+package com.store.jdstore.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -6,18 +6,15 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "hanma_shop_category")
-public class HanmaShopCategoryEntity {
+@Table(name = "hanma_product_category")
+public class ProductCategoryModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private Long shopId;
     private String name;
-    private String imgUrl;
+    private String type;
     private Long status;
-
-    private String createTime;
-
-    private String updateTime;
 
 }

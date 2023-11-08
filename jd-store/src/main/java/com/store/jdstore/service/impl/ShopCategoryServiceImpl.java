@@ -3,7 +3,9 @@ package com.store.jdstore.service.impl;
 import com.store.jdstore.dao.ShopCategoryDao;
 import com.store.jdstore.entity.HanmaShopCategoryEntity;
 import com.store.jdstore.service.ShopCategoryService;
+import com.store.jdstore.util.Utils;
 import lombok.Data;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,7 +27,16 @@ public class ShopCategoryServiceImpl implements ShopCategoryService {
 
     @Override
     public Long update(HanmaShopCategoryEntity hanmaShopCategory) {
-        return shopCategoryDao.save(hanmaShopCategory).getId();
+        if (hanmaShopCategory.getId() == null) {
+            return shopCategoryDao.save(hanmaShopCategory).getId();
+        }
+        HanmaShopCategoryEntity shopCategoryEntity = findById(hanmaShopCategory.getId());
+        HanmaShopCategoryEntity h = new HanmaShopCategoryEntity();
+        BeanUtils.copyProperties(shopCategoryEntity, h);
+        BeanUtils.copyProperties(hanmaShopCategory, h);
+        h.setCreateTime(shopCategoryEntity.getCreateTime());
+        h.setUpdateTime(Utils.getTimestampStr());
+        return shopCategoryDao.save(h).getId();
     }
 
     @Override

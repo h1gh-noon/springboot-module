@@ -5,6 +5,7 @@ import com.store.jdstore.model.CommonResponse;
 import com.store.jdstore.model.ShopCategoryModel;
 import com.store.jdstore.service.ShopCategoryService;
 import com.store.jdstore.util.ResponseUtil;
+import com.store.jdstore.util.Utils;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -29,6 +30,9 @@ public class ShopCategoryController {
     @PostMapping("/shopCategoryAdd")
     public CommonResponse shopCategoryAdd(@RequestBody HanmaShopCategoryEntity hanmaShopCategory) {
         hanmaShopCategory.setId(null);
+        String t = Utils.getTimestampStr();
+        hanmaShopCategory.setCreateTime(t);
+        hanmaShopCategory.setUpdateTime(t);
         return ResponseUtil.getSuccessResponse(shopCategoryService.update(hanmaShopCategory));
     }
 
@@ -42,6 +46,8 @@ public class ShopCategoryController {
 
     @PostMapping("/shopCategoryUpdate")
     public CommonResponse shopCategoryUpdate(@RequestBody HanmaShopCategoryEntity hanmaShopCategory) {
+        hanmaShopCategory.setUpdateTime(null);
+        hanmaShopCategory.setUpdateTime(Utils.getTimestampStr());
         return ResponseUtil.getSuccessResponse(shopCategoryService.update(hanmaShopCategory));
     }
 

@@ -9,17 +9,16 @@ import jakarta.persistence.*;
 @Table(name = "hanma_product_category")
 public class HanmaProductCategoryEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
-  private Long shopId;
-  private String name;
-  private String type;
-  private Long status;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private Long shopId;
+    private String name;
+    private String type;
+    private Long status;
 
-  @Column(insertable = false, updatable = false)
-  private String createTime;
-  @Column(insertable = false, updatable = false)
-  private String updateTime;
+    private String createTime;
+
+    private String updateTime;
 
 }

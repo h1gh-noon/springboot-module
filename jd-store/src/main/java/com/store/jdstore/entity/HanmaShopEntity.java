@@ -9,23 +9,21 @@ import jakarta.persistence.*;
 @Table(name = "hanma_shop")
 public class HanmaShopEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
-  private Long cateId;
-  private String name;
-  private Long sales;
-  private Long expressLimit;
-  private Double expressPrice;
-  private String desc;
-  private String imgUrl;
-  private Long state;
-  private Long status;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private Long cateId;
+    private String name;
+    private Long sales;
+    private Long expressLimit;
+    private Double expressPrice;
+    private String desc;
+    private String imgUrl;
+    private Long state;
+    private Long status;
 
-  @Column(insertable = false, updatable = false)
-  private String createTime;
+    private String createTime;
 
-  @Column(insertable = false, updatable = false)
-  private String updateTime;
+    private String updateTime;
 
 }
