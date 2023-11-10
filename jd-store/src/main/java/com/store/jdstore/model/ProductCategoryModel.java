@@ -15,6 +15,6 @@ public class ProductCategoryModel {
     private Long shopId;
     private String name;
     private String type;
-    private Long status;
+    private Integer status;
 
 }

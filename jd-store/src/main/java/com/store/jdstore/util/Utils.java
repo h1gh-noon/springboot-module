@@ -14,4 +14,7 @@ public class Utils {
         return date.format(dateTimeFormatter);
     }
 
+    public static String getTimeRandom() {
+        return System.currentTimeMillis() + (int) ((Math.random() * 100000) + Math.random() * 10000) + "";
+    }
 }

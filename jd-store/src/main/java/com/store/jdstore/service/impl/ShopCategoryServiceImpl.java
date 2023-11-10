@@ -4,21 +4,17 @@ import com.store.jdstore.dao.ShopCategoryDao;
 import com.store.jdstore.entity.HanmaShopCategoryEntity;
 import com.store.jdstore.service.ShopCategoryService;
 import com.store.jdstore.util.Utils;
-import lombok.Data;
+import jakarta.annotation.Resource;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@Data
 public class ShopCategoryServiceImpl implements ShopCategoryService {
 
+    @Resource
     private ShopCategoryDao shopCategoryDao;
-
-    public ShopCategoryServiceImpl(ShopCategoryDao shopCategoryDao) {
-        this.shopCategoryDao = shopCategoryDao;
-    }
 
     @Override
     public void delete(HanmaShopCategoryEntity hanmaShopCategory) {

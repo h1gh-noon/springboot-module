@@ -9,6 +9,6 @@ public class ShopCategoryModel {
     private Long id;
     private String name;
     private String imgUrl;
-    private Long status;
+    private Integer status;
 
 }

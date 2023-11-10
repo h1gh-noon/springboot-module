@@ -14,7 +14,7 @@ public class HanmaShopCategoryEntity {
     private Long id;
     private String name;
     private String imgUrl;
-    private Long status;
+    private Integer status;
 
     private String createTime;
 

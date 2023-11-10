@@ -1,6 +1,5 @@
 package com.store.jdstore.service.impl;
 
-import com.store.jdstore.dao.ShopCategoryDao;
 import com.store.jdstore.dao.ShopDao;
 import com.store.jdstore.entity.HanmaProductCategoryEntity;
 import com.store.jdstore.entity.HanmaProductEntity;
@@ -11,7 +10,6 @@ import com.store.jdstore.service.ProductService;
 import com.store.jdstore.service.ShopService;
 import com.store.jdstore.util.Utils;
 import jakarta.annotation.Resource;
-import lombok.Data;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -20,22 +18,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Data
 public class ShopServiceImpl implements ShopService {
 
+    @Resource
     private ShopDao shopDao;
-
-    private ShopCategoryDao shopCategoryDao;
 
     @Resource
     private ProductCategoryService productCategoryService;
 
     @Resource
     private ProductService productService;
-
-    public ShopServiceImpl(ShopDao shopDao) {
-        this.shopDao = shopDao;
-    }
 
     @Override
     public void delete(HanmaShopEntity hanmaShopEntity) {

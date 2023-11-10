@@ -11,6 +11,8 @@ public interface ProductService {
 
     Long update(HanmaProductEntity productEntity);
 
+    List<HanmaProductEntity> update(List<HanmaProductEntity> productEntityList);
+
     HanmaProductEntity findById(Long id);
 
     List<HanmaProductEntity> getProductListByShopId(Long shopId);

@@ -2,6 +2,7 @@ package com.store.jdstore.model;
 
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 
@@ -17,10 +18,10 @@ public class OrderModel {
     private String userOpenid;
     private Long shopId;
     private String shopName;
-    private Double orderAmount;
-    private Long payTime;
-    private Long payStatus;
-    private Long orderStatus;
+    private BigDecimal orderAmount;
+    private String payTime;
+    private Integer payStatus;
+    private Integer orderStatus;
     private String createTime;
     private String updateTime;
 

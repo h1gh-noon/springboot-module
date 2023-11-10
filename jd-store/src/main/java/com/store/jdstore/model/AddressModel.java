@@ -13,6 +13,6 @@ public class AddressModel {
   private String city;
   private String area;
   private String house;
-  private Long isDefault;
+  private Integer isDefault;
 
 }

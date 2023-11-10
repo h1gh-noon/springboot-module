@@ -4,7 +4,7 @@ import com.store.jdstore.dao.AddressDao;
 import com.store.jdstore.entity.HanmaAddressEntity;
 import com.store.jdstore.model.AddressModel;
 import com.store.jdstore.service.AddressService;
-import lombok.Data;
+import jakarta.annotation.Resource;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -12,15 +12,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Data
 public class AddressServiceImpl implements AddressService {
 
 
+    @Resource
     private AddressDao addressDao;
-
-    public AddressServiceImpl(AddressDao addressDao) {
-        this.addressDao = addressDao;
-    }
 
     @Override
     public void delete(HanmaAddressEntity hanmaAddress) {

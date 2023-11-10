@@ -3,36 +3,36 @@ package com.store.jdstore.service.impl;
 import com.store.jdstore.dao.ProductDao;
 import com.store.jdstore.entity.HanmaProductEntity;
 import com.store.jdstore.service.ProductService;
-import lombok.Data;
+import jakarta.annotation.Resource;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@Data
 public class ProductServiceImpl implements ProductService {
 
-
-    private ProductDao shopCategoryDao;
-
-    public ProductServiceImpl(ProductDao shopCategoryDao) {
-        this.shopCategoryDao = shopCategoryDao;
-    }
+    @Resource
+    private ProductDao productDao;
 
     @Override
     public void delete(HanmaProductEntity hanmaProduct) {
-        shopCategoryDao.delete(hanmaProduct);
+        productDao.delete(hanmaProduct);
     }
 
     @Override
     public Long update(HanmaProductEntity hanmaProduct) {
-        return shopCategoryDao.save(hanmaProduct).getId();
+        return productDao.save(hanmaProduct).getId();
+    }
+
+    @Override
+    public List<HanmaProductEntity> update(List<HanmaProductEntity> productEntityList) {
+        return productDao.saveAll(productEntityList);
     }
 
     @Override
     public HanmaProductEntity findById(Long id) {
-        return shopCategoryDao.findById(id).orElse(null);
+        return productDao.findById(id).orElse(null);
     }
 
     @Override
@@ -40,7 +40,7 @@ public class ProductServiceImpl implements ProductService {
         HanmaProductEntity p = new HanmaProductEntity();
         p.setShopId(shopId);
         Example<HanmaProductEntity> example = Example.of(p);
-        return shopCategoryDao.findAll(example);
+        return productDao.findAll(example);
     }
 
 }

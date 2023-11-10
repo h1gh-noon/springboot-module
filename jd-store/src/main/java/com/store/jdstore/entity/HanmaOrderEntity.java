@@ -3,6 +3,8 @@ package com.store.jdstore.entity;
 import lombok.Data;
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
+
 
 @Data
 @Entity
@@ -12,7 +14,7 @@ public class HanmaOrderEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long orderId;
+    private String orderNo;
     private Long userId;
     private String userName;
     private String userPhone;
@@ -20,10 +22,10 @@ public class HanmaOrderEntity {
     private String userOpenid;
     private Long shopId;
     private String shopName;
-    private Double orderAmount;
-    private Long payTime;
-    private Long payStatus;
-    private Long orderStatus;
+    private BigDecimal orderAmount;
+    private String payTime;
+    private Integer payStatus;
+    private Integer orderStatus;
     private String createTime;
     private String updateTime;
 

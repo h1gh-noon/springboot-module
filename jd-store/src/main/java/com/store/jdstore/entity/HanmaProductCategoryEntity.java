@@ -15,7 +15,7 @@ public class HanmaProductCategoryEntity {
     private Long shopId;
     private String name;
     private String type;
-    private Long status;
+    private Integer status;
 
     private String createTime;
 
