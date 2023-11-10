@@ -6,7 +6,7 @@ import com.user.userserver.model.PaginationData;
 import com.user.userserver.model.UserInfo;
 import com.user.userserver.service.UserService;
 import com.user.userserver.util.ResponseTool;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -16,7 +16,7 @@ import java.util.List;
 @RequestMapping("/user")
 public class UserController {
 
-    @Autowired
+    @Resource
     private UserService userService;
 
     @PostMapping("/getUserById")

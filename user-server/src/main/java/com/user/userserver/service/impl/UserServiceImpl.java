@@ -9,6 +9,7 @@ import com.user.userserver.model.UserInfo;
 import com.user.userserver.service.UserService;
 import com.user.userserver.util.PBKDF2Util;
 import com.user.userserver.util.RedisUtil;
+import com.user.userserver.util.Util;
 import jakarta.annotation.Resource;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.BeanUtils;
@@ -19,6 +20,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -111,7 +113,7 @@ public class UserServiceImpl implements UserService {
     public String userLogin(Map<String, String> map) {
         User user = getUserByName(map.get("username"));
         if (PBKDF2Util.verification(map.get("password"), user.getPassword())) {
-            String token = UUID.randomUUID().toString().replace("-", "");
+            String token = Util.getRandomToken();
             List<String> list = new ArrayList<>();
             list.add(token);
 
@@ -130,6 +132,7 @@ public class UserServiceImpl implements UserService {
                 public Object execute(RedisOperations operations) throws DataAccessException {
                     operations.multi();
                     operations.opsForValue().set(token, JSON.toJSONString(user));
+                    operations.expire(token, 3600 * 12, TimeUnit.SECONDS);
                     operations.opsForList().rightPushAll(userKey, list);
                     if (finalOldToken != null) {
                         operations.delete(finalOldToken);

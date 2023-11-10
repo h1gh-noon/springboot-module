@@ -7,7 +7,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.util.Base64;
-import java.util.Random;
 
 
 public class PBKDF2Util {
@@ -51,23 +50,8 @@ public class PBKDF2Util {
      * @return String
      */
     private static String getSalt() {
-        int length = 32; // 盐的长度
-        Random rand = new Random();
-        char[] rs = new char[length];
-        for (int i = 0; i < length; i++) {
-            int t = rand.nextInt(3);
-            if (t == 0) {
-                // 大写字母
-                rs[i] = (char) (rand.nextInt(26) + 65);
-            } else if (t == 1) {
-                // 小写字母
-                rs[i] = (char) (rand.nextInt(26) + 97);
-            } else {
-                // 数字
-                rs[i] = (char) (rand.nextInt(10) + 48);
-            }
-        }
-        return new String(rs);
+        // 盐的长度
+        return Util.getRandomStr(32);
     }
 
     /**
