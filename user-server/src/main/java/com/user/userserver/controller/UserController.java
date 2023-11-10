@@ -1,16 +1,18 @@
 package com.user.userserver.controller;
 
-import com.user.userserver.entity.User;
+import com.user.userserver.entity.UserEntity;
 import com.user.userserver.model.CommonResponse;
 import com.user.userserver.model.PaginationData;
-import com.user.userserver.model.UserInfo;
+import com.user.userserver.model.UserModel;
 import com.user.userserver.service.UserService;
 import com.user.userserver.util.ResponseTool;
 import jakarta.annotation.Resource;
+import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/user")
@@ -20,12 +22,13 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/getUserById")
-    public CommonResponse getUserById(@RequestBody User user) {
+    public CommonResponse getUserById(@RequestBody Long id) {
 
-        if (user.getId() == null) {
-            return ResponseTool.getErrorResponse();
-        }
-        return ResponseTool.getSuccessResponse(userService.getUserById(user.getId()));
+        UserEntity userEntity = userService.getUserById(id);
+        UserModel u = new UserModel();
+        BeanUtils.copyProperties(userEntity, u);
+        u.setPassword(null);
+        return ResponseTool.getSuccessResponse(u);
     }
 
     /**
@@ -42,7 +45,7 @@ public class UserController {
      */
     @PostMapping("/getUserPageList")
     public CommonResponse getUserPageList(@RequestParam(required = false) HashMap<String, String> params,
-                                          @RequestBody(required = false) HashMap<String, Object> data) throws IllegalAccessException {
+                                          @RequestBody(required = false) HashMap<String, Object> data) {
 
         Integer currentPage = Integer.valueOf(params.getOrDefault("currentPage", "1"));
         Integer pageSize = Integer.valueOf(params.getOrDefault("pageSize", "20"));
@@ -50,7 +53,17 @@ public class UserController {
         data.put("pageSize", pageSize);
         data.put("limitRows", (currentPage - 1) * pageSize);
 
-        PaginationData<List<UserInfo>> p = userService.getUserPageList(data);
+        PaginationData<List<UserEntity>> userPageList = userService.getUserPageList(data);
+
+        PaginationData<List<UserModel>> p = new PaginationData<>();
+        p.setTotal(userPageList.getTotal());
+        p.setData(userPageList.getData().stream().map(e -> {
+            UserModel u = new UserModel();
+            BeanUtils.copyProperties(e, u);
+            u.setPassword(null);
+            return u;
+        }).collect(Collectors.toList()));
+
         p.setCurrentPage(currentPage);
         p.setPageSize(pageSize);
         return ResponseTool.getSuccessResponse(p);
@@ -59,18 +72,14 @@ public class UserController {
     /**
      * hasUserByName 查询username用户名是否已存在
      *
-     * @param user {
+     * @param username {
      *             username: String, 用户名 必须**
      *             }
      * @return CommonResponse
      */
     @PostMapping("/hasUserByName")
-    public CommonResponse hasUserByName(@RequestBody User user) {
-        if (user.getUsername() != null) {
-            int n = userService.hasUserByName(user.getUsername());
-            return ResponseTool.getSuccessResponse(n > 0);
-        }
-        return ResponseTool.getErrorResponse();
+    public CommonResponse hasUserByName(@RequestBody String username) {
+        return ResponseTool.getSuccessResponse(userService.hasUserByName(username) > 0);
     }
 
     /**
@@ -85,12 +94,13 @@ public class UserController {
      * @return CommonResponse
      */
     @PostMapping("/userAdd")
-    public CommonResponse userAdd(@RequestBody User user) {
-        if (user.getUsername() != null && user.getPassword() != null) {
-            int n = userService.userAdd(user);
-            if (n > 0) {
-                return ResponseTool.getSuccessResponse(user.getId());
-            }
+    public CommonResponse userAdd(@RequestBody UserModel user) {
+        UserEntity userEntity = new UserEntity();
+        BeanUtils.copyProperties(user, userEntity);
+
+        int n = userService.userAdd(userEntity);
+        if (n > 0) {
+            return ResponseTool.getSuccessResponse(user.getId());
         }
         return ResponseTool.getErrorResponse();
     }
@@ -108,12 +118,12 @@ public class UserController {
      * @return CommonResponse
      */
     @PostMapping("/userUpdate")
-    public CommonResponse userUpdate(@RequestBody User user) {
+    public CommonResponse userUpdate(@RequestBody UserEntity user) {
         if (user.getId() != null) {
             int n = userService.userUpdate(user);
             if (n > 0) {
                 // RedisUtil.
-                return ResponseTool.getSuccessResponse(user);
+                return ResponseTool.getSuccessResponse();
             }
         }
         return ResponseTool.getErrorResponse();
@@ -125,7 +135,7 @@ public class UserController {
      * @return CommonResponse
      */
     @PostMapping("/userUpdateStatus")
-    public CommonResponse userUpdateStatus(@RequestBody User user) {
+    public CommonResponse userUpdateStatus(@RequestBody UserEntity user) {
         if (user.getId() != null) {
             if (user.getStatus() == null) {
                 user.setStatus(0);
@@ -143,7 +153,7 @@ public class UserController {
      * @return CommonResponse
      */
     @PostMapping("/userDelete")
-    public CommonResponse userDelete(@RequestBody User user) {
+    public CommonResponse userDelete(@RequestBody UserEntity user) {
         if (user.getId() != null || user.getUsername() != null) {
             int n = userService.userDelete(user);
             if (n > 0) {

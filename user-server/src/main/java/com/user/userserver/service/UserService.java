@@ -1,40 +1,40 @@
 package com.user.userserver.service;
 
 
-import com.user.userserver.entity.User;
+import com.user.userserver.entity.UserEntity;
 import com.user.userserver.model.PaginationData;
-import com.user.userserver.model.UserInfo;
+import com.user.userserver.model.UserModel;
 
 import java.util.List;
 import java.util.Map;
 
 public interface UserService {
 
-    UserInfo getUserById(Long id);
+    UserEntity getUserById(Long id);
 
-    User getUserByName(String username);
+    UserEntity getUserByName(String username);
 
-    UserInfo getUserInfoByToken(String token);
+    UserEntity getUserByToken(String token);
 
     boolean authUserByToken(String token);
 
-    boolean loginOut(String token, User user);
+    boolean loginOut(String token, UserEntity user);
 
-    boolean loginOutAll(String toke, User usern);
+    boolean loginOutAll(String toke, UserEntity user);
 
 
-    PaginationData<List<UserInfo>> getUserPageList(Map<String, Object> map);
+    PaginationData<List<UserEntity>> getUserPageList(Map<String, Object> map);
 
     int hasUserByName(String username);
 
-    int userAdd(User user);
+    int userAdd(UserEntity user);
 
-    int userUpdate(User user);
+    int userUpdate(UserEntity user);
 
-    int userUpdateStatus(User user);
+    int userUpdateStatus(UserEntity user);
 
-    int userDelete(User user);
+    int userDelete(UserEntity user);
 
-    String userLogin(Map<String, String> map);
+    String userLogin(UserModel userModel);
 
 }

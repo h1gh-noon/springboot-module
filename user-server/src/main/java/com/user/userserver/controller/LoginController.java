@@ -1,13 +1,13 @@
 package com.user.userserver.controller;
 
+import com.user.userserver.entity.UserEntity;
 import com.user.userserver.model.CommonResponse;
-import com.user.userserver.model.UserInfo;
+import com.user.userserver.model.UserModel;
 import com.user.userserver.service.UserService;
 import com.user.userserver.util.ResponseTool;
 import jakarta.annotation.Resource;
+import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
@@ -19,22 +19,18 @@ public class LoginController {
     /**
      * 登录
      *
-     * @param data { username: String, password: String 接收md5大写32位密文** }
+     * @param userModel { username: String, password: String 接收md5大写32位密文** }
      * @return CommonResponse
      */
     @PostMapping("/userLogin")
-    public CommonResponse userLogin(@RequestBody Map<String, String> data) {
-        if (data.containsKey("username") && data.containsKey("password")) {
-            String resToken = userService.userLogin(data);
-            if (resToken == null) {
-                return ResponseTool.getErrorResponse(200);
-            } else {
-                // success
-                return ResponseTool.getSuccessResponse(resToken);
-            }
+    public CommonResponse userLogin(@RequestBody UserModel userModel) {
+        String resToken = userService.userLogin(userModel);
+        if (resToken == null) {
+            return ResponseTool.getErrorResponse(200);
+        } else {
+            // success
+            return ResponseTool.getSuccessResponse(resToken);
         }
-
-        return ResponseTool.getErrorResponse();
     }
 
     /**
@@ -45,12 +41,15 @@ public class LoginController {
      */
     @RequestMapping("/userInfo")
     public CommonResponse userInfo(@RequestHeader(name = "token") String token) {
-        UserInfo userInfo = userService.getUserInfoByToken(token);
-        if (userInfo != null) {
-            // success
-            return ResponseTool.getSuccessResponse(userInfo);
+        UserEntity userInfo = userService.getUserByToken(token);
+        if (userInfo == null) {
+            return ResponseTool.getErrorResponse(200);
         }
-        return ResponseTool.getErrorResponse(200);
+        // success
+        UserModel u = new UserModel();
+        BeanUtils.copyProperties(userInfo, u);
+        u.setPassword(null);
+        return ResponseTool.getSuccessResponse(u);
     }
 
     /**
@@ -61,10 +60,9 @@ public class LoginController {
      */
     @RequestMapping("/loginOut")
     public CommonResponse loginOut(@RequestHeader(name = "token") String token) {
-        UserInfo userInfo = userService.getUserInfoByToken(token);
-        if (userInfo != null) {
+        if (userService.loginOut(token, new UserEntity())) {
             // success
-            return ResponseTool.getSuccessResponse(userInfo);
+            return ResponseTool.getSuccessResponse();
         }
         return ResponseTool.getErrorResponse(200);
     }
@@ -77,10 +75,9 @@ public class LoginController {
      */
     @RequestMapping("/loginOutAll")
     public CommonResponse loginOutAll(@RequestHeader(name = "token") String token) {
-        UserInfo userInfo = userService.getUserInfoByToken(token);
-        if (userInfo != null) {
+        if (userService.loginOutAll(token, new UserEntity())) {
             // success
-            return ResponseTool.getSuccessResponse(userInfo);
+            return ResponseTool.getSuccessResponse();
         }
         return ResponseTool.getErrorResponse(200);
     }

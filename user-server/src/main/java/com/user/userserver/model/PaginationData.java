@@ -1,8 +1,10 @@
 package com.user.userserver.model;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class PaginationData<T> {
 
     private Integer currentPage;
@@ -10,8 +12,6 @@ public class PaginationData<T> {
     private Long total;
     private T data;
 
-    public PaginationData() {
-    }
 
     public PaginationData(Integer currentPage, Integer pageSize) {
         this.currentPage = currentPage;

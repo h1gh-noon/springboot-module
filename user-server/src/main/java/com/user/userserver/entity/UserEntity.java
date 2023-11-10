@@ -2,9 +2,11 @@ package com.user.userserver.entity;
 
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-public class User {
+@NoArgsConstructor
+public class UserEntity {
 
     private Long id;
     private String username;
@@ -16,11 +18,8 @@ public class User {
     private String createTime;
     private String updateTime;
 
-    public User() {
-    }
-
-    public User(String username, String password, String phone, String permissions, Integer status, Integer isDel,
-                String createTime, String updateTime) {
+    public UserEntity(String username, String password, String phone, String permissions, Integer status, Integer isDel,
+                      String createTime, String updateTime) {
         this.username = username;
         this.password = password;
         this.phone = phone;

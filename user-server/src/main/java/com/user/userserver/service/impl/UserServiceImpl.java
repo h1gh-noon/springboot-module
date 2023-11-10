@@ -2,24 +2,26 @@ package com.user.userserver.service.impl;
 
 
 import com.alibaba.fastjson2.JSON;
-import com.user.userserver.entity.User;
+import com.user.userserver.entity.UserEntity;
 import com.user.userserver.mapper.UserMapper;
 import com.user.userserver.model.PaginationData;
-import com.user.userserver.model.UserInfo;
+import com.user.userserver.model.UserModel;
 import com.user.userserver.service.UserService;
 import com.user.userserver.util.PBKDF2Util;
 import com.user.userserver.util.RedisUtil;
 import com.user.userserver.util.Util;
 import jakarta.annotation.Resource;
 import org.apache.logging.log4j.util.Strings;
-import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.SessionCallback;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -39,25 +41,20 @@ public class UserServiceImpl implements UserService {
     public static final Long REDIS_USER_MAX_TOKEN_COUNT = 5L; // 用户登录的最多设备数量
 
     @Override
-    public UserInfo getUserById(Long id) {
+    public UserEntity getUserById(Long id) {
 
-        User u = userMapper.getUserById(id);
+        return userMapper.getUserById(id);
 
-        UserInfo userInfo = new UserInfo();
-        if (u != null) {
-            BeanUtils.copyProperties(u, userInfo);
-        }
-        return userInfo;
     }
 
     @Override
-    public User getUserByName(String username) {
+    public UserEntity getUserByName(String username) {
         return userMapper.getUserByName(username);
     }
 
     @Override
-    public PaginationData<List<UserInfo>> getUserPageList(Map<String, Object> map) {
-        PaginationData<List<UserInfo>> paginationData = new PaginationData<>();
+    public PaginationData<List<UserEntity>> getUserPageList(Map<String, Object> map) {
+        PaginationData<List<UserEntity>> paginationData = new PaginationData<>();
         paginationData.setData(userMapper.getUserPageList(map));
         paginationData.setTotal(userMapper.userCount(map));
         return paginationData;
@@ -65,12 +62,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public int hasUserByName(String username) {
-        User user = userMapper.getUserByName(username);
+        UserEntity user = userMapper.getUserByName(username);
         return user == null ? 0 : 1;
     }
 
     @Override
-    public int userAdd(User user) {
+    public int userAdd(UserEntity user) {
         if (hasUserByName(user.getUsername()) > 0) {
             // 用户名已存在
             return 0;
@@ -82,12 +79,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int userUpdate(User user) {
+    public int userUpdate(UserEntity user) {
         if (user.getPassword() != null) {
             user.setPassword(PBKDF2Util.encode(user.getPassword()));
         }
         if (user.getUsername() != null) {
-            User u = userMapper.getUserByName(user.getUsername());
+            UserEntity u = userMapper.getUserByName(user.getUsername());
             if (!Objects.equals(u.getId(), user.getId())) {
                 // 修改用户名 且 目标用户名已存在
                 return 0;
@@ -100,19 +97,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int userUpdateStatus(User user) {
+    public int userUpdateStatus(UserEntity user) {
         return userMapper.userUpdateStatus(user);
     }
 
     @Override
-    public int userDelete(User user) {
+    public int userDelete(UserEntity user) {
         return userMapper.userDelete(user);
     }
 
     @Override
-    public String userLogin(Map<String, String> map) {
-        User user = getUserByName(map.get("username"));
-        if (PBKDF2Util.verification(map.get("password"), user.getPassword())) {
+    public String userLogin(UserModel userModel) {
+        UserEntity user = getUserByName(userModel.getUsername());
+        if (PBKDF2Util.verification(userModel.getPassword(), user.getPassword())) {
             String token = Util.getRandomToken();
             List<String> list = new ArrayList<>();
             list.add(token);
@@ -149,27 +146,13 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
-    // 返回UserInfo 不包含密码等信息 对外提供
-    @Override
-    public UserInfo getUserInfoByToken(String token) {
+    public UserEntity getUserByToken(String token) {
         if (Strings.isEmpty(token)) {
             return null;
         }
         Object obj = redisUtil.get(token);
         if (obj != null) {
-            return JSON.parseObject((String) obj, UserInfo.class);
-        }
-        return null;
-    }
-
-    // 返回User 包含密码等信息 对内提供
-    public User getUserByToken(String token) {
-        if (Strings.isEmpty(token)) {
-            return null;
-        }
-        Object obj = redisUtil.get(token);
-        if (obj != null) {
-            return JSON.parseObject((String) obj, User.class);
+            return JSON.parseObject((String) obj, UserEntity.class);
         }
         return null;
     }
@@ -180,7 +163,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean loginOut(String token, User user) {
+    public boolean loginOut(String token, UserEntity user) {
         String userKey = REDIS_USER_ID + user.getId();
         // 开启事务
         SessionCallback<Object> callback = new SessionCallback<>() {
@@ -197,7 +180,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean loginOutAll(String token, User user) {
+    public boolean loginOutAll(String token, UserEntity user) {
         String userKey = REDIS_USER_ID + user.getId();
         List<String> removeKeys = new ArrayList<>();
         removeKeys.add(userKey);
