@@ -10,7 +10,6 @@ import com.store.jdstore.entity.HanmaShopEntity;
 import com.store.jdstore.enums.ExceptionMsgEnum;
 import com.store.jdstore.exception.SelfException;
 import com.store.jdstore.service.OrderService;
-import com.store.jdstore.service.ProductCategoryService;
 import com.store.jdstore.service.ProductService;
 import com.store.jdstore.service.ShopService;
 import com.store.jdstore.util.Utils;
@@ -25,9 +24,6 @@ import java.util.stream.Collectors;
 
 @Service
 public class OrderServiceImpl implements OrderService {
-
-    @Resource
-    private ProductCategoryService productCategoryService;
 
     @Resource
     private ProductService productService;
@@ -50,22 +46,19 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public OrderDto orderAdd(OrderDto orderDto) throws SelfException {
 
-        HanmaOrderEntity hanmaOrderEntity = new HanmaOrderEntity();
-        BeanUtils.copyProperties(orderDto, hanmaOrderEntity);
-        hanmaOrderEntity.setId(null);
-        hanmaOrderEntity.setOrderNo(Utils.getTimeRandom());
-        hanmaOrderEntity.setOrderAmount(new BigDecimal(0));
-        hanmaOrderEntity.setPayTime(null);
-        hanmaOrderEntity.setPayStatus(null);
-        hanmaOrderEntity.setOrderStatus(1);
-        hanmaOrderEntity.setCreateTime(Utils.getTimestampStr());
-        hanmaOrderEntity.setUpdateTime(hanmaOrderEntity.getCreateTime());
-
         List<HanmaOrderDetailEntity> orderDetailEntityList = orderDto.getDetailList();
-
         if (orderDetailEntityList == null || orderDetailEntityList.isEmpty()){
             return null;
         }
+
+        orderDto.setId(null);
+        orderDto.setOrderNo(Utils.getTimeRandom());
+        orderDto.setOrderAmount(new BigDecimal(0));
+        orderDto.setPayTime(null);
+        orderDto.setPayStatus(null);
+        orderDto.setOrderStatus(1);
+        orderDto.setCreateTime(Utils.getTimestampStr());
+        orderDto.setUpdateTime(orderDto.getCreateTime());
 
         List<HanmaProductEntity> detailList = orderDetailEntityList.stream().map(e -> {
             HanmaProductEntity p = productService.findById(e.getProductId());
@@ -73,25 +66,25 @@ public class OrderServiceImpl implements OrderService {
                 throw new SelfException(ExceptionMsgEnum.NO_STACK);
             }
             p.setProductStock(p.getProductStock() - e.getQuantity());
-            hanmaOrderEntity.setOrderAmount(hanmaOrderEntity.getOrderAmount().add(p.getPrice().multiply(new BigDecimal(p.getProductStock()))));
+            orderDto.setOrderAmount(orderDto.getOrderAmount().add(p.getPrice().multiply(new BigDecimal(e.getQuantity()))));
             e.setId(null);
             e.setName(p.getName());
             e.setPrice(p.getPrice());
             e.setImgUrl(p.getImgUrl());
-            e.setCreateTime(hanmaOrderEntity.getCreateTime());
-            e.setUpdateTime(hanmaOrderEntity.getCreateTime());
-            // productService.update(p);
-            // HanmaOrderDetailEntity hanmaOrderDetailEntity = new HanmaOrderDetailEntity();
-            // BeanUtils.copyProperties(p, hanmaOrderDetailEntity);
+            e.setCreateTime(orderDto.getCreateTime());
+            e.setUpdateTime(orderDto.getCreateTime());
             return p;
         }).collect(Collectors.toList());
 
-        HanmaShopEntity shopEntity = shopService.findById(hanmaOrderEntity.getShopId());
-        hanmaOrderEntity.setShopName(shopEntity.getName());
+        HanmaShopEntity shopEntity = shopService.findById(orderDto.getShopId());
         orderDto.setShopName(shopEntity.getName());
 
+        HanmaOrderEntity hanmaOrderEntity = new HanmaOrderEntity();
+        BeanUtils.copyProperties(orderDto, hanmaOrderEntity);
+
+
         orderDao.save(hanmaOrderEntity);
-        System.out.println(hanmaOrderEntity.getId());
+        orderDto.setId(hanmaOrderEntity.getId());
         orderDetailEntityList.forEach(e -> e.setOrderId(hanmaOrderEntity.getId()));
 
         // 减少库存
@@ -99,8 +92,6 @@ public class OrderServiceImpl implements OrderService {
 
         // 创建订单详情
         orderDto.setDetailList(orderDetailDao.saveAll(orderDetailEntityList));
-
-        BeanUtils.copyProperties(hanmaOrderEntity, orderDto);
 
         return orderDto;
     }

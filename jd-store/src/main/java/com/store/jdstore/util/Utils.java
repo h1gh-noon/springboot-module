@@ -15,6 +15,6 @@ public class Utils {
     }
 
     public static String getTimeRandom() {
-        return System.currentTimeMillis() + (int) ((Math.random() * 100000) + Math.random() * 10000) + "";
+        return System.currentTimeMillis() + ((int) ((Math.random() * 100000) + Math.random() * 10000) + "");
     }
 }
