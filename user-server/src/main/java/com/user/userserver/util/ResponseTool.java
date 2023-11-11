@@ -1,16 +1,19 @@
 package com.user.userserver.util;
 
+import com.user.userserver.enums.ResponseEnum;
 import com.user.userserver.model.CommonResponse;
 
 public class ResponseTool {
 
 
     public static CommonResponse getSuccessResponse() {
-        return new CommonResponse(200, true, null, null);
+        return new CommonResponse(ResponseEnum.SUCCESS_200.getCode(), ResponseEnum.SUCCESS_200.getSuccess(), null,
+                ResponseEnum.SUCCESS_200.getMsg());
     }
 
     public static CommonResponse getSuccessResponse(Object data) {
-        return new CommonResponse(200, true, data, null);
+        return new CommonResponse(ResponseEnum.SUCCESS_200.getCode(), ResponseEnum.SUCCESS_200.getSuccess(), data,
+                ResponseEnum.SUCCESS_200.getMsg());
     }
 
     public static CommonResponse getErrorResponse() {
@@ -33,4 +36,7 @@ public class ResponseTool {
         return new CommonResponse(code, false, data, msg);
     }
 
+    public static CommonResponse getResponseEnum(ResponseEnum responseEnum, Object data) {
+        return new CommonResponse(responseEnum.getCode(), responseEnum.getSuccess(), data, responseEnum.getMsg());
+    }
 }

@@ -1,6 +1,7 @@
 package com.user.userserver.model;
 
 
+import com.user.userserver.enums.ResponseEnum;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,8 +11,8 @@ public class CommonResponse {
 
     private Integer code;
     private Boolean success;
-    private Object data;
     private String msg;
+    private Object data;
 
     public CommonResponse(Integer code) {
         this.code = code;
@@ -33,6 +34,19 @@ public class CommonResponse {
         this.success = success;
         this.data = data;
         this.msg = msg;
+    }
+
+    public CommonResponse(ResponseEnum responseEnum) {
+        this.code = responseEnum.getCode();
+        this.success = responseEnum.getSuccess();
+        this.msg = responseEnum.getMsg();
+    }
+
+    public CommonResponse(ResponseEnum responseEnum, Object data) {
+        this.code = responseEnum.getCode();
+        this.success = responseEnum.getSuccess();
+        this.msg = responseEnum.getMsg();
+        this.data = data;
     }
 
 }

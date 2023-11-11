@@ -1,5 +1,6 @@
 package com.user.userserver.controller;
 
+import com.user.userserver.dto.UserDto;
 import com.user.userserver.entity.UserEntity;
 import com.user.userserver.model.CommonResponse;
 import com.user.userserver.model.UserModel;
@@ -7,6 +8,7 @@ import com.user.userserver.service.UserService;
 import com.user.userserver.util.ResponseTool;
 import jakarta.annotation.Resource;
 import org.springframework.beans.BeanUtils;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,12 +21,13 @@ public class LoginController {
     /**
      * 登录
      *
-     * @param userModel { username: String, password: String 接收md5大写32位密文** }
+     * @param userDto { username: String, password: String 接收md5大写32位密文** }
      * @return CommonResponse
      */
     @PostMapping("/userLogin")
-    public CommonResponse userLogin(@RequestBody UserModel userModel) {
-        String resToken = userService.userLogin(userModel);
+    public CommonResponse userLogin(@RequestBody @Validated(UserDto.Login.class) UserDto userDto) {
+
+        String resToken = userService.userLogin(userDto);
         if (resToken == null) {
             return ResponseTool.getErrorResponse(200);
         } else {
@@ -48,7 +51,6 @@ public class LoginController {
         // success
         UserModel u = new UserModel();
         BeanUtils.copyProperties(userInfo, u);
-        u.setPassword(null);
         return ResponseTool.getSuccessResponse(u);
     }
 
@@ -60,7 +62,7 @@ public class LoginController {
      */
     @RequestMapping("/loginOut")
     public CommonResponse loginOut(@RequestHeader(name = "token") String token) {
-        if (userService.loginOut(token, new UserEntity())) {
+        if (userService.loginOut(token, new UserDto())) {
             // success
             return ResponseTool.getSuccessResponse();
         }
@@ -75,7 +77,7 @@ public class LoginController {
      */
     @RequestMapping("/loginOutAll")
     public CommonResponse loginOutAll(@RequestHeader(name = "token") String token) {
-        if (userService.loginOutAll(token, new UserEntity())) {
+        if (userService.loginOutAll(token, new UserDto())) {
             // success
             return ResponseTool.getSuccessResponse();
         }

@@ -1,9 +1,10 @@
 package com.user.userserver.service;
 
 
+import com.user.userserver.dto.UserDto;
 import com.user.userserver.entity.UserEntity;
+import com.user.userserver.exceptions.TemplateException;
 import com.user.userserver.model.PaginationData;
-import com.user.userserver.model.UserModel;
 
 import java.util.List;
 import java.util.Map;
@@ -18,23 +19,23 @@ public interface UserService {
 
     boolean authUserByToken(String token);
 
-    boolean loginOut(String token, UserEntity user);
+    boolean loginOut(String token, UserDto userDto);
 
-    boolean loginOutAll(String toke, UserEntity user);
+    boolean loginOutAll(String toke, UserDto userDto);
 
 
-    PaginationData<List<UserEntity>> getUserPageList(Map<String, Object> map);
+    PaginationData<List<UserDto>> getUserPageList(Map<String, Object> map);
 
     int hasUserByName(String username);
 
-    int userAdd(UserEntity user);
+    int userAdd(UserDto userDto);
 
-    int userUpdate(UserEntity user);
+    int userUpdate(UserDto userDto) throws TemplateException;
 
-    int userUpdateStatus(UserEntity user);
+    int userUpdateStatus(UserDto userDto);
 
-    int userDelete(UserEntity user);
+    int userDelete(UserDto userDto);
 
-    String userLogin(UserModel userModel);
+    String userLogin(UserDto userDto);
 
 }

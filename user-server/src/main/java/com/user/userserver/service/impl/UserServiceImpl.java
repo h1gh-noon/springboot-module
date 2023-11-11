@@ -2,16 +2,19 @@ package com.user.userserver.service.impl;
 
 
 import com.alibaba.fastjson2.JSON;
+import com.user.userserver.dto.UserDto;
 import com.user.userserver.entity.UserEntity;
+import com.user.userserver.enums.ResponseEnum;
+import com.user.userserver.exceptions.TemplateException;
 import com.user.userserver.mapper.UserMapper;
 import com.user.userserver.model.PaginationData;
-import com.user.userserver.model.UserModel;
 import com.user.userserver.service.UserService;
 import com.user.userserver.util.PBKDF2Util;
 import com.user.userserver.util.RedisUtil;
 import com.user.userserver.util.Util;
 import jakarta.annotation.Resource;
 import org.apache.logging.log4j.util.Strings;
+import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.SessionCallback;
@@ -23,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -42,9 +46,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserEntity getUserById(Long id) {
-
         return userMapper.getUserById(id);
-
     }
 
     @Override
@@ -53,9 +55,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public PaginationData<List<UserEntity>> getUserPageList(Map<String, Object> map) {
-        PaginationData<List<UserEntity>> paginationData = new PaginationData<>();
-        paginationData.setData(userMapper.getUserPageList(map));
+    public PaginationData<List<UserDto>> getUserPageList(Map<String, Object> map) {
+        PaginationData<List<UserDto>> paginationData = new PaginationData<>();
+        paginationData.setData(userMapper.getUserPageList(map).stream().map(e -> {
+            UserDto u = new UserDto();
+            BeanUtils.copyProperties(e, u);
+            return u;
+        }).collect(Collectors.toList()));
         paginationData.setTotal(userMapper.userCount(map));
         return paginationData;
     }
@@ -67,49 +73,56 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int userAdd(UserEntity user) {
-        if (hasUserByName(user.getUsername()) > 0) {
+    public int userAdd(UserDto userDto) {
+        if (hasUserByName(userDto.getUsername()) > 0) {
             // 用户名已存在
             return 0;
         }
-        user.setPassword(PBKDF2Util.encode(user.getPassword()));
-        int n = userMapper.userAdd(user);
-        user.setPassword(null);
+        userDto.setPassword(PBKDF2Util.encode(userDto.getPassword()));
+        UserEntity userEntity = new UserEntity();
+        BeanUtils.copyProperties(userDto, userEntity);
+        int n = userMapper.userAdd(userEntity);
+        userDto.setId(userEntity.getId());
         return n;
     }
 
     @Override
-    public int userUpdate(UserEntity user) {
-        if (user.getPassword() != null) {
-            user.setPassword(PBKDF2Util.encode(user.getPassword()));
-        }
-        if (user.getUsername() != null) {
-            UserEntity u = userMapper.getUserByName(user.getUsername());
-            if (!Objects.equals(u.getId(), user.getId())) {
+    public int userUpdate(UserDto userDto) throws TemplateException {
+        if (userDto.getUsername() != null) {
+            UserEntity u = userMapper.getUserByName(userDto.getUsername());
+            if (!Objects.equals(u.getId(), userDto.getId())) {
                 // 修改用户名 且 目标用户名已存在
-                return 0;
+                throw new TemplateException(ResponseEnum.HAS_USERNAME);
             }
         }
-        int n = userMapper.userUpdate(user);
-        // 清空密文 返回到controller
-        user.setPassword(null);
-        return n;
+        if (userDto.getPassword() != null) {
+            userDto.setPassword(PBKDF2Util.encode(userDto.getPassword()));
+        }
+        UserEntity user = new UserEntity();
+        BeanUtils.copyProperties(userDto, user);
+        return userMapper.userUpdate(user);
     }
 
     @Override
-    public int userUpdateStatus(UserEntity user) {
-        return userMapper.userUpdateStatus(user);
+    public int userUpdateStatus(UserDto userDto) {
+        UserEntity userEntity = new UserEntity();
+        userEntity.setId(userDto.getId());
+        userEntity.setUsername(userDto.getUsername());
+        userEntity.setStatus(userDto.getStatus());
+        return userMapper.userUpdateStatus(userEntity);
     }
 
     @Override
-    public int userDelete(UserEntity user) {
-        return userMapper.userDelete(user);
+    public int userDelete(UserDto userDto) {
+        UserEntity userEntity = new UserEntity();
+        userEntity.setId(userDto.getId());
+        return userMapper.userDelete(userEntity);
     }
 
     @Override
-    public String userLogin(UserModel userModel) {
-        UserEntity user = getUserByName(userModel.getUsername());
-        if (PBKDF2Util.verification(userModel.getPassword(), user.getPassword())) {
+    public String userLogin(UserDto userDto) {
+        UserEntity user = getUserByName(userDto.getUsername());
+        if (PBKDF2Util.verification(userDto.getPassword(), user.getPassword())) {
             String token = Util.getRandomToken();
             List<String> list = new ArrayList<>();
             list.add(token);
@@ -163,8 +176,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean loginOut(String token, UserEntity user) {
-        String userKey = REDIS_USER_ID + user.getId();
+    public boolean loginOut(String token, UserDto userDto) {
+        String userKey = REDIS_USER_ID + userDto.getId();
         // 开启事务
         SessionCallback<Object> callback = new SessionCallback<>() {
             @Override
@@ -180,8 +193,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean loginOutAll(String token, UserEntity user) {
-        String userKey = REDIS_USER_ID + user.getId();
+    public boolean loginOutAll(String token, UserDto userDto) {
+        String userKey = REDIS_USER_ID + userDto.getId();
         List<String> removeKeys = new ArrayList<>();
         removeKeys.add(userKey);
         removeKeys.addAll(redisUtil.lRange(userKey));
