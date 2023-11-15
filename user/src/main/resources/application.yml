@@ -1,0 +1,10 @@
+spring:
+  profiles:
+    active: dev
+  jackson:
+    default-property-inclusion: non_null
+mybatis:
+  mapper-locations: classpath:mapping/*Mapper.xml
+  type-aliases-package: com.hn.user.entity
+  configuration:
+    map-underscore-to-camel-case: true
