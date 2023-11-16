@@ -1,4 +1,4 @@
-package com.hn.user.util;
+package com.hn.common.util;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;

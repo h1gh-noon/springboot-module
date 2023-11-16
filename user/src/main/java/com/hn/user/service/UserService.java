@@ -1,10 +1,10 @@
 package com.hn.user.service;
 
 
+import com.hn.common.model.PaginationData;
 import com.hn.user.entity.UserEntity;
-import com.hn.user.dto.UserDto;
-import com.hn.user.exceptions.TemplateException;
-import com.hn.user.model.PaginationData;
+import com.hn.common.dto.UserDto;
+import com.hn.common.exceptions.TemplateException;
 
 import java.util.List;
 import java.util.Map;

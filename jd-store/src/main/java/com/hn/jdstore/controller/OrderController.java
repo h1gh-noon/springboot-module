@@ -1,5 +1,6 @@
 package com.hn.jdstore.controller;
 
+import com.hn.common.exceptions.TemplateException;
 import com.hn.jdstore.model.CommonResponse;
 import com.hn.jdstore.model.OrderDetailModel;
 import com.hn.jdstore.model.OrderModel;
@@ -26,7 +27,7 @@ public class OrderController {
     private OrderService orderService;
 
     @PostMapping("/orderAdd")
-    public CommonResponse orderAdd(@RequestBody OrderDto orderDto) {
+    public CommonResponse orderAdd(@RequestBody OrderDto orderDto) throws TemplateException {
         OrderDto resOrderDto = orderService.orderAdd(orderDto);
 
         OrderModel orderModel = new OrderModel();

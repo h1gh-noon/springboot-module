@@ -1,6 +1,6 @@
-package com.hn.user.exceptions;
+package com.hn.common.exceptions;
 
-import com.hn.user.enums.ResponseEnum;
+import com.hn.common.enums.ResponseEnum;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class TemplateException extends Exception {
+public class TemplateException extends RuntimeException {
 
     private Integer code;
     private String msg;

@@ -1,4 +1,4 @@
-package com.hn.user.model;
+package com.hn.common.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

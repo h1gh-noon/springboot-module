@@ -1,13 +1,13 @@
 package com.hn.user.controller;
 
+import com.hn.common.model.CommonResponse;
+import com.hn.common.model.PaginationData;
 import com.hn.user.entity.UserEntity;
-import com.hn.user.model.CommonResponse;
 import com.hn.user.service.UserService;
-import com.hn.user.dto.UserDto;
-import com.hn.user.exceptions.TemplateException;
-import com.hn.user.model.PaginationData;
+import com.hn.common.dto.UserDto;
+import com.hn.common.exceptions.TemplateException;
 import com.hn.user.model.UserModel;
-import com.hn.user.util.ResponseTool;
+import com.hn.common.util.ResponseTool;
 import jakarta.annotation.Resource;
 import org.springframework.beans.BeanUtils;
 import org.springframework.validation.annotation.Validated;

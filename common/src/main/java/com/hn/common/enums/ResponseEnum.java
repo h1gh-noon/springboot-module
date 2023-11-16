@@ -1,4 +1,4 @@
-package com.hn.user.enums;
+package com.hn.common.enums;
 
 public enum ResponseEnum {
 

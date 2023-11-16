@@ -1,7 +1,7 @@
-package com.hn.user.util;
+package com.hn.common.util;
 
-import com.hn.user.enums.ResponseEnum;
-import com.hn.user.model.CommonResponse;
+import com.hn.common.enums.ResponseEnum;
+import com.hn.common.model.CommonResponse;
 
 public class ResponseTool {
 

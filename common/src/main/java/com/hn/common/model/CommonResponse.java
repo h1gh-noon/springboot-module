@@ -1,7 +1,7 @@
-package com.hn.user.model;
+package com.hn.common.model;
 
 
-import com.hn.user.enums.ResponseEnum;
+import com.hn.common.enums.ResponseEnum;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
