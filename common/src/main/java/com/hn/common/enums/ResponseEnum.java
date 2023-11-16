@@ -4,8 +4,8 @@ public enum ResponseEnum {
 
     SUCCESS_200(200, true, "success"),
     SUCCESS_200_NO_MSG(200, true, null),
-    FAIL_401(401, false, "404了"),
-    FAIL_404(404, false, "404了"),
+    FAIL_401(401, false, "401"),
+    FAIL_404(404, false, "404"),
     Unauthorized(401, false, "需要登录！"),
     Authorization(403, false, "权限不足！"),
 

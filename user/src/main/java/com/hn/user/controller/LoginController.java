@@ -1,5 +1,9 @@
 package com.hn.user.controller;
 
+import com.alibaba.fastjson2.JSON;
+import com.hn.common.constant.RequestHeaderConstant;
+import com.hn.common.enums.ResponseEnum;
+import com.hn.common.exceptions.TemplateException;
 import com.hn.common.model.CommonResponse;
 import com.hn.user.entity.UserEntity;
 import com.hn.common.dto.UserDto;
@@ -42,17 +46,13 @@ public class LoginController {
      * @return CommonResponse
      * @RequestHeader token
      */
-    // @RequestHeader(name = "token-user-info") String tokenUserInfo
     @RequestMapping("/userInfo")
-    public CommonResponse userInfo(@RequestHeader(name = "token") String token) {
-        UserEntity userInfo = userService.getUserByToken(token);
-        if (userInfo == null) {
-            return ResponseTool.getErrorResponse(200);
-        }
+    public CommonResponse userInfo(@RequestHeader(name = RequestHeaderConstant.HEADER_TOKEN_INFO) String tokenInfo) {
         // success
-        UserModel u = new UserModel();
-        BeanUtils.copyProperties(userInfo, u);
-        return ResponseTool.getSuccessResponse(u);
+        if (tokenInfo.isEmpty()) {
+            throw new TemplateException(ResponseEnum.FAIL_401);
+        }
+        return ResponseTool.getSuccessResponse(JSON.parseObject(tokenInfo, UserModel.class));
     }
 
     /**
