@@ -1,9 +1,9 @@
 package com.hn.jdstore.service.impl;
 
+import com.hn.common.util.Util;
 import com.hn.jdstore.entity.HanmaShopCategoryEntity;
 import com.hn.jdstore.service.ShopCategoryService;
 import com.hn.jdstore.dao.ShopCategoryDao;
-import com.hn.jdstore.util.Utils;
 import jakarta.annotation.Resource;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -31,7 +31,7 @@ public class ShopCategoryServiceImpl implements ShopCategoryService {
         BeanUtils.copyProperties(shopCategoryEntity, h);
         BeanUtils.copyProperties(hanmaShopCategory, h);
         h.setCreateTime(shopCategoryEntity.getCreateTime());
-        h.setUpdateTime(Utils.getTimestampStr());
+        h.setUpdateTime(Util.getTimestampStr());
         return shopCategoryDao.save(h).getId();
     }
 

@@ -1,6 +1,8 @@
 package com.hn.common.util;
 
 import java.lang.reflect.Field;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -58,6 +60,19 @@ public class Util {
             }
         }
         return new String(rs);
+    }
+
+    public static String getTimestampStr() {
+        return getTimestampStr(LocalDateTime.now());
+    }
+
+    public static String getTimestampStr(LocalDateTime date) {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return date.format(dateTimeFormatter);
+    }
+
+    public static String getTimeRandom() {
+        return System.currentTimeMillis() + ((int) ((Math.random() * 100000) + Math.random() * 10000) + "");
     }
 
 }

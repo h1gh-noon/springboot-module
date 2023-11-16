@@ -1,11 +1,11 @@
 package com.hn.jdstore.controller;
 
+import com.hn.common.model.CommonResponse;
+import com.hn.common.util.ResponseTool;
+import com.hn.common.util.Util;
 import com.hn.jdstore.entity.HanmaProductCategoryEntity;
-import com.hn.jdstore.model.CommonResponse;
 import com.hn.jdstore.model.ProductCategoryModel;
 import com.hn.jdstore.service.ProductCategoryService;
-import com.hn.jdstore.util.ResponseUtil;
-import com.hn.jdstore.util.Utils;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -30,36 +30,36 @@ public class ProductCategoryController {
     @PostMapping("/productCategoryAdd")
     public CommonResponse productCategoryAdd(@RequestBody HanmaProductCategoryEntity hanmaProductCategory) {
         hanmaProductCategory.setId(null);
-        String t = Utils.getTimestampStr();
+        String t = Util.getTimestampStr();
         hanmaProductCategory.setCreateTime(t);
         hanmaProductCategory.setUpdateTime(t);
-        return ResponseUtil.getSuccessResponse(productCategoryService.update(hanmaProductCategory));
+        return ResponseTool.getSuccessResponse(productCategoryService.update(hanmaProductCategory));
     }
 
     @PostMapping("/productCategoryDelete")
     public CommonResponse productCategoryDelete(@RequestBody HanmaProductCategoryEntity hanmaProductCategory) {
         if (hanmaProductCategory.getId() == null) {
-            return ResponseUtil.getErrorResponse();
+            return ResponseTool.getErrorResponse();
         }
-        return ResponseUtil.getSuccessResponse(productCategoryService.update(hanmaProductCategory));
+        return ResponseTool.getSuccessResponse(productCategoryService.update(hanmaProductCategory));
     }
 
     @PostMapping("/productCategoryUpdate")
     public CommonResponse productCategoryUpdate(@RequestBody HanmaProductCategoryEntity hanmaProductCategory) {
         hanmaProductCategory.setUpdateTime(null);
-        hanmaProductCategory.setUpdateTime(Utils.getTimestampStr());
-        return ResponseUtil.getSuccessResponse(productCategoryService.update(hanmaProductCategory));
+        hanmaProductCategory.setUpdateTime(Util.getTimestampStr());
+        return ResponseTool.getSuccessResponse(productCategoryService.update(hanmaProductCategory));
     }
 
     @PostMapping("/getProductCategoryById")
     public CommonResponse getProductCategoryById(@RequestBody HanmaProductCategoryEntity hanmaProductCategory) {
         if (hanmaProductCategory.getId() == null) {
-            return ResponseUtil.getErrorResponse();
+            return ResponseTool.getErrorResponse();
         }
 
         ProductCategoryModel productCategoryModel = new ProductCategoryModel();
         BeanUtils.copyProperties(productCategoryService.findById(hanmaProductCategory.getId()), productCategoryModel);
-        return ResponseUtil.getSuccessResponse(productCategoryModel);
+        return ResponseTool.getSuccessResponse(productCategoryModel);
     }
 
     @PostMapping("/getProductCategoryList")
@@ -73,7 +73,7 @@ public class ProductCategoryController {
             return productCategoryModel;
         }).collect(Collectors.toList());
 
-        return ResponseUtil.getSuccessResponse(list);
+        return ResponseTool.getSuccessResponse(list);
     }
 
 }

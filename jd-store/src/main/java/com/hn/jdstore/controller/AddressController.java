@@ -1,14 +1,11 @@
 package com.hn.jdstore.controller;
 
-import com.hn.common.exceptions.TemplateException;
+import com.hn.common.model.CommonResponse;
 import com.hn.jdstore.entity.HanmaAddressEntity;
-import com.hn.jdstore.enums.ExceptionMsgEnum;
-import com.hn.jdstore.exception.SelfException;
 import com.hn.jdstore.model.AddressModel;
-import com.hn.jdstore.model.CommonResponse;
 import com.hn.jdstore.service.AddressService;
-import com.hn.jdstore.util.ResponseUtil;
-import com.hn.jdstore.util.Utils;
+import com.hn.common.util.ResponseTool;
+import com.hn.common.util.Util;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -30,40 +27,40 @@ public class AddressController {
     @PostMapping("/addressAdd")
     public CommonResponse addressAdd(@RequestBody HanmaAddressEntity hanmaAddress) {
         hanmaAddress.setId(null);
-        String time = Utils.getTimestampStr();
+        String time = Util.getTimestampStr();
         hanmaAddress.setCreateTime(time);
         hanmaAddress.setUpdateTime(time);
-        return ResponseUtil.getSuccessResponse(addressService.update(hanmaAddress));
+        return ResponseTool.getSuccessResponse(addressService.update(hanmaAddress));
     }
 
     @PostMapping("/addressDelete")
     public CommonResponse addressDelete(@RequestBody HanmaAddressEntity hanmaAddress) {
         if (hanmaAddress.getId() == null) {
-            return ResponseUtil.getErrorResponse();
+            return ResponseTool.getErrorResponse();
         }
-        return ResponseUtil.getSuccessResponse(addressService.update(hanmaAddress));
+        return ResponseTool.getSuccessResponse(addressService.update(hanmaAddress));
     }
 
     @PostMapping("/addressUpdate")
     public CommonResponse addressUpdate(@RequestBody HanmaAddressEntity hanmaAddress) {
         hanmaAddress.setCreateTime(null);
-        hanmaAddress.setUpdateTime(Utils.getTimestampStr());
-        return ResponseUtil.getSuccessResponse(addressService.update(hanmaAddress));
+        hanmaAddress.setUpdateTime(Util.getTimestampStr());
+        return ResponseTool.getSuccessResponse(addressService.update(hanmaAddress));
     }
 
     @PostMapping("/getAddressById")
     public CommonResponse getAddressById(@RequestBody HanmaAddressEntity hanmaAddress) {
         if (hanmaAddress.getId() == null) {
-            return ResponseUtil.getErrorResponse();
+            return ResponseTool.getErrorResponse();
         }
 
         AddressModel addressModel = new AddressModel();
         BeanUtils.copyProperties(addressService.findById(hanmaAddress.getId()), addressModel);
-        return ResponseUtil.getSuccessResponse(addressModel);
+        return ResponseTool.getSuccessResponse(addressModel);
     }
 
     @RequestMapping("/getAddressList")
     public CommonResponse getAddressInfoProductList() {
-        return ResponseUtil.getSuccessResponse(addressService.getAddressList());
+        return ResponseTool.getSuccessResponse(addressService.getAddressList());
     }
 }

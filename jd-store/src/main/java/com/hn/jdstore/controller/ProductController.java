@@ -1,11 +1,11 @@
 package com.hn.jdstore.controller;
 
+import com.hn.common.model.CommonResponse;
+import com.hn.common.util.ResponseTool;
+import com.hn.common.util.Util;
 import com.hn.jdstore.entity.HanmaProductEntity;
-import com.hn.jdstore.model.CommonResponse;
 import com.hn.jdstore.model.ProductModel;
 import com.hn.jdstore.service.ProductService;
-import com.hn.jdstore.util.ResponseUtil;
-import com.hn.jdstore.util.Utils;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -27,36 +27,36 @@ public class ProductController {
     @PostMapping("/productAdd")
     public CommonResponse productAdd(@RequestBody HanmaProductEntity hanmaProduct) {
         hanmaProduct.setId(null);
-        String t = Utils.getTimestampStr();
+        String t = Util.getTimestampStr();
         hanmaProduct.setCreateTime(t);
         hanmaProduct.setUpdateTime(t);
-        return ResponseUtil.getSuccessResponse(productService.update(hanmaProduct));
+        return ResponseTool.getSuccessResponse(productService.update(hanmaProduct));
     }
 
     @PostMapping("/productDelete")
     public CommonResponse productDelete(@RequestBody HanmaProductEntity hanmaProduct) {
         if (hanmaProduct.getId() == null) {
-            return ResponseUtil.getErrorResponse();
+            return ResponseTool.getErrorResponse();
         }
-        return ResponseUtil.getSuccessResponse(productService.update(hanmaProduct));
+        return ResponseTool.getSuccessResponse(productService.update(hanmaProduct));
     }
 
     @PostMapping("/productUpdate")
     public CommonResponse productUpdate(@RequestBody HanmaProductEntity hanmaProduct) {
         hanmaProduct.setUpdateTime(null);
-        hanmaProduct.setUpdateTime(Utils.getTimestampStr());
-        return ResponseUtil.getSuccessResponse(productService.update(hanmaProduct));
+        hanmaProduct.setUpdateTime(Util.getTimestampStr());
+        return ResponseTool.getSuccessResponse(productService.update(hanmaProduct));
     }
 
     @PostMapping("/getProductById")
     public CommonResponse getProductById(@RequestBody HanmaProductEntity hanmaProduct) {
         if (hanmaProduct.getId() == null) {
-            return ResponseUtil.getErrorResponse();
+            return ResponseTool.getErrorResponse();
         }
 
         ProductModel productModel = new ProductModel();
         BeanUtils.copyProperties(productService.findById(hanmaProduct.getId()), productModel);
-        return ResponseUtil.getSuccessResponse(productModel);
+        return ResponseTool.getSuccessResponse(productModel);
     }
 
 }

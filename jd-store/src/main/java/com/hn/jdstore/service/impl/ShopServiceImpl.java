@@ -1,5 +1,7 @@
 package com.hn.jdstore.service.impl;
 
+import com.hn.common.model.PaginationData;
+import com.hn.common.util.Util;
 import com.hn.jdstore.entity.HanmaProductEntity;
 import com.hn.jdstore.entity.HanmaShopEntity;
 import com.hn.jdstore.model.*;
@@ -7,7 +9,6 @@ import com.hn.jdstore.service.ProductCategoryService;
 import com.hn.jdstore.service.ProductService;
 import com.hn.jdstore.service.ShopService;
 import com.hn.jdstore.dao.ShopDao;
-import com.hn.jdstore.util.Utils;
 import com.hn.jdstore.entity.HanmaProductCategoryEntity;
 import jakarta.annotation.Resource;
 import org.springframework.beans.BeanUtils;
@@ -46,7 +47,7 @@ public class ShopServiceImpl implements ShopService {
         BeanUtils.copyProperties(hanmaShopEntity, h);
 
         h.setCreateTime(old.getCreateTime());
-        h.setUpdateTime(Utils.getTimestampStr());
+        h.setUpdateTime(Util.getTimestampStr());
 
         return shopDao.save(h).getId();
 
@@ -58,7 +59,7 @@ public class ShopServiceImpl implements ShopService {
     }
 
     @Override
-    public Page<HanmaShopEntity> getShopPageList(Pagination<ShopModel> pagination, ShopModel shopModel) {
+    public Page<HanmaShopEntity> getShopPageList(PaginationData<ShopModel> pagination, ShopModel shopModel) {
         HanmaShopEntity h = new HanmaShopEntity();
         if (shopModel != null) {
             h.setCateId(shopModel.getCateId());

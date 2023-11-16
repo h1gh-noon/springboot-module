@@ -1,6 +1,7 @@
 package com.hn.jdstore.service.impl;
 
 import com.hn.common.exceptions.TemplateException;
+import com.hn.common.util.Util;
 import com.hn.jdstore.entity.HanmaOrderDetailEntity;
 import com.hn.jdstore.entity.HanmaOrderEntity;
 import com.hn.jdstore.entity.HanmaProductEntity;
@@ -12,7 +13,6 @@ import com.hn.jdstore.dao.OrderDao;
 import com.hn.jdstore.dao.OrderDetailDao;
 import com.hn.jdstore.dto.OrderDto;
 import com.hn.jdstore.enums.ExceptionMsgEnum;
-import com.hn.jdstore.util.Utils;
 import com.hn.jdstore.exception.SelfException;
 import jakarta.annotation.Resource;
 import org.springframework.beans.BeanUtils;
@@ -53,12 +53,12 @@ public class OrderServiceImpl implements OrderService {
         }
 
         orderDto.setId(null);
-        orderDto.setOrderNo(Utils.getTimeRandom());
+        orderDto.setOrderNo(Util.getTimeRandom());
         orderDto.setOrderAmount(new BigDecimal(0));
         orderDto.setPayTime(null);
         orderDto.setPayStatus(null);
         orderDto.setOrderStatus(1);
-        orderDto.setCreateTime(Utils.getTimestampStr());
+        orderDto.setCreateTime(Util.getTimestampStr());
         orderDto.setUpdateTime(orderDto.getCreateTime());
 
         List<HanmaProductEntity> detailList = orderDetailEntityList.stream().map(e -> {

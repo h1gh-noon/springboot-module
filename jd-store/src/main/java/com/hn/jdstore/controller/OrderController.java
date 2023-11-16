@@ -1,12 +1,12 @@
 package com.hn.jdstore.controller;
 
 import com.hn.common.exceptions.TemplateException;
-import com.hn.jdstore.model.CommonResponse;
+import com.hn.common.model.CommonResponse;
+import com.hn.common.util.ResponseTool;
 import com.hn.jdstore.model.OrderDetailModel;
 import com.hn.jdstore.model.OrderModel;
 import com.hn.jdstore.service.OrderService;
 import com.hn.jdstore.dto.OrderDto;
-import com.hn.jdstore.util.ResponseUtil;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -39,7 +39,7 @@ public class OrderController {
             return o;
         }).collect(Collectors.toList());
         orderModel.setDetailList(orderDetailModels);
-        return ResponseUtil.getSuccessResponse(orderModel);
+        return ResponseTool.getSuccessResponse(orderModel);
     }
 
 }

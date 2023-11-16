@@ -1,11 +1,11 @@
 package com.hn.jdstore.controller;
 
+import com.hn.common.model.CommonResponse;
+import com.hn.common.util.ResponseTool;
+import com.hn.common.util.Util;
 import com.hn.jdstore.entity.HanmaShopCategoryEntity;
-import com.hn.jdstore.model.CommonResponse;
 import com.hn.jdstore.model.ShopCategoryModel;
 import com.hn.jdstore.service.ShopCategoryService;
-import com.hn.jdstore.util.ResponseUtil;
-import com.hn.jdstore.util.Utils;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -30,36 +30,36 @@ public class ShopCategoryController {
     @PostMapping("/shopCategoryAdd")
     public CommonResponse shopCategoryAdd(@RequestBody HanmaShopCategoryEntity hanmaShopCategory) {
         hanmaShopCategory.setId(null);
-        String t = Utils.getTimestampStr();
+        String t = Util.getTimestampStr();
         hanmaShopCategory.setCreateTime(t);
         hanmaShopCategory.setUpdateTime(t);
-        return ResponseUtil.getSuccessResponse(shopCategoryService.update(hanmaShopCategory));
+        return ResponseTool.getSuccessResponse(shopCategoryService.update(hanmaShopCategory));
     }
 
     @PostMapping("/shopCategoryDelete")
     public CommonResponse shopCategoryDelete(@RequestBody HanmaShopCategoryEntity hanmaShopCategory) {
         if (hanmaShopCategory.getId() == null) {
-            return ResponseUtil.getErrorResponse();
+            return ResponseTool.getErrorResponse();
         }
-        return ResponseUtil.getSuccessResponse(shopCategoryService.update(hanmaShopCategory));
+        return ResponseTool.getSuccessResponse(shopCategoryService.update(hanmaShopCategory));
     }
 
     @PostMapping("/shopCategoryUpdate")
     public CommonResponse shopCategoryUpdate(@RequestBody HanmaShopCategoryEntity hanmaShopCategory) {
         hanmaShopCategory.setUpdateTime(null);
-        hanmaShopCategory.setUpdateTime(Utils.getTimestampStr());
-        return ResponseUtil.getSuccessResponse(shopCategoryService.update(hanmaShopCategory));
+        hanmaShopCategory.setUpdateTime(Util.getTimestampStr());
+        return ResponseTool.getSuccessResponse(shopCategoryService.update(hanmaShopCategory));
     }
 
     @PostMapping("/getShopCategoryById")
     public CommonResponse getShopCategoryById(@RequestBody HanmaShopCategoryEntity hanmaShopCategory) {
         if (hanmaShopCategory.getId() == null) {
-            return ResponseUtil.getErrorResponse();
+            return ResponseTool.getErrorResponse();
         }
 
         ShopCategoryModel shopCategoryModel = new ShopCategoryModel();
         BeanUtils.copyProperties(shopCategoryService.findById(hanmaShopCategory.getId()), shopCategoryModel);
-        return ResponseUtil.getSuccessResponse(shopCategoryModel);
+        return ResponseTool.getSuccessResponse(shopCategoryModel);
     }
 
     @PostMapping("/getShopCategoryList")
@@ -75,7 +75,7 @@ public class ShopCategoryController {
         });
 
 
-        return ResponseUtil.getSuccessResponse(list);
+        return ResponseTool.getSuccessResponse(list);
     }
 
 }
