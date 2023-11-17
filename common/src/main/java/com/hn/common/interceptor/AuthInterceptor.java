@@ -1,5 +1,6 @@
-package com.hn.common.filter;
+package com.hn.common.interceptor;
 
+import com.hn.common.constant.RedisConstant;
 import com.hn.common.constant.RequestHeaderConstant;
 import com.hn.common.util.RedisUtil;
 import jakarta.annotation.Resource;
@@ -13,7 +14,7 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AuthFilter implements HandlerInterceptor {
+public class AuthInterceptor implements HandlerInterceptor {
 
     @Resource
     private RedisUtil redisUtil;
@@ -24,12 +25,13 @@ public class AuthFilter implements HandlerInterceptor {
         String token = request.getHeader(RequestHeaderConstant.HEADER_TOKEN);
         Map<String, String> header = new HashMap<>();
         if (Strings.isEmpty(token)) {
-            header.put(RequestHeaderConstant.HEADER_TOKEN_INFO, "");
+            header.put(RequestHeaderConstant.HEADER_TOKEN, null);
+            header.put(RequestHeaderConstant.HEADER_TOKEN_INFO, null);
         } else {
-            Object o = redisUtil.get(token);
+            Object o = redisUtil.get(RedisConstant.USER_TOKEN + token);
             if (o == null) {
-                header.put(RequestHeaderConstant.HEADER_TOKEN, "");
-                header.put(RequestHeaderConstant.HEADER_TOKEN_INFO, "");
+                header.put(RequestHeaderConstant.HEADER_TOKEN, null);
+                header.put(RequestHeaderConstant.HEADER_TOKEN_INFO, null);
             } else {
                 String tokenInfo = (String) o;
                 header.put(RequestHeaderConstant.HEADER_TOKEN_INFO, tokenInfo);

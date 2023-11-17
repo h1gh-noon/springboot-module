@@ -1,21 +1,13 @@
-package com.hn.common.filter;
+package com.hn.common.interceptor;
 
 import com.hn.common.constant.RequestHeaderConstant;
 import com.hn.common.enums.ResponseEnum;
 import com.hn.common.exceptions.TemplateException;
-import com.hn.common.util.RedisUtil;
-import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.apache.logging.log4j.util.Strings;
-import org.apache.tomcat.util.http.MimeHeaders;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.Map;
-
-public class LoginFilter implements HandlerInterceptor {
+public class LoginInterceptor implements HandlerInterceptor {
 
 
     @Override

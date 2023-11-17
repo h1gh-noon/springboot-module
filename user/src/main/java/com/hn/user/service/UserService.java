@@ -21,7 +21,7 @@ public interface UserService {
 
     boolean loginOut(String token, UserDto userDto);
 
-    boolean loginOutAll(String toke, UserDto userDto);
+    boolean loginOutAll(UserDto userDto);
 
 
     PaginationData<List<UserDto>> getUserPageList(Map<String, Object> map);

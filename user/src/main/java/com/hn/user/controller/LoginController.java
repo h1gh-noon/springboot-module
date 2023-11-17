@@ -11,6 +11,7 @@ import com.hn.user.model.UserModel;
 import com.hn.user.service.UserService;
 import com.hn.common.util.ResponseTool;
 import jakarta.annotation.Resource;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.beans.BeanUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -49,9 +50,6 @@ public class LoginController {
     @RequestMapping("/userInfo")
     public CommonResponse userInfo(@RequestHeader(name = RequestHeaderConstant.HEADER_TOKEN_INFO) String tokenInfo) {
         // success
-        if (tokenInfo.isEmpty()) {
-            throw new TemplateException(ResponseEnum.FAIL_401);
-        }
         return ResponseTool.getSuccessResponse(JSON.parseObject(tokenInfo, UserModel.class));
     }
 
@@ -62,8 +60,12 @@ public class LoginController {
      * @RequestHeader token
      */
     @RequestMapping("/loginOut")
-    public CommonResponse loginOut(@RequestHeader(name = "token") String token) {
-        if (userService.loginOut(token, new UserDto())) {
+    public CommonResponse loginOut(@RequestHeader(name = RequestHeaderConstant.HEADER_TOKEN) String token,
+                                   @RequestHeader(name =
+                                           RequestHeaderConstant.HEADER_TOKEN_INFO) String tokenInfo) {
+        UserDto userDto = JSON.parseObject(tokenInfo, UserDto.class);
+
+        if (userService.loginOut(token, userDto)) {
             // success
             return ResponseTool.getSuccessResponse();
         }
@@ -77,8 +79,9 @@ public class LoginController {
      * @RequestHeader token
      */
     @RequestMapping("/loginOutAll")
-    public CommonResponse loginOutAll(@RequestHeader(name = "token") String token) {
-        if (userService.loginOutAll(token, new UserDto())) {
+    public CommonResponse loginOutAll(@RequestHeader(name = RequestHeaderConstant.HEADER_TOKEN_INFO) String tokenInfo) {
+        UserDto userDto = JSON.parseObject(tokenInfo, UserDto.class);
+        if (userService.loginOutAll(userDto)) {
             // success
             return ResponseTool.getSuccessResponse();
         }

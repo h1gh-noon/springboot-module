@@ -2,6 +2,7 @@ package com.hn.user.service.impl;
 
 
 import com.alibaba.fastjson2.JSON;
+import com.hn.common.constant.RedisConstant;
 import com.hn.common.model.PaginationData;
 import com.hn.user.entity.UserEntity;
 import com.hn.user.mapper.UserMapper;
@@ -39,8 +40,6 @@ public class UserServiceImpl implements UserService {
 
     @Resource
     private StringRedisTemplate stringRedisTemplate;
-
-    public static final String REDIS_USER_ID = "TOKEN_LIST_USER_ID_"; // 前缀(+用户id) redis存储每个用户的token列表key
 
     public static final Long REDIS_USER_MAX_TOKEN_COUNT = 5L; // 用户登录的最多设备数量
 
@@ -125,9 +124,9 @@ public class UserServiceImpl implements UserService {
         if (PBKDF2Util.verification(userDto.getPassword(), user.getPassword())) {
             String token = Util.getRandomToken();
             List<String> list = new ArrayList<>();
-            list.add(token);
+            list.add(RedisConstant.USER_TOKEN + token);
 
-            String userKey = REDIS_USER_ID + user.getId();
+            String userKey = RedisConstant.USER_TOKEN_LIST + user.getId();
             Long tokenCount = stringRedisTemplate.opsForList().size(userKey);
             String oldToken = null;
             if (tokenCount != null && REDIS_USER_MAX_TOKEN_COUNT <= tokenCount) {
@@ -141,8 +140,8 @@ public class UserServiceImpl implements UserService {
                 @Override
                 public Object execute(RedisOperations operations) throws DataAccessException {
                     operations.multi();
-                    operations.opsForValue().set(token, JSON.toJSONString(user));
-                    operations.expire(token, 3600 * 12, TimeUnit.SECONDS);
+                    operations.opsForValue().set(RedisConstant.USER_TOKEN + token, JSON.toJSONString(user));
+                    operations.expire(RedisConstant.USER_TOKEN + token, 3600 * 12, TimeUnit.SECONDS);
                     operations.opsForList().rightPushAll(userKey, list);
                     if (finalOldToken != null) {
                         operations.delete(finalOldToken);
@@ -163,7 +162,7 @@ public class UserServiceImpl implements UserService {
         if (Strings.isEmpty(token)) {
             return null;
         }
-        Object obj = redisUtil.get(token);
+        Object obj = redisUtil.get(RedisConstant.USER_TOKEN + token);
         if (obj != null) {
             return JSON.parseObject((String) obj, UserEntity.class);
         }
@@ -172,19 +171,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean authUserByToken(String token) {
-        return getUserByToken(token) != null;
+        return getUserByToken(RedisConstant.USER_TOKEN + token) != null;
     }
 
     @Override
     public boolean loginOut(String token, UserDto userDto) {
-        String userKey = REDIS_USER_ID + userDto.getId();
+        String userKey = RedisConstant.USER_TOKEN_LIST + userDto.getId();
         // 开启事务
         SessionCallback<Object> callback = new SessionCallback<>() {
             @Override
             public Object execute(RedisOperations operations) throws DataAccessException {
                 operations.multi();
-                operations.delete(token);
-                operations.opsForList().remove(userKey, 1, token);
+                operations.delete(RedisConstant.USER_TOKEN + token);
+                operations.opsForList().remove(userKey, 1, RedisConstant.USER_TOKEN + token);
                 return operations.exec();
             }
         };
@@ -193,8 +192,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean loginOutAll(String token, UserDto userDto) {
-        String userKey = REDIS_USER_ID + userDto.getId();
+    public boolean loginOutAll(UserDto userDto) {
+        String userKey = RedisConstant.USER_TOKEN_LIST + userDto.getId();
         List<String> removeKeys = new ArrayList<>();
         removeKeys.add(userKey);
         removeKeys.addAll(redisUtil.lRange(userKey));
