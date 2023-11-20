@@ -1,8 +1,9 @@
 package com.hn.jdstore.enums;
 
-import com.hn.common.enums.ResponseEnum;
 
-public enum ExceptionMsgEnum {
+import com.hn.common.api.ResponseCode;
+
+public enum ExceptionMsgEnum implements ResponseCode {
     NO_STACK(200, false, "没库存了！");
 
     private final Integer code;

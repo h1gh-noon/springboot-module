@@ -12,8 +12,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebAppConfigurer implements WebMvcConfigurer {
 
-    @Value("${apiPath}")
-    private String apiPath;
+    @Value("${server.servlet.context-path}")
+    private String contextPath;
 
     @Bean
     public AuthInterceptor authInterceptor() {
@@ -23,14 +23,13 @@ public class WebAppConfigurer implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
 
-        System.out.println(apiPath);
         registry.addInterceptor(authInterceptor())
-                .addPathPatterns(apiPath + "/**")
-                .excludePathPatterns(apiPath + "/auth/userLogin").order(0);
+                .addPathPatterns(contextPath + "/**")
+                .excludePathPatterns(contextPath + "/auth/userLogin").order(0);
 
         registry.addInterceptor(new LoginInterceptor())
-                .addPathPatterns(apiPath + "/**")
-                .excludePathPatterns(apiPath + "/auth/userLogin")
+                .addPathPatterns(contextPath + "/**")
+                .excludePathPatterns(contextPath + "/auth/userLogin")
                 .order(1);
 
     }

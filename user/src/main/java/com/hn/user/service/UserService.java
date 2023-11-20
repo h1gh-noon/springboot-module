@@ -1,7 +1,7 @@
 package com.hn.user.service;
 
 
-import com.hn.common.model.PaginationData;
+import com.hn.common.api.PaginationData;
 import com.hn.user.entity.UserEntity;
 import com.hn.common.dto.UserDto;
 import com.hn.common.exceptions.TemplateException;

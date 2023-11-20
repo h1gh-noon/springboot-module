@@ -1,6 +1,6 @@
 package com.hn.jdstore.controller;
 
-import com.hn.common.model.CommonResponse;
+import com.hn.common.api.CommonResponse;
 import com.hn.common.util.ResponseTool;
 import com.hn.common.util.Util;
 import com.hn.jdstore.entity.HanmaShopCategoryEntity;

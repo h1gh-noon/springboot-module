@@ -1,5 +1,5 @@
 server:
-  port: 8888
+  port: 8889
 spring:
   datasource:
     #driver-class-name: com.mysql.cj.jdbc.Driver
@@ -16,6 +16,12 @@ spring:
           max-idle: 16
           max-active: 32
           min-idle: 8
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+        username: nacos
+        password: nacos
 logging:
   level:
     com.user: debug

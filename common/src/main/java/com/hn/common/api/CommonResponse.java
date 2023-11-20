@@ -1,4 +1,4 @@
-package com.hn.common.model;
+package com.hn.common.api;
 
 
 import com.hn.common.enums.ResponseEnum;

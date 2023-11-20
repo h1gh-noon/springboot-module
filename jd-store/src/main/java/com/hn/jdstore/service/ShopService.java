@@ -1,6 +1,6 @@
 package com.hn.jdstore.service;
 
-import com.hn.common.model.PaginationData;
+import com.hn.common.api.PaginationData;
 import com.hn.jdstore.entity.HanmaShopEntity;
 import com.hn.jdstore.model.ShopInfoProductModel;
 import com.hn.jdstore.model.ShopModel;

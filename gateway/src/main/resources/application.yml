@@ -1,0 +1,22 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: service-user
+          uri: lb://service-user
+          predicates:
+            - Path=/user/**
+        - id: service-jd-store
+          uri: lb://service-jd-store
+          predicates:
+            - Path=/jdstore/**
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+        username: nacos
+        password: nacos
+
+  application:
+    name: gateway
+server:
+  port: 8888

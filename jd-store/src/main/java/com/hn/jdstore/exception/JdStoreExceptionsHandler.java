@@ -1,7 +1,7 @@
 package com.hn.jdstore.exception;
 
 
-import com.hn.common.model.CommonResponse;
+import com.hn.common.api.CommonResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;

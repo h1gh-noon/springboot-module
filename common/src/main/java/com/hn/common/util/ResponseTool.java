@@ -1,42 +1,41 @@
 package com.hn.common.util;
 
+import com.hn.common.api.ResponseCode;
 import com.hn.common.enums.ResponseEnum;
-import com.hn.common.model.CommonResponse;
+import com.hn.common.api.CommonResponse;
 
 public class ResponseTool {
 
 
     public static CommonResponse getSuccessResponse() {
-        return new CommonResponse(ResponseEnum.SUCCESS_200.getCode(), ResponseEnum.SUCCESS_200.getSuccess(), null,
-                ResponseEnum.SUCCESS_200.getMsg());
+        return getSuccessResponse(ResponseEnum.SUCCESS_200, null);
     }
 
     public static CommonResponse getSuccessResponse(Object data) {
-        return new CommonResponse(ResponseEnum.SUCCESS_200.getCode(), ResponseEnum.SUCCESS_200.getSuccess(), data,
-                ResponseEnum.SUCCESS_200.getMsg());
+        return getSuccessResponse(ResponseEnum.SUCCESS_200, data);
+    }
+
+    public static CommonResponse getSuccessResponse(ResponseCode responseCode, Object data) {
+        return new CommonResponse(responseCode.getCode(), responseCode.getSuccess(), data,
+                responseCode.getMsg());
     }
 
     public static CommonResponse getErrorResponse() {
-        return new CommonResponse(404, false, null, null);
+        return getErrorResponse(ResponseEnum.FAIL_404);
     }
 
-    public static CommonResponse getErrorResponse(Integer code) {
-        return new CommonResponse(code, false, null, null);
+    public static CommonResponse getErrorResponse(ResponseCode responseCode) {
+        return getErrorResponse(responseCode, null);
+    }
+    public static CommonResponse getErrorResponse(ResponseCode responseCode, Object data) {
+        return new CommonResponse(responseCode.getCode(), responseCode.getSuccess(), data, responseCode.getMsg());
     }
 
-    public static CommonResponse getErrorResponse(Integer code, String msg) {
-        return new CommonResponse(code, false, null, msg);
+    public static CommonResponse getResponseEnum(Integer code, Boolean success, String msg, Object data) {
+        return new CommonResponse(code, success, data, msg);
     }
 
-    public static CommonResponse getErrorResponse(Object data, String msg) {
-        return new CommonResponse(404, false, data, msg);
-    }
-
-    public static CommonResponse getErrorResponse(Integer code, Object data, String msg) {
-        return new CommonResponse(code, false, data, msg);
-    }
-
-    public static CommonResponse getResponseEnum(ResponseEnum responseEnum, Object data) {
-        return new CommonResponse(responseEnum.getCode(), responseEnum.getSuccess(), data, responseEnum.getMsg());
+    public static CommonResponse getResponseEnum(ResponseCode responseCode, Object data) {
+        return new CommonResponse(responseCode.getCode(), responseCode.getSuccess(), data, responseCode.getMsg());
     }
 }

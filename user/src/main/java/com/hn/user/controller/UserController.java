@@ -1,7 +1,7 @@
 package com.hn.user.controller;
 
-import com.hn.common.model.CommonResponse;
-import com.hn.common.model.PaginationData;
+import com.hn.common.api.CommonResponse;
+import com.hn.common.api.PaginationData;
 import com.hn.user.entity.UserEntity;
 import com.hn.user.service.UserService;
 import com.hn.common.dto.UserDto;
@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("${apiPath}/user")
+@RequestMapping("/user")
 public class UserController {
 
     @Resource

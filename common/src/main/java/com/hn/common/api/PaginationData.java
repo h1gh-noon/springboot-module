@@ -1,4 +1,4 @@
-package com.hn.common.model;
+package com.hn.common.api;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

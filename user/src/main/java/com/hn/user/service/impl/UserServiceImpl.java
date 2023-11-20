@@ -3,7 +3,7 @@ package com.hn.user.service.impl;
 
 import com.alibaba.fastjson2.JSON;
 import com.hn.common.constant.RedisConstant;
-import com.hn.common.model.PaginationData;
+import com.hn.common.api.PaginationData;
 import com.hn.user.entity.UserEntity;
 import com.hn.user.mapper.UserMapper;
 import com.hn.user.service.UserService;

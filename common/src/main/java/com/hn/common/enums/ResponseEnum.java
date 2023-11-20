@@ -1,6 +1,8 @@
 package com.hn.common.enums;
 
-public enum ResponseEnum {
+import com.hn.common.api.ResponseCode;
+
+public enum ResponseEnum implements ResponseCode {
 
     SUCCESS_200(200, true, "success"),
     SUCCESS_200_NO_MSG(200, true, null),

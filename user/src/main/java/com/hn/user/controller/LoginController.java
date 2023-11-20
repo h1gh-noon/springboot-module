@@ -2,22 +2,17 @@ package com.hn.user.controller;
 
 import com.alibaba.fastjson2.JSON;
 import com.hn.common.constant.RequestHeaderConstant;
-import com.hn.common.enums.ResponseEnum;
-import com.hn.common.exceptions.TemplateException;
-import com.hn.common.model.CommonResponse;
-import com.hn.user.entity.UserEntity;
+import com.hn.common.api.CommonResponse;
 import com.hn.common.dto.UserDto;
 import com.hn.user.model.UserModel;
 import com.hn.user.service.UserService;
 import com.hn.common.util.ResponseTool;
 import jakarta.annotation.Resource;
-import jakarta.validation.constraints.NotBlank;
-import org.springframework.beans.BeanUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("${apiPath}/auth")
+@RequestMapping("/auth")
 public class LoginController {
 
     @Resource
@@ -34,7 +29,7 @@ public class LoginController {
 
         String resToken = userService.userLogin(userDto);
         if (resToken == null) {
-            return ResponseTool.getErrorResponse(200);
+            return ResponseTool.getErrorResponse();
         } else {
             // success
             return ResponseTool.getSuccessResponse(resToken);
@@ -69,7 +64,7 @@ public class LoginController {
             // success
             return ResponseTool.getSuccessResponse();
         }
-        return ResponseTool.getErrorResponse(200);
+        return ResponseTool.getErrorResponse();
     }
 
     /**
@@ -85,6 +80,6 @@ public class LoginController {
             // success
             return ResponseTool.getSuccessResponse();
         }
-        return ResponseTool.getErrorResponse(200);
+        return ResponseTool.getErrorResponse();
     }
 }

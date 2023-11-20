@@ -1,6 +1,6 @@
 package com.hn.jdstore.controller;
 
-import com.hn.common.model.CommonResponse;
+import com.hn.common.api.CommonResponse;
 import com.hn.jdstore.entity.HanmaAddressEntity;
 import com.hn.jdstore.model.AddressModel;
 import com.hn.jdstore.service.AddressService;

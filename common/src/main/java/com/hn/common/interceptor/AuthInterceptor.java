@@ -4,8 +4,6 @@ import com.hn.common.constant.RedisConstant;
 import com.hn.common.constant.RequestHeaderConstant;
 import com.hn.common.util.RedisUtil;
 import jakarta.annotation.Resource;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletRequestWrapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.util.Strings;
@@ -13,7 +11,6 @@ import org.apache.tomcat.util.http.MimeHeaders;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import java.lang.reflect.Field;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -64,7 +61,6 @@ public class AuthInterceptor implements HandlerInterceptor {
         requestF.setAccessible(true);
         Object requestO = requestF.get(request);
 
-        Field[] declaredFields = requestO.getClass().getDeclaredFields();
         Field requestField = requestO.getClass().getDeclaredField("request");
         requestField.setAccessible(true);
         Object requestObj = requestField.get(requestO);

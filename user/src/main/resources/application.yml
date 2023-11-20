@@ -3,12 +3,13 @@ spring:
     active: dev
   jackson:
     default-property-inclusion: non_null
+  application:
+    name: service-user
 mybatis:
   mapper-locations: classpath:mapping/*Mapper.xml
   type-aliases-package: com.hn.user.entity
   configuration:
     map-underscore-to-camel-case: true
-apiPath: /api/v1
 
 # springdoc-openapi项目配置
 springdoc:
@@ -27,3 +28,6 @@ knife4j:
   enable: true
   setting:
     language: zh_cn
+server:
+  servlet:
+    context-path: /user
