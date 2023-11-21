@@ -27,7 +27,7 @@ public class OrderController {
     private OrderService orderService;
 
     @PostMapping("/orderAdd")
-    public CommonResponse orderAdd(@RequestBody OrderDto orderDto) throws TemplateException {
+    public CommonResponse<OrderModel> orderAdd(@RequestBody OrderDto orderDto) throws TemplateException {
         OrderDto resOrderDto = orderService.orderAdd(orderDto);
 
         OrderModel orderModel = new OrderModel();

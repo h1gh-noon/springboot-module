@@ -25,7 +25,7 @@ public class ProductController {
     private ProductService productService;
 
     @PostMapping("/productAdd")
-    public CommonResponse productAdd(@RequestBody HanmaProductEntity hanmaProduct) {
+    public CommonResponse<Long> productAdd(@RequestBody HanmaProductEntity hanmaProduct) {
         hanmaProduct.setId(null);
         String t = Util.getTimestampStr();
         hanmaProduct.setCreateTime(t);
@@ -34,7 +34,7 @@ public class ProductController {
     }
 
     @PostMapping("/productDelete")
-    public CommonResponse productDelete(@RequestBody HanmaProductEntity hanmaProduct) {
+    public CommonResponse<Long> productDelete(@RequestBody HanmaProductEntity hanmaProduct) {
         if (hanmaProduct.getId() == null) {
             return ResponseTool.getErrorResponse();
         }
@@ -42,14 +42,14 @@ public class ProductController {
     }
 
     @PostMapping("/productUpdate")
-    public CommonResponse productUpdate(@RequestBody HanmaProductEntity hanmaProduct) {
+    public CommonResponse<Long> productUpdate(@RequestBody HanmaProductEntity hanmaProduct) {
         hanmaProduct.setUpdateTime(null);
         hanmaProduct.setUpdateTime(Util.getTimestampStr());
         return ResponseTool.getSuccessResponse(productService.update(hanmaProduct));
     }
 
     @PostMapping("/getProductById")
-    public CommonResponse getProductById(@RequestBody HanmaProductEntity hanmaProduct) {
+    public CommonResponse<ProductModel> getProductById(@RequestBody HanmaProductEntity hanmaProduct) {
         if (hanmaProduct.getId() == null) {
             return ResponseTool.getErrorResponse();
         }

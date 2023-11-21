@@ -15,7 +15,7 @@ public interface ShopService {
 
     HanmaShopEntity findById(Long id);
 
-    Page<HanmaShopEntity> getShopPageList(PaginationData<ShopModel> pagination, ShopModel shopModel);
+    Page<HanmaShopEntity> getShopPageList(Integer currentPage, Integer pageSize, ShopModel shopModel);
 
     ShopInfoProductModel getShopInfoProductList(Long shopId);
 

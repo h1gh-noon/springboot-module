@@ -1,20 +1,24 @@
 package com.hn.common.api;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Data
 @NoArgsConstructor
 public class PaginationData<T> {
 
-    private Integer currentPage = 1;
-    private Integer pageSize = 10;
-    private Long total;
-    private T data;
-    private List<T> list;
+    @Schema(description = "当前页码")
+    private Integer currentPage;
 
+    @Schema(description = "每页条数")
+    private Integer pageSize;
+
+    @Schema(description = "总条数")
+    private Long total;
+
+    @Schema(description = "响应的数据", accessMode = Schema.AccessMode.READ_ONLY)
+    private T data;
 
     public PaginationData(Integer currentPage, Integer pageSize) {
         this.currentPage = currentPage;

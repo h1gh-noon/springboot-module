@@ -1,15 +1,17 @@
 package com.hn.jdstore.service.impl;
 
-import com.hn.common.api.PaginationData;
 import com.hn.common.util.Util;
+import com.hn.jdstore.dao.ShopDao;
+import com.hn.jdstore.entity.HanmaProductCategoryEntity;
 import com.hn.jdstore.entity.HanmaProductEntity;
 import com.hn.jdstore.entity.HanmaShopEntity;
-import com.hn.jdstore.model.*;
+import com.hn.jdstore.model.ProductCategoryModel;
+import com.hn.jdstore.model.ProductModel;
+import com.hn.jdstore.model.ShopInfoProductModel;
+import com.hn.jdstore.model.ShopModel;
 import com.hn.jdstore.service.ProductCategoryService;
 import com.hn.jdstore.service.ProductService;
 import com.hn.jdstore.service.ShopService;
-import com.hn.jdstore.dao.ShopDao;
-import com.hn.jdstore.entity.HanmaProductCategoryEntity;
 import jakarta.annotation.Resource;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.*;
@@ -59,7 +61,7 @@ public class ShopServiceImpl implements ShopService {
     }
 
     @Override
-    public Page<HanmaShopEntity> getShopPageList(PaginationData<ShopModel> pagination, ShopModel shopModel) {
+    public Page<HanmaShopEntity> getShopPageList(Integer currentPage, Integer pageSize, ShopModel shopModel) {
         HanmaShopEntity h = new HanmaShopEntity();
         if (shopModel != null) {
             h.setCateId(shopModel.getCateId());
@@ -68,7 +70,7 @@ public class ShopServiceImpl implements ShopService {
         Example<HanmaShopEntity> example = Example.of(h);
         Sort sort = Sort.by(Sort.Direction.DESC, "sales");
 
-        Pageable pageable = PageRequest.of(pagination.getCurrentPage() - 1, pagination.getPageSize(), sort);
+        Pageable pageable = PageRequest.of(currentPage - 1, pageSize, sort);
         return shopDao.findAll(example, pageable);
     }
 

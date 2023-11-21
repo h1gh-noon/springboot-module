@@ -27,7 +27,10 @@ springdoc:
 knife4j:
   enable: true
   setting:
+    enable-dynamic-parameter: true
     language: zh_cn
+    enable-filter-multipart-apis: true
+    enable-filter-multipart-api-method-type: POST
 server:
   servlet:
     context-path: /user

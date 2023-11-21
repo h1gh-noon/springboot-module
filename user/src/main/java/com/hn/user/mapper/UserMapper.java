@@ -17,7 +17,6 @@ public interface UserMapper {
 
     Long userCount(Map<String, Object> map);
 
-
     int userAdd(UserEntity user);
 
     int userUpdate(UserEntity user);

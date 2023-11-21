@@ -28,7 +28,7 @@ public class ShopCategoryController {
     private ShopCategoryService shopCategoryService;
 
     @PostMapping("/shopCategoryAdd")
-    public CommonResponse shopCategoryAdd(@RequestBody HanmaShopCategoryEntity hanmaShopCategory) {
+    public CommonResponse<Long> shopCategoryAdd(@RequestBody HanmaShopCategoryEntity hanmaShopCategory) {
         hanmaShopCategory.setId(null);
         String t = Util.getTimestampStr();
         hanmaShopCategory.setCreateTime(t);
@@ -37,7 +37,7 @@ public class ShopCategoryController {
     }
 
     @PostMapping("/shopCategoryDelete")
-    public CommonResponse shopCategoryDelete(@RequestBody HanmaShopCategoryEntity hanmaShopCategory) {
+    public CommonResponse<Long> shopCategoryDelete(@RequestBody HanmaShopCategoryEntity hanmaShopCategory) {
         if (hanmaShopCategory.getId() == null) {
             return ResponseTool.getErrorResponse();
         }
@@ -45,14 +45,14 @@ public class ShopCategoryController {
     }
 
     @PostMapping("/shopCategoryUpdate")
-    public CommonResponse shopCategoryUpdate(@RequestBody HanmaShopCategoryEntity hanmaShopCategory) {
+    public CommonResponse<Long> shopCategoryUpdate(@RequestBody HanmaShopCategoryEntity hanmaShopCategory) {
         hanmaShopCategory.setUpdateTime(null);
         hanmaShopCategory.setUpdateTime(Util.getTimestampStr());
         return ResponseTool.getSuccessResponse(shopCategoryService.update(hanmaShopCategory));
     }
 
     @PostMapping("/getShopCategoryById")
-    public CommonResponse getShopCategoryById(@RequestBody HanmaShopCategoryEntity hanmaShopCategory) {
+    public CommonResponse<ShopCategoryModel> getShopCategoryById(@RequestBody HanmaShopCategoryEntity hanmaShopCategory) {
         if (hanmaShopCategory.getId() == null) {
             return ResponseTool.getErrorResponse();
         }
@@ -63,7 +63,7 @@ public class ShopCategoryController {
     }
 
     @PostMapping("/getShopCategoryList")
-    public CommonResponse getShopCategoryList() {
+    public CommonResponse<List<ShopCategoryModel>> getShopCategoryList() {
 
         List<ShopCategoryModel> list = new ArrayList<>();
         List<HanmaShopCategoryEntity> hanmaShopCategoryList = shopCategoryService.getShopCategoryList();

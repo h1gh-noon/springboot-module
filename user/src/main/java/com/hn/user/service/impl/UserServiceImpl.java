@@ -2,17 +2,18 @@ package com.hn.user.service.impl;
 
 
 import com.alibaba.fastjson2.JSON;
-import com.hn.common.constant.RedisConstant;
 import com.hn.common.api.PaginationData;
-import com.hn.user.entity.UserEntity;
-import com.hn.user.mapper.UserMapper;
-import com.hn.user.service.UserService;
+import com.hn.common.constant.RedisConstant;
 import com.hn.common.dto.UserDto;
 import com.hn.common.enums.ResponseEnum;
 import com.hn.common.exceptions.TemplateException;
 import com.hn.common.util.PBKDF2Util;
 import com.hn.common.util.RedisUtil;
 import com.hn.common.util.Util;
+import com.hn.user.dto.LoginDto;
+import com.hn.user.entity.UserEntity;
+import com.hn.user.mapper.UserMapper;
+import com.hn.user.service.UserService;
 import jakarta.annotation.Resource;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.BeanUtils;
@@ -54,14 +55,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public PaginationData<List<UserDto>> getUserPageList(Map<String, Object> map) {
+    public PaginationData<List<UserDto>> getUserPageList(Integer currentPage, Integer pageSize, UserDto userDto) throws IllegalAccessException {
         PaginationData<List<UserDto>> paginationData = new PaginationData<>();
-        paginationData.setData(userMapper.getUserPageList(map).stream().map(e -> {
+        Integer limitRows = (currentPage - 1) * pageSize;
+        Map<String, Object> maps = Util.getObjectToMap(userDto);
+        maps.put("limitRows", limitRows);
+        maps.put("pageSize", pageSize);
+
+        paginationData.setData(userMapper.getUserPageList(maps).stream().map(e -> {
             UserDto u = new UserDto();
             BeanUtils.copyProperties(e, u);
             return u;
         }).collect(Collectors.toList()));
-        paginationData.setTotal(userMapper.userCount(map));
+        paginationData.setTotal(userMapper.userCount(maps));
         return paginationData;
     }
 
@@ -119,9 +125,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String userLogin(UserDto userDto) {
-        UserEntity user = getUserByName(userDto.getUsername());
-        if (PBKDF2Util.verification(userDto.getPassword(), user.getPassword())) {
+    public String userLogin(LoginDto loginDto) {
+        UserEntity user = getUserByName(loginDto.getUsername());
+        if (PBKDF2Util.verification(loginDto.getPassword(), user.getPassword())) {
             String token = Util.getRandomToken();
             List<String> list = new ArrayList<>();
             list.add(RedisConstant.USER_TOKEN + token);

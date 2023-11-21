@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @Controller
 @RequestMapping("/address")
@@ -25,7 +27,7 @@ public class AddressController {
     private AddressService addressService;
 
     @PostMapping("/addressAdd")
-    public CommonResponse addressAdd(@RequestBody HanmaAddressEntity hanmaAddress) {
+    public CommonResponse<Long> addressAdd(@RequestBody HanmaAddressEntity hanmaAddress) {
         hanmaAddress.setId(null);
         String time = Util.getTimestampStr();
         hanmaAddress.setCreateTime(time);
@@ -34,7 +36,7 @@ public class AddressController {
     }
 
     @PostMapping("/addressDelete")
-    public CommonResponse addressDelete(@RequestBody HanmaAddressEntity hanmaAddress) {
+    public CommonResponse<Long> addressDelete(@RequestBody HanmaAddressEntity hanmaAddress) {
         if (hanmaAddress.getId() == null) {
             return ResponseTool.getErrorResponse();
         }
@@ -42,14 +44,14 @@ public class AddressController {
     }
 
     @PostMapping("/addressUpdate")
-    public CommonResponse addressUpdate(@RequestBody HanmaAddressEntity hanmaAddress) {
+    public CommonResponse<Long> addressUpdate(@RequestBody HanmaAddressEntity hanmaAddress) {
         hanmaAddress.setCreateTime(null);
         hanmaAddress.setUpdateTime(Util.getTimestampStr());
         return ResponseTool.getSuccessResponse(addressService.update(hanmaAddress));
     }
 
     @PostMapping("/getAddressById")
-    public CommonResponse getAddressById(@RequestBody HanmaAddressEntity hanmaAddress) {
+    public CommonResponse<AddressModel> getAddressById(@RequestBody HanmaAddressEntity hanmaAddress) {
         if (hanmaAddress.getId() == null) {
             return ResponseTool.getErrorResponse();
         }
@@ -60,7 +62,7 @@ public class AddressController {
     }
 
     @RequestMapping("/getAddressList")
-    public CommonResponse getAddressInfoProductList() {
+    public CommonResponse<List<AddressModel>> getAddressInfoProductList() {
         return ResponseTool.getSuccessResponse(addressService.getAddressList());
     }
 }

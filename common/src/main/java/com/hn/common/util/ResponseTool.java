@@ -7,35 +7,36 @@ import com.hn.common.api.CommonResponse;
 public class ResponseTool {
 
 
-    public static CommonResponse getSuccessResponse() {
+    public static <T> CommonResponse<T> getSuccessResponse() {
         return getSuccessResponse(ResponseEnum.SUCCESS_200, null);
     }
 
-    public static CommonResponse getSuccessResponse(Object data) {
+    public static <T> CommonResponse<T> getSuccessResponse(T data) {
         return getSuccessResponse(ResponseEnum.SUCCESS_200, data);
     }
 
-    public static CommonResponse getSuccessResponse(ResponseCode responseCode, Object data) {
-        return new CommonResponse(responseCode.getCode(), responseCode.getSuccess(), data,
+    public static <T> CommonResponse<T> getSuccessResponse(ResponseCode responseCode, T data) {
+        return new CommonResponse<T>(responseCode.getCode(), responseCode.getSuccess(), data,
                 responseCode.getMsg());
     }
 
-    public static CommonResponse getErrorResponse() {
+    public static <T> CommonResponse<T> getErrorResponse() {
         return getErrorResponse(ResponseEnum.FAIL_404);
     }
 
-    public static CommonResponse getErrorResponse(ResponseCode responseCode) {
+    public static <T> CommonResponse<T> getErrorResponse(ResponseCode responseCode) {
         return getErrorResponse(responseCode, null);
     }
-    public static CommonResponse getErrorResponse(ResponseCode responseCode, Object data) {
-        return new CommonResponse(responseCode.getCode(), responseCode.getSuccess(), data, responseCode.getMsg());
+
+    public static <T> CommonResponse<T> getErrorResponse(ResponseCode responseCode, T data) {
+        return new CommonResponse<T>(responseCode.getCode(), responseCode.getSuccess(), data, responseCode.getMsg());
     }
 
-    public static CommonResponse getResponseEnum(Integer code, Boolean success, String msg, Object data) {
-        return new CommonResponse(code, success, data, msg);
+    public static <T> CommonResponse<T> getResponseEnum(Integer code, Boolean success, String msg, T data) {
+        return new CommonResponse<T>(code, success, data, msg);
     }
 
-    public static CommonResponse getResponseEnum(ResponseCode responseCode, Object data) {
-        return new CommonResponse(responseCode.getCode(), responseCode.getSuccess(), data, responseCode.getMsg());
+    public static <T> CommonResponse<T> getResponseEnum(ResponseCode responseCode, T data) {
+        return new CommonResponse<T>(responseCode.getCode(), responseCode.getSuccess(), data, responseCode.getMsg());
     }
 }

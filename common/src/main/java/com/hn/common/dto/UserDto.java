@@ -1,6 +1,7 @@
 package com.hn.common.dto;
 
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -11,11 +12,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserDto {
 
-    @NotNull(groups = Update.class)
+    @Schema(description = "id 新增时不传")
+    @NotNull(groups = Validation.Update.class)
     private Long id;
-    @NotBlank(groups = {Save.class, Login.class})
+
+    @Schema(defaultValue = "admin", description = "用户名")
+    @NotBlank(groups = {Validation.Save.class, Validation.Login.class})
     private String username;
-    @NotBlank(groups = {Save.class, Login.class})
+
+    @Schema(description = "密码")
+    @NotBlank(groups = {Validation.Save.class, Validation.Login.class})
     private String password;
 
     @Pattern(regexp = "^1[0-9]{10}$")
@@ -36,15 +42,6 @@ public class UserDto {
         this.isDel = isDel;
         this.createTime = createTime;
         this.updateTime = updateTime;
-    }
-
-    public interface Save {
-    }
-
-    public interface Update {
-    }
-
-    public interface Login {
     }
 
 }

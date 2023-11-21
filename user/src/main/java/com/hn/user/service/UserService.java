@@ -2,12 +2,12 @@ package com.hn.user.service;
 
 
 import com.hn.common.api.PaginationData;
-import com.hn.user.entity.UserEntity;
 import com.hn.common.dto.UserDto;
 import com.hn.common.exceptions.TemplateException;
+import com.hn.user.dto.LoginDto;
+import com.hn.user.entity.UserEntity;
 
 import java.util.List;
-import java.util.Map;
 
 public interface UserService {
 
@@ -24,7 +24,7 @@ public interface UserService {
     boolean loginOutAll(UserDto userDto);
 
 
-    PaginationData<List<UserDto>> getUserPageList(Map<String, Object> map);
+    PaginationData<List<UserDto>> getUserPageList(Integer currentPage, Integer pageSize, UserDto userDto) throws IllegalAccessException;
 
     int hasUserByName(String username);
 
@@ -36,6 +36,6 @@ public interface UserService {
 
     int userDelete(UserDto userDto);
 
-    String userLogin(UserDto userDto);
+    String userLogin(LoginDto loginDto);
 
 }

@@ -2,17 +2,26 @@ package com.hn.common.api;
 
 
 import com.hn.common.enums.ResponseEnum;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class CommonResponse {
+@Schema(description = "响应数据对象")
+public class CommonResponse<T> {
 
+    @Schema(description = "响应码", example = "200")
     private Integer code;
+
+    @Schema(description = "操作是否成功", example = "true")
     private Boolean success;
+
+    @Schema(description = "响应信息", example = "操作成功")
     private String msg;
-    private Object data;
+
+    @Schema(description = "响应数据", accessMode = Schema.AccessMode.READ_ONLY, example = "...数据")
+    private T data;
 
     public CommonResponse(Integer code) {
         this.code = code;
@@ -23,13 +32,13 @@ public class CommonResponse {
         this.success = success;
     }
 
-    public CommonResponse(Integer code, Boolean success, Object data) {
+    public CommonResponse(Integer code, Boolean success, T data) {
         this.code = code;
         this.success = success;
         this.data = data;
     }
 
-    public CommonResponse(Integer code, Boolean success, Object data, String msg) {
+    public CommonResponse(Integer code, Boolean success, T data, String msg) {
         this.code = code;
         this.success = success;
         this.data = data;
@@ -42,7 +51,7 @@ public class CommonResponse {
         this.msg = responseEnum.getMsg();
     }
 
-    public CommonResponse(ResponseEnum responseEnum, Object data) {
+    public CommonResponse(ResponseEnum responseEnum, T data) {
         this.code = responseEnum.getCode();
         this.success = responseEnum.getSuccess();
         this.msg = responseEnum.getMsg();

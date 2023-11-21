@@ -5,8 +5,10 @@ import com.hn.common.api.PaginationData;
 import com.hn.common.util.ResponseTool;
 import com.hn.common.util.Util;
 import com.hn.jdstore.entity.HanmaShopEntity;
-import com.hn.jdstore.service.ShopService;
+import com.hn.jdstore.model.ShopInfoProductModel;
 import com.hn.jdstore.model.ShopModel;
+import com.hn.jdstore.service.ShopService;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -27,7 +29,7 @@ public class ShopController {
     private ShopService shopService;
 
     @PostMapping("/shopAdd")
-    public CommonResponse shopAdd(@RequestBody HanmaShopEntity hanmaShop) {
+    public CommonResponse<Long> shopAdd(@RequestBody HanmaShopEntity hanmaShop) {
         hanmaShop.setId(null);
         String time = Util.getTimestampStr();
         hanmaShop.setCreateTime(time);
@@ -36,7 +38,7 @@ public class ShopController {
     }
 
     @PostMapping("/shopDelete")
-    public CommonResponse shopDelete(@RequestBody HanmaShopEntity hanmaShop) {
+    public CommonResponse<Long> shopDelete(@RequestBody HanmaShopEntity hanmaShop) {
         if (hanmaShop.getId() == null) {
             return ResponseTool.getErrorResponse();
         }
@@ -44,14 +46,14 @@ public class ShopController {
     }
 
     @PostMapping("/shopUpdate")
-    public CommonResponse shopUpdate(@RequestBody HanmaShopEntity hanmaShop) {
+    public CommonResponse<Long> shopUpdate(@RequestBody HanmaShopEntity hanmaShop) {
         hanmaShop.setCreateTime(null);
         hanmaShop.setUpdateTime(Util.getTimestampStr());
         return ResponseTool.getSuccessResponse(shopService.update(hanmaShop));
     }
 
     @PostMapping("/getShopById")
-    public CommonResponse getShopById(@RequestBody HanmaShopEntity hanmaShop) {
+    public CommonResponse<ShopModel> getShopById(@RequestBody HanmaShopEntity hanmaShop) {
         if (hanmaShop.getId() == null) {
             return ResponseTool.getErrorResponse();
         }
@@ -62,13 +64,17 @@ public class ShopController {
     }
 
     @PostMapping("/getShopPageList")
-    public CommonResponse getShopPageList(@RequestParam(required = false) PaginationData<ShopModel> pagination,
-                                          @RequestBody(required = false) ShopModel shopModel) {
+    public CommonResponse<PaginationData<List<ShopModel>>> getShopPageList(
+            @RequestParam(required = false, defaultValue = "1") @Schema(description = "当前页码") String currentPage,
+            @RequestParam(required = false, defaultValue = "20") @Schema(description = "每页条数") String pageSize,
+            @RequestBody(required = false) ShopModel shopModel) {
 
-        if (pagination == null || pagination.getPageSize() == null || pagination.getCurrentPage() == null) {
-            pagination = new PaginationData<>();
-        }
-        Page<HanmaShopEntity> hanmaShopList = shopService.getShopPageList(pagination, shopModel);
+        Integer cPage = Integer.valueOf(currentPage);
+        Integer pSize = Integer.valueOf(pageSize);
+
+        Page<HanmaShopEntity> hanmaShopList = shopService.getShopPageList(cPage,
+                pSize,
+                shopModel);
         log.info("hanmaShopList={}", hanmaShopList);
 
         List<ShopModel> list = new ArrayList<>();
@@ -78,13 +84,16 @@ public class ShopController {
             list.add(sm);
         });
 
+        PaginationData<List<ShopModel>> pagination = new PaginationData<>();
+        pagination.setCurrentPage(cPage);
+        pagination.setPageSize(pSize);
         pagination.setTotal(hanmaShopList.getTotalElements());
-        pagination.setList(list);
+        pagination.setData(list);
         return ResponseTool.getSuccessResponse(pagination);
     }
 
     @RequestMapping("/getShopInfoProductList/{shopId}")
-    public CommonResponse getShopInfoProductList(@PathVariable Long shopId) {
+    public CommonResponse<ShopInfoProductModel> getShopInfoProductList(@PathVariable Long shopId) {
 
         return ResponseTool.getSuccessResponse(shopService.getShopInfoProductList(shopId));
     }

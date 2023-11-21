@@ -28,7 +28,7 @@ public class ProductCategoryController {
     private ProductCategoryService productCategoryService;
 
     @PostMapping("/productCategoryAdd")
-    public CommonResponse productCategoryAdd(@RequestBody HanmaProductCategoryEntity hanmaProductCategory) {
+    public CommonResponse<Long> productCategoryAdd(@RequestBody HanmaProductCategoryEntity hanmaProductCategory) {
         hanmaProductCategory.setId(null);
         String t = Util.getTimestampStr();
         hanmaProductCategory.setCreateTime(t);
@@ -37,7 +37,7 @@ public class ProductCategoryController {
     }
 
     @PostMapping("/productCategoryDelete")
-    public CommonResponse productCategoryDelete(@RequestBody HanmaProductCategoryEntity hanmaProductCategory) {
+    public CommonResponse<Long> productCategoryDelete(@RequestBody HanmaProductCategoryEntity hanmaProductCategory) {
         if (hanmaProductCategory.getId() == null) {
             return ResponseTool.getErrorResponse();
         }
@@ -45,14 +45,14 @@ public class ProductCategoryController {
     }
 
     @PostMapping("/productCategoryUpdate")
-    public CommonResponse productCategoryUpdate(@RequestBody HanmaProductCategoryEntity hanmaProductCategory) {
+    public CommonResponse<Long> productCategoryUpdate(@RequestBody HanmaProductCategoryEntity hanmaProductCategory) {
         hanmaProductCategory.setUpdateTime(null);
         hanmaProductCategory.setUpdateTime(Util.getTimestampStr());
         return ResponseTool.getSuccessResponse(productCategoryService.update(hanmaProductCategory));
     }
 
     @PostMapping("/getProductCategoryById")
-    public CommonResponse getProductCategoryById(@RequestBody HanmaProductCategoryEntity hanmaProductCategory) {
+    public CommonResponse<ProductCategoryModel> getProductCategoryById(@RequestBody HanmaProductCategoryEntity hanmaProductCategory) {
         if (hanmaProductCategory.getId() == null) {
             return ResponseTool.getErrorResponse();
         }
@@ -63,7 +63,7 @@ public class ProductCategoryController {
     }
 
     @PostMapping("/getProductCategoryList")
-    public CommonResponse getProductCategoryList() {
+    public CommonResponse<List<ProductCategoryModel>> getProductCategoryList() {
 
         List<HanmaProductCategoryEntity> hanmaProductCategoryList = productCategoryService.getProductCategoryList();
         log.info("hanmaProductCategoryList={}", hanmaProductCategoryList);
