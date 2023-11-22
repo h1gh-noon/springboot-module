@@ -6,6 +6,7 @@ import com.hn.common.constant.RequestHeaderConstant;
 import com.hn.common.dto.UserDto;
 import com.hn.common.util.ResponseTool;
 import com.hn.user.dto.LoginDto;
+import com.hn.user.model.LoginInfoModel;
 import com.hn.user.model.UserModel;
 import com.hn.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,14 +30,14 @@ public class LoginController {
      */
     @Operation(summary = "登录接口", method = "post", description = "登录 data中返回token")
     @PostMapping("/userLogin")
-    public CommonResponse<String> userLogin(@RequestBody LoginDto loginDto) {
+    public CommonResponse<LoginInfoModel> userLogin(@RequestBody LoginDto loginDto) {
 
-        String resToken = userService.userLogin(loginDto);
-        if (resToken == null) {
+        LoginInfoModel loginInfoModel = userService.userLogin(loginDto);
+        if (loginInfoModel == null) {
             return ResponseTool.getErrorResponse();
         } else {
             // success
-            return ResponseTool.getSuccessResponse(resToken);
+            return ResponseTool.getSuccessResponse(loginInfoModel);
         }
     }
 

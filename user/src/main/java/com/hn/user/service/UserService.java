@@ -6,6 +6,7 @@ import com.hn.common.dto.UserDto;
 import com.hn.common.exceptions.TemplateException;
 import com.hn.user.dto.LoginDto;
 import com.hn.user.entity.UserEntity;
+import com.hn.user.model.LoginInfoModel;
 
 import java.util.List;
 
@@ -36,6 +37,6 @@ public interface UserService {
 
     int userDelete(UserDto userDto);
 
-    String userLogin(LoginDto loginDto);
+    LoginInfoModel userLogin(LoginDto loginDto);
 
 }

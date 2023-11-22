@@ -5,11 +5,11 @@ spring:
         - id: service-user
           uri: lb://service-user
           predicates:
-            - Path=/user/**
+            - Path=/api/user/**
         - id: service-jd-store
           uri: lb://service-jd-store
           predicates:
-            - Path=/jdstore/**
+            - Path=/api/jdstore/**
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
@@ -20,3 +20,5 @@ spring:
     name: gateway
 server:
   port: 8888
+  #servlet:
+    #context-path: /api

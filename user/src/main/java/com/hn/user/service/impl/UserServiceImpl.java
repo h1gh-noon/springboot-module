@@ -13,6 +13,8 @@ import com.hn.common.util.Util;
 import com.hn.user.dto.LoginDto;
 import com.hn.user.entity.UserEntity;
 import com.hn.user.mapper.UserMapper;
+import com.hn.user.model.LoginInfoModel;
+import com.hn.user.model.UserModel;
 import com.hn.user.service.UserService;
 import jakarta.annotation.Resource;
 import org.apache.logging.log4j.util.Strings;
@@ -125,7 +127,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String userLogin(LoginDto loginDto) {
+    public LoginInfoModel userLogin(LoginDto loginDto) {
         UserEntity user = getUserByName(loginDto.getUsername());
         if (PBKDF2Util.verification(loginDto.getPassword(), user.getPassword())) {
             String token = Util.getRandomToken();
@@ -158,7 +160,13 @@ public class UserServiceImpl implements UserService {
 
             stringRedisTemplate.execute(callback);
 
-            return token;
+            LoginInfoModel loginInfoModel = new LoginInfoModel();
+
+            UserModel userModel = new UserModel();
+            BeanUtils.copyProperties(user, userModel);
+            loginInfoModel.setUserInfo(userModel);
+            loginInfoModel.setToken(token);
+            return loginInfoModel;
 
         }
         return null;

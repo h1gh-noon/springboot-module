@@ -13,7 +13,7 @@ spring:
         password: nacos
 server:
   servlet:
-    context-path: /jdstore
+    context-path: /api/jdstore
 knife4j:
   enable: true
   setting:

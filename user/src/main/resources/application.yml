@@ -33,4 +33,4 @@ knife4j:
     enable-filter-multipart-api-method-type: POST
 server:
   servlet:
-    context-path: /user
+    context-path: /api/user
