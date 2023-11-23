@@ -10,7 +10,10 @@ public class UserEntity {
 
     private Long id;
     private String username;
+    private String openid;
+    private String nickname;
     private String password;
+    private String headimgurl;
     private String phone;
     private String permissions;
     private Integer status;

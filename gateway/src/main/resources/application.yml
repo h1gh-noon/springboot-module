@@ -40,7 +40,7 @@ knife4j:
         - gateway
 
 server:
-  port: 8888
+  port: 8080
 white-url:
   whiteList:
     - /api/user/auth/userLogin

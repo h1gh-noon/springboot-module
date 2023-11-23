@@ -14,7 +14,7 @@ public class LoginDto {
     @NotBlank
     private String username;
 
-    @Schema(description = "密码", defaultValue = "EE11CBB19052E40B07AAC0CA060C23EE")
+    @Schema(description = "密码", defaultValue = "21232F297A57A5A743894A0E4A801FC3")
     @NotBlank
     private String password;
 

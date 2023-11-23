@@ -132,36 +132,7 @@ public class UserServiceImpl implements UserService {
         if (PBKDF2Util.verification(loginDto.getPassword(), user.getPassword())) {
             // 验证通过 清空密码
             user.setPassword(null);
-            String token = Util.getRandomToken();
-            List<String> list = new ArrayList<>();
-            list.add(RedisConstant.USER_TOKEN + token);
-
-            String userKey = RedisConstant.USER_TOKEN_LIST + user.getId();
-            Long tokenCount = stringRedisTemplate.opsForList().size(userKey);
-            String oldToken = null;
-            if (tokenCount != null && REDIS_USER_MAX_TOKEN_COUNT <= tokenCount) {
-                // 控制每个用户最多登录的设备数
-                oldToken = stringRedisTemplate.opsForList().leftPop(userKey);
-            }
-
-            // 开启事务
-            String finalOldToken = oldToken;
-            SessionCallback<Object> callback = new SessionCallback<>() {
-                @Override
-                public Object execute(RedisOperations operations) throws DataAccessException {
-                    operations.multi();
-                    operations.opsForValue().set(RedisConstant.USER_TOKEN + token, JSON.toJSONString(user));
-                    operations.expire(RedisConstant.USER_TOKEN + token, 3600 * 12, TimeUnit.SECONDS);
-                    operations.opsForList().rightPushAll(userKey, list);
-                    if (finalOldToken != null) {
-                        operations.delete(finalOldToken);
-                    }
-                    return operations.exec();
-                }
-            };
-
-            stringRedisTemplate.execute(callback);
-
+            String token = setUserToken(user);
             LoginInfoModel loginInfoModel = new LoginInfoModel();
 
             UserModel userModel = new UserModel();
@@ -173,6 +144,42 @@ public class UserServiceImpl implements UserService {
         }
         return null;
     }
+
+    @Override
+    public String setUserToken(UserEntity user) {
+        String token = Util.getRandomToken();
+        List<String> list = new ArrayList<>();
+        list.add(RedisConstant.USER_TOKEN + token);
+
+        String userKey = RedisConstant.USER_TOKEN_LIST + user.getId();
+        Long tokenCount = stringRedisTemplate.opsForList().size(userKey);
+        String oldToken = null;
+        if (tokenCount != null && REDIS_USER_MAX_TOKEN_COUNT <= tokenCount) {
+            // 控制每个用户最多登录的设备数
+            oldToken = stringRedisTemplate.opsForList().leftPop(userKey);
+        }
+
+        // 开启事务
+        String finalOldToken = oldToken;
+        SessionCallback<Object> callback = new SessionCallback<>() {
+            @Override
+            public Object execute(RedisOperations operations) throws DataAccessException {
+                operations.multi();
+                operations.opsForValue().set(RedisConstant.USER_TOKEN + token, JSON.toJSONString(user));
+                operations.expire(RedisConstant.USER_TOKEN + token, 3600 * 12, TimeUnit.SECONDS);
+                operations.opsForList().rightPushAll(userKey, list);
+                if (finalOldToken != null) {
+                    operations.delete(finalOldToken);
+                }
+                return operations.exec();
+            }
+        };
+
+        stringRedisTemplate.execute(callback);
+
+        return token;
+    }
+
 
     public UserEntity getUserByToken(String token) {
         if (Strings.isEmpty(token)) {

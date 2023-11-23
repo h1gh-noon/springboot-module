@@ -98,10 +98,10 @@ public class PBKDF2Util {
     }
 
     public static void main(String[] args) {
-        System.out.println(PBKDF2Util.encode("123456"));
-        String en = "nqiRCdB81937etc4LYf0266hJ3l8Tb51$Bm0sAmpXbuE50dpJAJFERQcA2Tr0oGZ/JciTOCBcgMVf1H22Nve9HpiO" +
-                "/eip7PzpMI6cOOlg1WpsbVbt60hYoQ==";
-        System.out.println(PBKDF2Util.verification("123456", en));
+        System.out.println(PBKDF2Util.encode("21232F297A57A5A743894A0E4A801FC3"));
+        // String en = "nqiRCdB81937etc4LYf0266hJ3l8Tb51$Bm0sAmpXbuE50dpJAJFERQcA2Tr0oGZ/JciTOCBcgMVf1H22Nve9HpiO" +
+        //         "/eip7PzpMI6cOOlg1WpsbVbt60hYoQ==";
+        // System.out.println(PBKDF2Util.verification("123456", en));
 //        System.out.println(PBKDF2Util.getSalt());
     }
 }

@@ -39,4 +39,6 @@ public interface UserService {
 
     LoginInfoModel userLogin(LoginDto loginDto);
 
+    String setUserToken(UserEntity user);
+
 }

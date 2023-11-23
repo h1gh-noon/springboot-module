@@ -13,6 +13,8 @@ public interface UserMapper {
 
     UserEntity getUserByName(String username);
 
+    UserEntity getUserByOpenid(String openid);
+
     List<UserEntity> getUserPageList(Map<String, Object> map);
 
     Long userCount(Map<String, Object> map);

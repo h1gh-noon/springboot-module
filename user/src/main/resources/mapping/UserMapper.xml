@@ -6,6 +6,9 @@
     <select id="getUserById">
         select id,
                username,
+               openid,
+               nickname,
+               headimgurl,
                password,
                phone,
                permissions,
@@ -21,6 +24,9 @@
     <select id="getUserByName">
         select id,
                username,
+               openid,
+               nickname,
+               headimgurl,
                password,
                phone,
                permissions,
@@ -33,9 +39,28 @@
           and is_del = 0
     </select>
 
+    <select id="getUserByOpenid">
+        select id,
+               username,
+               openid,
+               nickname,
+               headimgurl,
+               phone,
+               permissions,
+               status,
+               is_del,
+               create_time,
+               update_time
+        from user
+        where openid = #{openid}
+          and is_del = 0
+    </select>
+
     <select id="getUserPageList">
         select id,
         username,
+        nickname,
+        headimgurl,
         phone,
         permissions,
         status,
@@ -83,9 +108,12 @@
             keyColumn="id">
         insert into user(username,
                          password,
+                         openid,
+                         nickname,
+                         headimgurl,
                          phone,
                          permissions)
-        values (#{username}, #{password}, #{phone}, #{permissions})
+        values (#{username}, #{password},#{openid}, #{nickname}, #{headimgurl}, #{phone}, #{permissions})
     </insert>
 
     <update id="userUpdate" parameterType="com.hn.user.entity.UserEntity">
@@ -96,6 +124,12 @@
             </if>
             <if test="password!=null">
                 password=#{password},
+            </if>
+            <if test="nickname!=null">
+                nickname=#{nickname},
+            </if>
+            <if test="headimgurl!=null">
+                headimgurl=#{headimgurl},
             </if>
             <if test="phone!=null">
                 phone=#{phone},
