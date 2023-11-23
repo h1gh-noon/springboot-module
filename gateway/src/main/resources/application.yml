@@ -1,4 +1,16 @@
 spring:
+  profiles:
+    active: dev
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      database: 1
+      lettuce:
+        pool:
+          max-idle: 16
+          max-active: 32
+          min-idle: 8
   cloud:
     gateway:
       routes:
@@ -10,15 +22,25 @@ spring:
           uri: lb://service-jd-store
           predicates:
             - Path=/api/jdstore/**
-    nacos:
-      discovery:
-        server-addr: 127.0.0.1:8848
-        username: nacos
-        password: nacos
 
   application:
     name: gateway
+
+knife4j:
+  gateway:
+    enabled: true
+    # 指定服务发现的模式聚合微服务文档，并且是默认`default`分组
+    strategy: discover
+    discover:
+      enabled: true
+      # 指定版本号(Swagger2|OpenAPI3)
+      version : openapi3
+      # 需要排除的微服务(eg:网关服务)
+      excluded-services:
+        - gateway
+
 server:
   port: 8888
-  #servlet:
-    #context-path: /api
+white-url:
+  whiteList:
+    - /api/user/auth/userLogin

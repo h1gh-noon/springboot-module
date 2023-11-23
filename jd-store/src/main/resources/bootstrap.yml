@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: service-jd-store
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+        username: nacos
+        password: nacos
+        namespace: 12ffc5c2-478f-41be-a0e2-05c8dc8ddc6e

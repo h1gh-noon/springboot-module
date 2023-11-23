@@ -5,15 +5,18 @@ spring:
     default-property-inclusion: non_null
   application:
     name: service-jd-store
-  cloud:
-    nacos:
-      discovery:
-        server-addr: 127.0.0.1:8848
-        username: nacos
-        password: nacos
+
 server:
   servlet:
     context-path: /api/jdstore
+# springdoc-openapi项目配置
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  group-configs:
+    - group: 'default'
+      paths-to-match: '/**'
+      packages-to-scan: com.hn.jdstore.controller
 knife4j:
   enable: true
   setting:

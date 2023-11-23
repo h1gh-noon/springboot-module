@@ -130,6 +130,8 @@ public class UserServiceImpl implements UserService {
     public LoginInfoModel userLogin(LoginDto loginDto) {
         UserEntity user = getUserByName(loginDto.getUsername());
         if (PBKDF2Util.verification(loginDto.getPassword(), user.getPassword())) {
+            // 验证通过 清空密码
+            user.setPassword(null);
             String token = Util.getRandomToken();
             List<String> list = new ArrayList<>();
             list.add(RedisConstant.USER_TOKEN + token);

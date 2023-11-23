@@ -10,18 +10,12 @@ spring:
     redis:
       host: 127.0.0.1
       port: 6379
-      database: 0
+      database: 1
       lettuce:
         pool:
           max-idle: 16
           max-active: 32
           min-idle: 8
-  cloud:
-    nacos:
-      discovery:
-        server-addr: 127.0.0.1:8848
-        username: nacos
-        password: nacos
 logging:
   level:
     com.user: debug
