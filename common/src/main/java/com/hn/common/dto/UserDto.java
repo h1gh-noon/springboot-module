@@ -20,6 +20,13 @@ public class UserDto {
     @NotBlank(groups = {Validation.Save.class, Validation.Login.class})
     private String username;
 
+    @Schema(defaultValue = "昵称", description = "昵称")
+    private String nickname;
+
+    @Schema(description = "微信头像")
+
+    private String headimgurl;
+
     @Schema(description = "密码")
     @NotBlank(groups = {Validation.Save.class, Validation.Login.class})
     private String password;

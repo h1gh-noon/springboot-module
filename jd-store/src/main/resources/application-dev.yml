@@ -15,4 +15,5 @@ spring:
         implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
 logging:
   level:
-    com.store: debug
+    com:
+      hn: debug

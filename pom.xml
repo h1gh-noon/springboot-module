@@ -9,8 +9,8 @@
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>jd-store</module>
         <module>user</module>
+        <module>jd-store</module>
         <module>common</module>
         <module>gateway</module>
     </modules>
@@ -54,12 +54,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
-
-        <!--        <dependency>-->
-        <!--            <groupId>com.alibaba.cloud</groupId>-->
-        <!--            <artifactId>spring-cloud-alibaba-dependencies</artifactId>-->
-        <!--            <version>2021.0.4.0</version>-->
-        <!--        </dependency>-->
 
     </dependencies>
 
@@ -116,13 +110,6 @@
                 <artifactId>spring-cloud-starter-bootstrap</artifactId>
                 <version>4.0.1</version>
             </dependency>
-
-<!--            &lt;!&ndash; https://mvnrepository.com/artifact/com.alibaba.cloud/spring-cloud-starter-alibaba-nacos-discovery &ndash;&gt;-->
-<!--            <dependency>-->
-<!--                <groupId>com.alibaba.cloud</groupId>-->
-<!--                <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>-->
-<!--                <version>2022.0.0.0</version>-->
-<!--            </dependency>-->
 
         </dependencies>
     </dependencyManagement>

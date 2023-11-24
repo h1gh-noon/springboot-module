@@ -4,8 +4,11 @@ import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
+
+import static io.micrometer.common.util.StringUtils.isNotBlank;
 
 public class Util {
 
@@ -75,4 +78,65 @@ public class Util {
         return System.currentTimeMillis() + ((int) ((Math.random() * 100000) + Math.random() * 10000) + "");
     }
 
+
+    /**
+     * 驼峰转下划线
+     */
+    public static String camelToUnderline(String param) {
+        if (isNotBlank(param)) {
+            int len = param.length();
+            StringBuilder sb = new StringBuilder(len);
+            for (int i = 0; i < len; i++) {
+                char c = param.charAt(i);
+                if (Character.isUpperCase(c)) {
+                    sb.append('_');
+                    sb.append(Character.toLowerCase(c));
+                } else {
+                    sb.append(c);
+                }
+            }
+            return sb.toString();
+        } else {
+            return "";
+        }
+    }
+
+    /**
+     * 下划线转驼峰
+     */
+    public static String underlineToCamel(String param) {
+        if (isNotBlank(param)) {
+            int len = param.length();
+            StringBuilder sb = new StringBuilder(len);
+            for (int i = 0; i < len; i++) {
+                char c = param.charAt(i);
+                if (c == 95) {
+                    ++i;
+                    if (i < len) {
+                        sb.append(Character.toUpperCase(param.charAt(i)));
+                    }
+                } else {
+                    sb.append(c);
+                }
+            }
+            return sb.toString();
+        } else {
+            return "";
+        }
+    }
+
+    public static <K, V> void removeNonValue(Map<K, V> map) {
+        map.values().removeIf(e -> {
+            if (e == null) {
+                return true;
+            } else if (e instanceof String) {
+                return ((String) e).isEmpty();
+            } else if (e instanceof List) {
+                return ((List<?>) e).isEmpty();
+            } else if (e instanceof Map) {
+                return ((Map<?, ?>) e).isEmpty();
+            }
+            return false;
+        });
+    }
 }

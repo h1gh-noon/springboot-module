@@ -25,7 +25,8 @@ public interface UserService {
     boolean loginOutAll(UserDto userDto);
 
 
-    PaginationData<List<UserDto>> getUserPageList(Integer currentPage, Integer pageSize, UserDto userDto) throws IllegalAccessException;
+    PaginationData<List<UserDto>> getUserPageList(Integer currentPage, Integer pageSize, String sort,
+                                                  UserDto userDto) throws IllegalAccessException;
 
     int hasUserByName(String username);
 

@@ -1,7 +1,9 @@
 package com.hn.common.enums;
 
 import com.hn.common.api.ResponseCode;
+import lombok.Getter;
 
+@Getter
 public enum ResponseEnum implements ResponseCode {
 
     SUCCESS_200(200, true, "success"),
@@ -24,15 +26,4 @@ public enum ResponseEnum implements ResponseCode {
         this.msg = msg;
     }
 
-    public Integer getCode() {
-        return code;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public Boolean getSuccess() {
-        return success;
-    }
 }

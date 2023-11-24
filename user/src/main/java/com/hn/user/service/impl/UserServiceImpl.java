@@ -57,13 +57,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public PaginationData<List<UserDto>> getUserPageList(Integer currentPage, Integer pageSize, UserDto userDto) throws IllegalAccessException {
+    public PaginationData<List<UserDto>> getUserPageList(Integer currentPage, Integer pageSize, String sort,
+                                                         UserDto userDto) throws IllegalAccessException {
         PaginationData<List<UserDto>> paginationData = new PaginationData<>();
         Integer limitRows = (currentPage - 1) * pageSize;
         Map<String, Object> maps = Util.getObjectToMap(userDto);
+
+        if (sort != null) {
+            String[] sorts = sort.split("-");
+            maps.put("sortField", sorts[0]);
+            maps.put("sort", sorts[1]);
+        }
         maps.put("limitRows", limitRows);
         maps.put("pageSize", pageSize);
-
+        Util.removeNonValue(maps);
         paginationData.setData(userMapper.getUserPageList(maps).stream().map(e -> {
             UserDto u = new UserDto();
             BeanUtils.copyProperties(e, u);

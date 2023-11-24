@@ -2,6 +2,7 @@ package com.hn.user.controller;
 
 import com.hn.common.api.CommonResponse;
 import com.hn.common.api.PaginationData;
+import com.hn.common.constant.SortConstant;
 import com.hn.common.dto.UserDto;
 import com.hn.common.dto.Validation;
 import com.hn.common.exceptions.TemplateException;
@@ -41,7 +42,7 @@ public class UserController {
 
     /**
      * @param currentPage: 1, pageSize: 20
-     * @param userDto         @RequestBody 筛选条件
+     * @param userDto      @RequestBody 筛选条件
      *                     {
      *                     username: String, // 模糊查询
      *                     phone: String, // 模糊查询
@@ -56,12 +57,16 @@ public class UserController {
     public CommonResponse<PaginationData<List<UserModel>>> getUserPageList(
             @RequestParam(required = false, defaultValue = "1") @Schema(description = "当前页码") String currentPage,
             @RequestParam(required = false, defaultValue = "20") @Schema(description = "每页条数") String pageSize,
+            @RequestParam(required = false) @Schema(title = "排序", description = "排序 默认顺序不传 降序: `字段名-sort_down` 升序: " +
+                    "`字段名-sort_up`") String sort,
             @RequestBody(required = false) UserDto userDto) throws IllegalAccessException {
+
 
         Integer cPage = Integer.valueOf(currentPage);
         Integer pSize = Integer.valueOf(pageSize);
 
-        PaginationData<List<UserDto>> userPageList = userService.getUserPageList(cPage, pSize, userDto);
+        PaginationData<List<UserDto>> userPageList = userService.getUserPageList(cPage, pSize,
+                SortConstant.sortFieldValid(sort), userDto);
 
         PaginationData<List<UserModel>> p = new PaginationData<>();
         p.setTotal(userPageList.getTotal());
