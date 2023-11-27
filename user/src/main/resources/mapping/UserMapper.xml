@@ -117,13 +117,19 @@
     <insert id="userAdd" parameterType="com.hn.user.entity.UserEntity" useGeneratedKeys="true" keyProperty="id"
             keyColumn="id">
         insert into user(username,
-                         password,
-                         openid,
-                         nickname,
-                         headimgurl,
-                         phone,
-                         permissions)
-        values (#{username}, #{password}, #{openid}, #{nickname}, #{headimgurl}, #{phone}, #{permissions})
+        password,
+        <if test="openid!=null">
+            openid,
+        </if>
+        nickname,
+        headimgurl,
+        phone,
+        permissions)
+        values (#{username}, #{password},
+        <if test="openid!=null">
+            #{openid},
+        </if>
+        #{nickname}, #{headimgurl}, #{phone}, #{permissions})
     </insert>
 
     <update id="userUpdate" parameterType="com.hn.user.entity.UserEntity">

@@ -6,14 +6,13 @@ import com.hn.common.util.Util;
 import com.hn.jdstore.entity.HanmaShopCategoryEntity;
 import com.hn.jdstore.model.ShopCategoryModel;
 import com.hn.jdstore.service.ShopCategoryService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,12 +21,14 @@ import java.util.List;
 @Controller
 @RequestMapping("/shop")
 @Slf4j
+@Tag(name = "店铺分类接口")
 public class ShopCategoryController {
 
     @Resource
     private ShopCategoryService shopCategoryService;
 
     @PostMapping("/shopCategoryAdd")
+    @Operation(summary = "添加店铺分类")
     public CommonResponse<Long> shopCategoryAdd(@RequestBody HanmaShopCategoryEntity hanmaShopCategory) {
         hanmaShopCategory.setId(null);
         String t = Util.getTimestampStr();
@@ -36,33 +37,35 @@ public class ShopCategoryController {
         return ResponseTool.getSuccessResponse(shopCategoryService.update(hanmaShopCategory));
     }
 
-    @PostMapping("/shopCategoryDelete")
-    public CommonResponse<Long> shopCategoryDelete(@RequestBody HanmaShopCategoryEntity hanmaShopCategory) {
-        if (hanmaShopCategory.getId() == null) {
-            return ResponseTool.getErrorResponse();
-        }
-        return ResponseTool.getSuccessResponse(shopCategoryService.update(hanmaShopCategory));
+    @RequestMapping("/shopCategoryDelete")
+    @Operation(summary = "删除店铺分类")
+    public CommonResponse<Long> shopCategoryDelete(@RequestParam Long id) {
+
+        HanmaShopCategoryEntity hanmaShopCategory = new HanmaShopCategoryEntity();
+        hanmaShopCategory.setId(id);
+        shopCategoryService.delete(hanmaShopCategory);
+        return ResponseTool.getSuccessResponse();
     }
 
     @PostMapping("/shopCategoryUpdate")
+    @Operation(summary = "修改店铺分类")
     public CommonResponse<Long> shopCategoryUpdate(@RequestBody HanmaShopCategoryEntity hanmaShopCategory) {
         hanmaShopCategory.setUpdateTime(null);
         hanmaShopCategory.setUpdateTime(Util.getTimestampStr());
         return ResponseTool.getSuccessResponse(shopCategoryService.update(hanmaShopCategory));
     }
 
-    @PostMapping("/getShopCategoryById")
-    public CommonResponse<ShopCategoryModel> getShopCategoryById(@RequestBody HanmaShopCategoryEntity hanmaShopCategory) {
-        if (hanmaShopCategory.getId() == null) {
-            return ResponseTool.getErrorResponse();
-        }
+    @RequestMapping("/getShopCategoryById")
+    @Operation(summary = "根据id查询店铺分类")
+    public CommonResponse<ShopCategoryModel> getShopCategoryById(@RequestParam Long id) {
 
         ShopCategoryModel shopCategoryModel = new ShopCategoryModel();
-        BeanUtils.copyProperties(shopCategoryService.findById(hanmaShopCategory.getId()), shopCategoryModel);
+        BeanUtils.copyProperties(shopCategoryService.findById(id), shopCategoryModel);
         return ResponseTool.getSuccessResponse(shopCategoryModel);
     }
 
-    @PostMapping("/getShopCategoryList")
+    @RequestMapping("/getShopCategoryList")
+    @Operation(summary = "店铺分类列表")
     public CommonResponse<List<ShopCategoryModel>> getShopCategoryList() {
 
         List<ShopCategoryModel> list = new ArrayList<>();

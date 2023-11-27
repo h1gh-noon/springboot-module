@@ -7,6 +7,8 @@ import com.hn.jdstore.model.OrderDetailModel;
 import com.hn.jdstore.model.OrderModel;
 import com.hn.jdstore.service.OrderService;
 import com.hn.jdstore.dto.OrderDto;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -21,12 +23,14 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/order")
 @Slf4j
+@Tag(name = "订单接口")
 public class OrderController {
 
     @Resource
     private OrderService orderService;
 
     @PostMapping("/orderAdd")
+    @Operation(summary = "创建订单")
     public CommonResponse<OrderModel> orderAdd(@RequestBody OrderDto orderDto) throws TemplateException {
         OrderDto resOrderDto = orderService.orderAdd(orderDto);
 

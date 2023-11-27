@@ -31,7 +31,7 @@ public class UserController {
     private UserService userService;
 
     @RequestMapping("/getUserById")
-    @Operation(summary = "查询-根据id查询用户", method = "post", description = "根据id查询用户")
+    @Operation(summary = "查询-根据id查询用户")
     public CommonResponse<UserModel> getUserById(@RequestParam String id) {
 
         UserEntity userEntity = userService.getUserById(Long.parseLong(id));
@@ -53,7 +53,7 @@ public class UserController {
      * @return CommonResponse
      */
     @PostMapping("/getUserPageList")
-    @Operation(summary = "查询-用户列表分页", method = "post", description = "用户列表分页-条件查询 条件放到body中")
+    @Operation(summary = "查询-用户列表分页", description = "用户列表分页-条件查询 条件放到body中")
     public CommonResponse<PaginationData<List<UserModel>>> getUserPageList(
             @RequestParam(required = false, defaultValue = "1") @Schema(description = "当前页码") String currentPage,
             @RequestParam(required = false, defaultValue = "20") @Schema(description = "每页条数") String pageSize,
@@ -90,7 +90,7 @@ public class UserController {
      * @return CommonResponse
      */
     @RequestMapping("/hasUserByName")
-    @Operation(summary = "查询-根据username查询用户", method = "post", description = "查询username用户名是否已存在")
+    @Operation(summary = "查询-根据username查询用户", description = "查询username用户名是否已存在")
     public CommonResponse<Boolean> hasUserByName(@RequestParam String username) {
         return ResponseTool.getSuccessResponse(userService.hasUserByName(username) > 0);
     }
@@ -107,7 +107,7 @@ public class UserController {
      * @return CommonResponse
      */
     @PostMapping("/userAdd")
-    @Operation(summary = "新增-用户", method = "post", description = "新增用户")
+    @Operation(summary = "新增-用户")
     public CommonResponse<Long> userAdd(@RequestBody @Validated({Validation.Save.class}) UserDto userDto) {
         int n = userService.userAdd(userDto);
         if (n > 0) {
@@ -129,7 +129,7 @@ public class UserController {
      * @return CommonResponse
      */
     @PostMapping("/userUpdate")
-    @Operation(summary = "修改-修改用户", method = "post", description = "修改用户")
+    @Operation(summary = "修改-修改用户")
     public CommonResponse userUpdate(@RequestBody @Validated(Validation.Update.class) UserDto userDto) throws TemplateException {
         userDto.setCreateTime(null);
         int n = userService.userUpdate(userDto);
@@ -146,7 +146,7 @@ public class UserController {
      * @return CommonResponse
      */
     @PostMapping("/userUpdateStatus")
-    @Operation(summary = "修改-修改用户状态 启用禁用", method = "post", description = "修改用户 启用禁用")
+    @Operation(summary = "用户-启用禁用", description = "修改用户 仅能启用禁用 status 1启用 0禁用(接口默认0)")
     public CommonResponse userUpdateStatus(@RequestBody @Validated(Validation.Update.class) UserDto userDto) {
         if (userDto.getStatus() == null) {
             userDto.setStatus(0);
@@ -163,7 +163,7 @@ public class UserController {
      * @return CommonResponse
      */
     @PostMapping("/userDelete")
-    @Operation(summary = "删除-用户", method = "post", description = "删除用户")
+    @Operation(summary = "删除-用户")
     public CommonResponse userDelete(@RequestParam(required = false) @NotBlank String id,
                                      @RequestParam(required = false) @NotBlank String username) {
         if (id != null || username != null) {

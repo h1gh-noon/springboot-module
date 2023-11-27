@@ -28,7 +28,7 @@ public class LoginController {
      * @param loginDto { username: String, password: String 接收md5大写32位密文** }
      * @return CommonResponse
      */
-    @Operation(summary = "登录接口", method = "post", description = "登录 data中返回token")
+    @Operation(summary = "登录接口", description = "登录 data中返回token")
     @PostMapping("/userLogin")
     public CommonResponse<LoginInfoModel> userLogin(@RequestBody LoginDto loginDto) {
 
@@ -47,7 +47,7 @@ public class LoginController {
      * RequestHeader token
      * @return CommonResponse
      */
-    @Operation(summary = "根据token获取用户信息", method = "post", description = "根据token获取用户信息")
+    @Operation(summary = "根据token获取用户信息")
     @RequestMapping("/userInfo")
     public CommonResponse<UserModel> userInfo(@RequestHeader(name = RequestHeaderConstant.HEADER_TOKEN_INFO) String tokenInfo) {
         // success
@@ -61,7 +61,7 @@ public class LoginController {
      * @return CommonResponse
      */
     @RequestMapping("/loginOut")
-    @Operation(summary = "退出登录", method = "post", description = "退出登录 销毁token")
+    @Operation(summary = "退出登录", description = "退出登录 销毁token")
     public CommonResponse<Boolean> loginOut(@RequestHeader(name = RequestHeaderConstant.HEADER_TOKEN) String token,
                                    @RequestHeader(name =
                                            RequestHeaderConstant.HEADER_TOKEN_INFO) String tokenInfo) {
@@ -81,7 +81,7 @@ public class LoginController {
      * @return CommonResponse
      */
     @RequestMapping("/loginOutAll")
-    @Operation(summary = "退出所有登录的设备", method = "post", description = "退出所有登录 销毁token")
+    @Operation(summary = "退出所有登录的设备", description = "退出所有登录 销毁token")
     public CommonResponse<Boolean> loginOutAll(@RequestHeader(name = RequestHeaderConstant.HEADER_TOKEN_INFO) String tokenInfo) {
         UserDto userDto = JSON.parseObject(tokenInfo, UserDto.class);
         if (userService.loginOutAll(userDto)) {

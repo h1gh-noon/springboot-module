@@ -8,7 +8,9 @@ import com.hn.jdstore.entity.HanmaShopEntity;
 import com.hn.jdstore.model.ShopInfoProductModel;
 import com.hn.jdstore.model.ShopModel;
 import com.hn.jdstore.service.ShopService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -23,12 +25,14 @@ import java.util.List;
 @Controller
 @RequestMapping("/shop")
 @Slf4j
+@Tag(name = "店铺接口")
 public class ShopController {
 
     @Resource
     private ShopService shopService;
 
     @PostMapping("/shopAdd")
+    @Operation(summary = "添加店铺")
     public CommonResponse<Long> shopAdd(@RequestBody HanmaShopEntity hanmaShop) {
         hanmaShop.setId(null);
         String time = Util.getTimestampStr();
@@ -37,33 +41,33 @@ public class ShopController {
         return ResponseTool.getSuccessResponse(shopService.update(hanmaShop));
     }
 
-    @PostMapping("/shopDelete")
-    public CommonResponse<Long> shopDelete(@RequestBody HanmaShopEntity hanmaShop) {
-        if (hanmaShop.getId() == null) {
-            return ResponseTool.getErrorResponse();
-        }
-        return ResponseTool.getSuccessResponse(shopService.update(hanmaShop));
+    @RequestMapping("/shopDelete")
+    @Operation(summary = "删除店铺")
+    public CommonResponse<Long> shopDelete(@RequestParam Long id) {
+        HanmaShopEntity hanmaShopEntity = new HanmaShopEntity();
+        hanmaShopEntity.setId(id);
+        shopService.delete(hanmaShopEntity);
+        return ResponseTool.getSuccessResponse();
     }
 
     @PostMapping("/shopUpdate")
+    @Operation(summary = "修改店铺")
     public CommonResponse<Long> shopUpdate(@RequestBody HanmaShopEntity hanmaShop) {
         hanmaShop.setCreateTime(null);
         hanmaShop.setUpdateTime(Util.getTimestampStr());
         return ResponseTool.getSuccessResponse(shopService.update(hanmaShop));
     }
 
-    @PostMapping("/getShopById")
-    public CommonResponse<ShopModel> getShopById(@RequestBody HanmaShopEntity hanmaShop) {
-        if (hanmaShop.getId() == null) {
-            return ResponseTool.getErrorResponse();
-        }
-
+    @RequestMapping("/getShopById")
+    @Operation(summary = "根据id查询店铺")
+    public CommonResponse<ShopModel> getShopById(@RequestParam Long id) {
         ShopModel shopModel = new ShopModel();
-        BeanUtils.copyProperties(shopService.findById(hanmaShop.getId()), shopModel);
+        BeanUtils.copyProperties(shopService.findById(id), shopModel);
         return ResponseTool.getSuccessResponse(shopModel);
     }
 
     @PostMapping("/getShopPageList")
+    @Operation(summary = "获取店铺列表分页")
     public CommonResponse<PaginationData<List<ShopModel>>> getShopPageList(
             @RequestParam(required = false, defaultValue = "1") @Schema(description = "当前页码") String currentPage,
             @RequestParam(required = false, defaultValue = "20") @Schema(description = "每页条数") String pageSize,
@@ -93,6 +97,7 @@ public class ShopController {
     }
 
     @RequestMapping("/getShopInfoProductList/{shopId}")
+    @Operation(summary = "根据店铺id查询商品")
     public CommonResponse<ShopInfoProductModel> getShopInfoProductList(@PathVariable Long shopId) {
 
         return ResponseTool.getSuccessResponse(shopService.getShopInfoProductList(shopId));
