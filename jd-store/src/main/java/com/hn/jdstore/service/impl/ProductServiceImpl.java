@@ -1,10 +1,13 @@
 package com.hn.jdstore.service.impl;
 
+import com.hn.jdstore.dao.ProductDao;
 import com.hn.jdstore.entity.HanmaProductEntity;
 import com.hn.jdstore.service.ProductService;
-import com.hn.jdstore.dao.ProductDao;
 import jakarta.annotation.Resource;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,7 +38,6 @@ public class ProductServiceImpl implements ProductService {
         return productDao.findById(id).orElse(null);
     }
 
-    @Override
     public List<HanmaProductEntity> getProductListByShopId(Long shopId) {
         HanmaProductEntity p = new HanmaProductEntity();
         p.setShopId(shopId);
@@ -43,4 +45,15 @@ public class ProductServiceImpl implements ProductService {
         return productDao.findAll(example);
     }
 
+    @Override
+    public Page<HanmaProductEntity> getProductPageList(Integer currentPage, Integer pageSize,
+                                                       HanmaProductEntity hanmaProduct) {
+        if (hanmaProduct == null) {
+            hanmaProduct = new HanmaProductEntity();
+        }
+        Example<HanmaProductEntity> example = Example.of(hanmaProduct);
+
+        Pageable p = PageRequest.of(currentPage - 1, pageSize);
+        return productDao.findAll(example, p);
+    }
 }

@@ -5,10 +5,12 @@ import com.hn.common.util.ResponseTool;
 import com.hn.common.util.Util;
 import com.hn.jdstore.entity.HanmaAddressEntity;
 import com.hn.jdstore.model.AddressModel;
+import com.hn.jdstore.model.IPLocation;
 import com.hn.jdstore.service.AddressService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Controller;
@@ -65,5 +67,11 @@ public class AddressController {
     @Operation(summary = "获取地址列表")
     public CommonResponse<List<AddressModel>> getAddressInfoProductList() {
         return ResponseTool.getSuccessResponse(addressService.getAddressList());
+    }
+
+    @RequestMapping("/getIPLocation")
+    @Operation(summary = "根据ip地址获取位置")
+    public CommonResponse<IPLocation> getIPLocation(HttpServletRequest request) {
+        return ResponseTool.getSuccessResponse(addressService.getIPLocation(request));
     }
 }

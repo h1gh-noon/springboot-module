@@ -1,18 +1,24 @@
 package com.hn.jdstore.controller;
 
 import com.hn.common.api.CommonResponse;
+import com.hn.common.api.PaginationData;
 import com.hn.common.util.ResponseTool;
 import com.hn.common.util.Util;
 import com.hn.jdstore.entity.HanmaProductEntity;
 import com.hn.jdstore.model.ProductModel;
 import com.hn.jdstore.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @Controller
@@ -58,6 +64,34 @@ public class ProductController {
         ProductModel productModel = new ProductModel();
         BeanUtils.copyProperties(productService.findById(id), productModel);
         return ResponseTool.getSuccessResponse(productModel);
+    }
+
+    @RequestMapping("/getProductPageList")
+    @Operation(summary = "查询商品分页列表")
+    public CommonResponse<PaginationData<List<ProductModel>>> getProductPageList(@RequestParam(required = false,
+            defaultValue = "1") @Schema(description = "当前页码") Integer currentPage,
+                                                                                 @RequestParam(required = false,
+                                                                                         defaultValue = "20") @Schema(description = "每页条数") Integer pageSize,
+                                                                                 @RequestBody(required = false) HanmaProductEntity productEntity) {
+
+        Page<HanmaProductEntity> productEntityPage = productService.getProductPageList(currentPage,
+                pageSize,
+                productEntity);
+        log.info("productEntityPage={}", productEntityPage);
+
+        List<ProductModel> list = new ArrayList<>();
+        productEntityPage.getContent().forEach(h -> {
+            ProductModel sm = new ProductModel();
+            BeanUtils.copyProperties(h, sm);
+            list.add(sm);
+        });
+
+        PaginationData<List<ProductModel>> pagination = new PaginationData<>();
+        pagination.setCurrentPage(currentPage);
+        pagination.setPageSize(pageSize);
+        pagination.setTotal(productEntityPage.getTotalElements());
+        pagination.setData(list);
+        return ResponseTool.getSuccessResponse(pagination);
     }
 
 }

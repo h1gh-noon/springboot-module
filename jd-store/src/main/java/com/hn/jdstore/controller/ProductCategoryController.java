@@ -14,6 +14,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -70,11 +71,14 @@ public class ProductCategoryController {
 
         List<HanmaProductCategoryEntity> hanmaProductCategoryList = productCategoryService.getProductCategoryList();
         log.info("hanmaProductCategoryList={}", hanmaProductCategoryList);
-        List<ProductCategoryModel> list = hanmaProductCategoryList.stream().map(h -> {
-            ProductCategoryModel productCategoryModel = new ProductCategoryModel();
-            BeanUtils.copyProperties(h, productCategoryModel);
-            return productCategoryModel;
-        }).collect(Collectors.toList());
+        List<ProductCategoryModel> list = new ArrayList<>();
+        if (hanmaProductCategoryList != null) {
+            list = hanmaProductCategoryList.stream().map(h -> {
+                ProductCategoryModel productCategoryModel = new ProductCategoryModel();
+                BeanUtils.copyProperties(h, productCategoryModel);
+                return productCategoryModel;
+            }).collect(Collectors.toList());
+        }
 
         return ResponseTool.getSuccessResponse(list);
     }

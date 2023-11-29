@@ -1,6 +1,7 @@
 package com.hn.jdstore.service;
 
 import com.hn.jdstore.entity.HanmaProductEntity;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -16,5 +17,7 @@ public interface ProductService {
     HanmaProductEntity findById(Long id);
 
     List<HanmaProductEntity> getProductListByShopId(Long shopId);
+
+    Page<HanmaProductEntity> getProductPageList(Integer currentPage, Integer pageSize, HanmaProductEntity hanmaProduct);
 
 }

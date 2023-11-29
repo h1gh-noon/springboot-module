@@ -10,3 +10,11 @@ spring:
         username: nacos
         password: nacos
         namespace: 12ffc5c2-478f-41be-a0e2-05c8dc8ddc6e
+      config:
+        server-addr: 127.0.0.1:8848
+        username: nacos
+        password: nacos
+        namespace: 12ffc5c2-478f-41be-a0e2-05c8dc8ddc6e
+        file-extension: yaml
+        enabled: true
+        refresh-enabled: true

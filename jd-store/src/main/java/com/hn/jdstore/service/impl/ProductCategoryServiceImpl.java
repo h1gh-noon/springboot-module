@@ -41,6 +41,6 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
 
     @Override
     public List<HanmaProductCategoryEntity> getProductCategoryList() {
-        return null;
+        return productCategoryDao.findAll();
     }
 }

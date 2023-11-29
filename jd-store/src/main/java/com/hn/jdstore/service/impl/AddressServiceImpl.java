@@ -1,12 +1,17 @@
 package com.hn.jdstore.service.impl;
 
+import com.hn.common.util.IPUtil;
+import com.hn.jdstore.dao.AddressDao;
 import com.hn.jdstore.entity.HanmaAddressEntity;
 import com.hn.jdstore.model.AddressModel;
+import com.hn.jdstore.model.IPLocation;
 import com.hn.jdstore.service.AddressService;
-import com.hn.jdstore.dao.AddressDao;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,6 +19,11 @@ import java.util.stream.Collectors;
 @Service
 public class AddressServiceImpl implements AddressService {
 
+    @Value("${baidu_api.map.access_token}")
+    private String accToken;
+
+    @Resource
+    private RestTemplate restTemplate;
 
     @Resource
     private AddressDao addressDao;
@@ -46,6 +56,13 @@ public class AddressServiceImpl implements AddressService {
             BeanUtils.copyProperties(e, h);
             return h;
         }).collect(Collectors.toList());
+    }
+
+    @Override
+    public IPLocation getIPLocation(HttpServletRequest request) {
+        String ip = IPUtil.getRequestIp(request);
+        String url = "https://api.map.baidu.com/location/ip?ip=" + ip + "&coor=bd09ll&ak=" + accToken;
+        return restTemplate.getForObject(url, IPLocation.class);
     }
 
 }

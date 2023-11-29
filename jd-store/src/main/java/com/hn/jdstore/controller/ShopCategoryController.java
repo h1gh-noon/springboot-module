@@ -1,6 +1,7 @@
 package com.hn.jdstore.controller;
 
 import com.hn.common.api.CommonResponse;
+import com.hn.common.dto.Validation;
 import com.hn.common.util.ResponseTool;
 import com.hn.common.util.Util;
 import com.hn.jdstore.entity.HanmaShopCategoryEntity;
@@ -12,6 +13,7 @@ import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -29,7 +31,7 @@ public class ShopCategoryController {
 
     @PostMapping("/shopCategoryAdd")
     @Operation(summary = "添加店铺分类")
-    public CommonResponse<Long> shopCategoryAdd(@RequestBody HanmaShopCategoryEntity hanmaShopCategory) {
+    public CommonResponse<Long> shopCategoryAdd(@RequestBody @Validated(Validation.Save.class) HanmaShopCategoryEntity hanmaShopCategory) {
         hanmaShopCategory.setId(null);
         String t = Util.getTimestampStr();
         hanmaShopCategory.setCreateTime(t);

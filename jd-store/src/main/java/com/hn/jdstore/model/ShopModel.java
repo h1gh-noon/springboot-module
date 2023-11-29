@@ -3,6 +3,8 @@ package com.hn.jdstore.model;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 
 @Data
 public class ShopModel {
@@ -23,10 +25,10 @@ public class ShopModel {
   private Long expressLimit;
 
   @Schema(description = "起送运费")
-  private Double expressPrice;
+  private BigDecimal expressPrice;
 
   @Schema(description = "优惠描述")
-  private String desc;
+  private String descDetail;
 
   @Schema(description = "店铺logo")
   private String imgUrl;
@@ -35,6 +37,6 @@ public class ShopModel {
   private Long state;
 
   @Schema(description = "店铺状态 0审核 1正常")
-  private Long status;
+  private Integer status;
 
 }

@@ -19,7 +19,7 @@ public class HanmaShopEntity {
     private Long sales;
     private Long expressLimit;
     private BigDecimal expressPrice;
-    private String desc;
+    private String descDetail;
     private String imgUrl;
     private Long state;
     private Integer status;
