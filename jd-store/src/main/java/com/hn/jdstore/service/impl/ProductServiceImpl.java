@@ -47,13 +47,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Page<HanmaProductEntity> getProductPageList(Integer currentPage, Integer pageSize,
-                                                       HanmaProductEntity hanmaProduct) {
-        if (hanmaProduct == null) {
-            hanmaProduct = new HanmaProductEntity();
-        }
-        Example<HanmaProductEntity> example = Example.of(hanmaProduct);
+                                                       String name) {
 
         Pageable p = PageRequest.of(currentPage - 1, pageSize);
-        return productDao.findAll(example, p);
+        return productDao.findByNameLike("%" + name + "%", p);
     }
 }

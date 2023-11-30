@@ -72,11 +72,11 @@ public class ProductController {
             defaultValue = "1") @Schema(description = "当前页码") Integer currentPage,
                                                                                  @RequestParam(required = false,
                                                                                          defaultValue = "20") @Schema(description = "每页条数") Integer pageSize,
-                                                                                 @RequestBody(required = false) HanmaProductEntity productEntity) {
+                                                                                 @RequestBody(required = false) String name) {
 
         Page<HanmaProductEntity> productEntityPage = productService.getProductPageList(currentPage,
                 pageSize,
-                productEntity);
+                name);
         log.info("productEntityPage={}", productEntityPage);
 
         List<ProductModel> list = new ArrayList<>();

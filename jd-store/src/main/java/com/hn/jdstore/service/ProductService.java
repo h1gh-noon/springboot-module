@@ -18,6 +18,6 @@ public interface ProductService {
 
     List<HanmaProductEntity> getProductListByShopId(Long shopId);
 
-    Page<HanmaProductEntity> getProductPageList(Integer currentPage, Integer pageSize, HanmaProductEntity hanmaProduct);
+    Page<HanmaProductEntity> getProductPageList(Integer currentPage, Integer pageSize, String name);
 
 }

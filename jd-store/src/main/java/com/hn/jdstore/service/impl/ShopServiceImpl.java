@@ -64,14 +64,21 @@ public class ShopServiceImpl implements ShopService {
     public Page<HanmaShopEntity> getShopPageList(Integer currentPage, Integer pageSize, ShopModel shopModel) {
         HanmaShopEntity h = new HanmaShopEntity();
         if (shopModel != null) {
-            h.setCateId(shopModel.getCateId());
-            h.setState(shopModel.getState());
+            BeanUtils.copyProperties(shopModel, h);
         }
         Example<HanmaShopEntity> example = Example.of(h);
         Sort sort = Sort.by(Sort.Direction.DESC, "sales");
 
         Pageable pageable = PageRequest.of(currentPage - 1, pageSize, sort);
         return shopDao.findAll(example, pageable);
+    }
+
+    @Override
+    public Page<HanmaShopEntity> searchShopByNamePageList(Integer currentPage, Integer pageSize, String name) {
+        Sort sort = Sort.by(Sort.Direction.DESC, "sales");
+
+        Pageable pageable = PageRequest.of(currentPage - 1, pageSize, sort);
+        return shopDao.findByNameLike("%" + name + "%", pageable);
     }
 
     @Override
