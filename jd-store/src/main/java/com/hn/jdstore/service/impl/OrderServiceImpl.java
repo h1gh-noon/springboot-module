@@ -1,5 +1,7 @@
 package com.hn.jdstore.service.impl;
 
+import com.alibaba.fastjson2.JSON;
+import com.hn.common.dto.UserDto;
 import com.hn.common.util.Util;
 import com.hn.jdstore.dao.OrderDao;
 import com.hn.jdstore.dao.OrderDetailDao;
@@ -44,7 +46,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public OrderDto orderAdd(OrderDto orderDto) throws SelfException {
+    public OrderDto orderAdd(OrderDto orderDto, String userInfo) throws SelfException {
+
+        UserDto userDto = JSON.parseObject(userInfo, UserDto.class);
 
         List<HanmaOrderDetailEntity> orderDetailEntityList = orderDto.getDetailList();
         if (orderDetailEntityList == null || orderDetailEntityList.isEmpty()) {
@@ -59,6 +63,9 @@ public class OrderServiceImpl implements OrderService {
         orderDto.setOrderStatus(1);
         orderDto.setCreateTime(Util.getTimestampStr());
         orderDto.setUpdateTime(orderDto.getCreateTime());
+
+        orderDto.setUserId(userDto.getId());
+        orderDto.setUserOpenid(userDto.getOpenid());
 
         List<HanmaProductEntity> detailList = orderDetailEntityList.stream().map(e -> {
             HanmaProductEntity p = productService.findById(e.getProductId());
@@ -82,7 +89,7 @@ public class OrderServiceImpl implements OrderService {
         HanmaOrderEntity hanmaOrderEntity = new HanmaOrderEntity();
         BeanUtils.copyProperties(orderDto, hanmaOrderEntity);
 
-
+        hanmaOrderEntity.setPayStatus(0);
         orderDao.save(hanmaOrderEntity);
         orderDto.setId(hanmaOrderEntity.getId());
         orderDetailEntityList.forEach(e -> e.setOrderId(hanmaOrderEntity.getId()));

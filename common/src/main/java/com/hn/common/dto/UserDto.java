@@ -20,6 +20,9 @@ public class UserDto {
     @NotBlank(groups = {Validation.Save.class, Validation.Login.class})
     private String username;
 
+    @Schema(defaultValue = "openid", description = "openid")
+    private String openid;
+
     @Schema(defaultValue = "昵称", description = "昵称")
     private String nickname;
 

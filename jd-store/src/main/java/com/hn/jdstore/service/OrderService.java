@@ -7,5 +7,5 @@ public interface OrderService {
 
     OrderDto findById(Long id);
 
-    OrderDto orderAdd(OrderDto orderDto) throws SelfException;
+    OrderDto orderAdd(OrderDto orderDto, String userInfo) throws SelfException;
 }
