@@ -1,6 +1,7 @@
 package com.hn.jdstore.service.impl;
 
 import com.alibaba.fastjson2.JSON;
+import com.hn.common.constant.PermissionConstant;
 import com.hn.common.dto.UserDto;
 import com.hn.common.util.Util;
 import com.hn.jdstore.dao.OrderDao;
@@ -17,10 +18,14 @@ import com.hn.jdstore.service.ProductService;
 import com.hn.jdstore.service.ShopService;
 import jakarta.annotation.Resource;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,8 +45,13 @@ public class OrderServiceImpl implements OrderService {
     private OrderDetailDao orderDetailDao;
 
     @Override
-    public OrderDto findById(Long id) {
-        return null;
+    public HanmaOrderEntity findById(Long id) {
+        return orderDao.findById(id).orElse(null);
+    }
+
+    @Override
+    public HanmaOrderEntity findByOrderNo(String orderNo) {
+        return orderDao.findByOrderNo(orderNo);
     }
 
     @Override
@@ -60,7 +70,7 @@ public class OrderServiceImpl implements OrderService {
         orderDto.setOrderAmount(new BigDecimal(0));
         orderDto.setPayTime(null);
         orderDto.setPayStatus(null);
-        orderDto.setOrderStatus(1);
+        orderDto.setOrderStatus(0);
         orderDto.setCreateTime(Util.getTimestampStr());
         orderDto.setUpdateTime(orderDto.getCreateTime());
 
@@ -101,5 +111,30 @@ public class OrderServiceImpl implements OrderService {
         orderDto.setDetailList(orderDetailDao.saveAll(orderDetailEntityList));
 
         return orderDto;
+    }
+
+    @Override
+    public void orderPay(HanmaOrderEntity orderEntity) {
+
+        orderDao.save(orderEntity);
+
+    }
+
+    @Override
+    public Page<HanmaOrderEntity> orderPageList(Integer currentPage, Integer pageSize,
+                                                OrderDto orderDto, UserDto userDto) {
+
+        Pageable p = PageRequest.of(currentPage - 1, pageSize);
+
+        List<String> permissions = Arrays.asList(userDto.getPermissions().split(","));
+        if (permissions.contains(PermissionConstant.SUPER_ADMIN)) {
+            return orderDao.findAll(p);
+        } else if (permissions.contains(PermissionConstant.ADMIN)) {
+            // 须验证对应的权限再进行查询
+            return orderDao.findByShopId(orderDto.getShopId(), p);
+        } else {
+            return orderDao.findByUserId(userDto.getId(), p);
+        }
+
     }
 }

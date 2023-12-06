@@ -1,5 +1,6 @@
 package com.hn.jdstore.controller;
 
+import com.alibaba.fastjson2.JSON;
 import com.github.binarywang.wxpay.exception.WxPayException;
 import com.hn.common.api.CommonResponse;
 import com.hn.common.constant.RequestHeaderConstant;
@@ -9,6 +10,7 @@ import com.hn.common.util.ResponseTool;
 import com.hn.jdstore.service.PayService;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,11 +23,19 @@ public class PayController {
     @Resource
     PayService payService;
 
-
     @PostMapping("/pay")
-    public CommonResponse<String> pay(Long id,
-                                      @RequestHeader(RequestHeaderConstant.HEADER_TOKEN_INFO) UserDto userDto,
+    public CommonResponse<Object> pay(Long id,
+                                      @RequestHeader(RequestHeaderConstant.HEADER_TOKEN_INFO) String userInfo,
                                       HttpServletRequest httpServletRequest) throws WxPayException {
-        return ResponseTool.getSuccessResponse(payService.pay(id, userDto, IPUtil.getRequestIp(httpServletRequest)));
+        return ResponseTool.getSuccessResponse(payService.pay(id, JSON.parseObject(userInfo,
+                        UserDto.class),
+                IPUtil.getRequestIp(httpServletRequest)));
+    }
+
+    @PostMapping("/notify")
+    public String notify(
+            HttpServletRequest request, HttpServletResponse response) {
+
+        return payService.notify(request, response);
     }
 }

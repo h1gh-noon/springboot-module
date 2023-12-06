@@ -14,31 +14,31 @@ import org.springframework.context.annotation.Configuration;
 @ConditionalOnClass(WxPayService.class)
 public class WxPayConfiguration {
 
-    @Value("{openAppId}")
-    private String openAppId;
+    @Value("${mpAppId}")
+    private String mpAppId;
 
     /**
      * 微信支付商户号
      */
-    @Value("{mchId}")
+    @Value("${mchId}")
     private String mchId;
 
     /**
      * 微信支付商户密钥
      */
-    @Value("{mchKey}")
+    @Value("${mchKey}")
     private String mchKey;
 
     /**
      * 微信支付商户密钥
      */
-    @Value("{keyPath}")
+    @Value("${keyPath}")
     private String keyPath;
 
     /**
      * 微信支付商户密钥
      */
-    @Value("{notifyUrl}")
+    @Value("${notifyUrl}")
     private String notifyUrl;
 
 
@@ -46,7 +46,7 @@ public class WxPayConfiguration {
     @ConditionalOnMissingBean
     public WxPayService wxService() {
         WxPayConfig payConfig = new WxPayConfig();
-        payConfig.setAppId(StringUtils.trimToNull(openAppId));
+        payConfig.setAppId(StringUtils.trimToNull(mpAppId));
         payConfig.setMchId(StringUtils.trimToNull(mchId));
         payConfig.setMchKey(StringUtils.trimToNull(mchKey));
         payConfig.setKeyPath(StringUtils.trimToNull(keyPath));

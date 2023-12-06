@@ -68,11 +68,12 @@ public class ProductController {
 
     @RequestMapping("/getProductPageList")
     @Operation(summary = "查询商品分页列表")
-    public CommonResponse<PaginationData<List<ProductModel>>> getProductPageList(@RequestParam(required = false,
+    public CommonResponse<PaginationData<List<ProductModel>>>
+    getProductPageList(@RequestParam(required = false,
             defaultValue = "1") @Schema(description = "当前页码") Integer currentPage,
-                                                                                 @RequestParam(required = false,
-                                                                                         defaultValue = "20") @Schema(description = "每页条数") Integer pageSize,
-                                                                                 @RequestBody(required = false) String name) {
+                       @RequestParam(required = false,
+                               defaultValue = "20") @Schema(description = "每页条数") Integer pageSize,
+                       @RequestBody(required = false) String name) {
 
         Page<HanmaProductEntity> productEntityPage = productService.getProductPageList(currentPage,
                 pageSize,
