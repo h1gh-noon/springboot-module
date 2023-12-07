@@ -17,5 +17,7 @@ public interface OrderService {
     void orderPay(HanmaOrderEntity orderEntity);
 
     Page<HanmaOrderEntity> orderPageList(Integer currentPage, Integer pageSize,
-                                 OrderDto orderDto, UserDto userDto);
+                                         OrderDto orderDto, UserDto userDto);
+
+    OrderDto getOrderDetail(OrderDto orderDto);
 }

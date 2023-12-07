@@ -3,8 +3,10 @@ package com.hn.jdstore.controller;
 import com.alibaba.fastjson2.JSON;
 import com.hn.common.api.CommonResponse;
 import com.hn.common.api.PaginationData;
+import com.hn.common.constant.PermissionConstant;
 import com.hn.common.constant.RequestHeaderConstant;
 import com.hn.common.dto.UserDto;
+import com.hn.common.enums.ResponseEnum;
 import com.hn.common.exceptions.TemplateException;
 import com.hn.common.util.ResponseTool;
 import com.hn.jdstore.dto.OrderDto;
@@ -22,7 +24,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RestController
@@ -81,6 +85,39 @@ public class OrderController {
         pagination.setData(list);
 
         return ResponseTool.getSuccessResponse(pagination);
+
+    }
+
+    @PostMapping("/getOrderDetail")
+    @Operation(summary = "订单详情")
+    public CommonResponse<OrderModel> getOrderDetail(
+            @RequestBody OrderDto orderDto,
+            @RequestHeader(RequestHeaderConstant.HEADER_TOKEN_INFO) String userInfo)
+            throws TemplateException {
+
+        UserDto userDto = JSON.parseObject(userInfo, UserDto.class);
+        List<String> permissions = Arrays.stream(userDto.getPermissions().split(",")).toList();
+
+        OrderDto orderDetail = orderService.getOrderDetail(orderDto);
+        // 权限验证
+        if (!Objects.equals(orderDetail.getUserId(), userDto.getId())
+                && !permissions.contains(PermissionConstant.SUPER_ADMIN)
+                && !permissions.contains(PermissionConstant.ADMIN)
+        ) {
+            throw new TemplateException(ResponseEnum.FAIL_404);
+        }
+
+        OrderModel orderModel = new OrderModel();
+        BeanUtils.copyProperties(orderDetail, orderModel);
+        List<OrderDetailModel> orderDetailModels = orderDetail.getDetailList().stream().map(e -> {
+            OrderDetailModel o = new OrderDetailModel();
+            BeanUtils.copyProperties(e, o);
+            return o;
+        }).collect(Collectors.toList());
+
+        orderModel.setDetailList(orderDetailModels);
+
+        return ResponseTool.getSuccessResponse(orderModel);
 
     }
 

@@ -3,6 +3,8 @@ package com.hn.jdstore.service.impl;
 import com.alibaba.fastjson2.JSON;
 import com.hn.common.constant.PermissionConstant;
 import com.hn.common.dto.UserDto;
+import com.hn.common.enums.ResponseEnum;
+import com.hn.common.exceptions.TemplateException;
 import com.hn.common.util.Util;
 import com.hn.jdstore.dao.OrderDao;
 import com.hn.jdstore.dao.OrderDetailDao;
@@ -136,5 +138,23 @@ public class OrderServiceImpl implements OrderService {
             return orderDao.findByUserId(userDto.getId(), p);
         }
 
+    }
+
+    @Override
+    public OrderDto getOrderDetail(OrderDto orderDto) {
+        HanmaOrderEntity hanmaOrderEntity = findById(orderDto.getId());
+        if (hanmaOrderEntity == null){
+            throw new TemplateException(ResponseEnum.FAIL_404);
+        }
+
+        OrderDto od = new OrderDto();
+
+        BeanUtils.copyProperties(hanmaOrderEntity, od);
+
+        List<HanmaOrderDetailEntity> detailEntityList =
+                orderDetailDao.findAllByOrderId(orderDto.getId());
+
+        od.setDetailList(detailEntityList);
+        return od;
     }
 }
