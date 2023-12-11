@@ -30,6 +30,9 @@ public class ProductModel {
     @Schema(description = "商品图片")
     private String imgUrl;
 
+    @Schema(description = "商品类型id")
+    private Long cateId;
+
     @Schema(description = "商品类型")
     private String type;
 

@@ -173,7 +173,7 @@ public class UserServiceImpl implements UserService {
             public Object execute(RedisOperations operations) throws DataAccessException {
                 operations.multi();
                 operations.opsForValue().set(RedisConstant.USER_TOKEN + token, JSON.toJSONString(user));
-                operations.expire(RedisConstant.USER_TOKEN + token, 3600 * 12, TimeUnit.SECONDS);
+                operations.expire(RedisConstant.USER_TOKEN + token, 3600 * 24, TimeUnit.SECONDS);
                 operations.opsForList().rightPushAll(userKey, list);
                 if (finalOldToken != null) {
                     operations.delete(finalOldToken);

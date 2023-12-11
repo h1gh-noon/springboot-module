@@ -68,7 +68,7 @@ public class PayServiceImpl implements PayService {
                     Charset.forName(request.getCharacterEncoding()));
             WxPayOrderNotifyResult result = wxPayService.parseOrderNotifyResult(xmlResult);
 
-            // 加入自己处理订单的业务逻辑，需要判断订单是否已经支付过，否则可能会重复调用
+            // 判断订单是否已经支付过，否则可能会重复调用
             String orderNo = result.getOutTradeNo();
             // String tradeNo = result.getTransactionId();
             String totalFee = BaseWxPayResult.fenToYuan(result.getTotalFee());

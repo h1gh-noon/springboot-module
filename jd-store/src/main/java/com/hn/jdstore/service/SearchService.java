@@ -1,9 +1,11 @@
 package com.hn.jdstore.service;
 
-import com.hn.jdstore.model.SearchModel;
+import com.hn.jdstore.model.ShopModel;
+
+import java.util.List;
 
 public interface SearchService {
 
-    SearchModel searchAll(String content);
+    List<ShopModel> searchAll(String content);
 
 }

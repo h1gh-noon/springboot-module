@@ -81,7 +81,8 @@ public class OrderServiceImpl implements OrderService {
 
         List<HanmaProductEntity> detailList = orderDetailEntityList.stream().map(e -> {
             HanmaProductEntity p = productService.findById(e.getProductId());
-            if (p == null || p.getProductStock() < e.getQuantity()) {
+            if (p == null || p.getStatus().equals(0) || p.getProductStock() < e.getQuantity()) {
+                // 未查到 || 未上架 || 库存不够
                 throw new SelfException(ExceptionMsgEnum.NO_STACK);
             }
             p.setProductStock(p.getProductStock() - e.getQuantity());
@@ -143,7 +144,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDto getOrderDetail(OrderDto orderDto) {
         HanmaOrderEntity hanmaOrderEntity = findById(orderDto.getId());
-        if (hanmaOrderEntity == null){
+        if (hanmaOrderEntity == null) {
             throw new TemplateException(ResponseEnum.FAIL_404);
         }
 

@@ -4,6 +4,7 @@ import com.hn.jdstore.dao.ProductDao;
 import com.hn.jdstore.entity.HanmaProductEntity;
 import com.hn.jdstore.service.ProductService;
 import jakarta.annotation.Resource;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -50,6 +51,9 @@ public class ProductServiceImpl implements ProductService {
                                                        String name) {
 
         Pageable p = PageRequest.of(currentPage - 1, pageSize);
+        if (StringUtils.isEmpty(name)) {
+            return productDao.findAll(p);
+        }
         return productDao.findByNameLike("%" + name + "%", p);
     }
 }

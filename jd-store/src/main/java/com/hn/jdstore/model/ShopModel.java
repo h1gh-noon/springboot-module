@@ -4,6 +4,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.Objects;
 
 
 @Data
@@ -39,4 +41,19 @@ public class ShopModel {
   @Schema(description = "店铺状态 0审核 1正常")
   private Integer status;
 
+  @Schema(description = "商品列表")
+  private List<ProductModel> productList;
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    ShopModel shopModel = (ShopModel) o;
+    return Objects.equals(id, shopModel.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id);
+  }
 }

@@ -1,6 +1,5 @@
 package com.hn.jdstore.service.impl;
 
-import com.hn.common.util.IPUtil;
 import com.hn.jdstore.dao.AddressDao;
 import com.hn.jdstore.entity.HanmaAddressEntity;
 import com.hn.jdstore.model.AddressModel;
@@ -8,6 +7,7 @@ import com.hn.jdstore.model.IPLocation;
 import com.hn.jdstore.service.AddressService;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class AddressServiceImpl implements AddressService {
 
     @Value("${baidu_api.map.access_token}")
@@ -60,9 +61,12 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public IPLocation getIPLocation(HttpServletRequest request) {
-        String ip = IPUtil.getRequestIp(request);
+        // String ip = IPUtil.getRequestIp(request);
+        String ip = "60.216.71.178";
         String url = "https://api.map.baidu.com/location/ip?ip=" + ip + "&coor=bd09ll&ak=" + accToken;
-        return restTemplate.getForObject(url, IPLocation.class);
+        IPLocation ipLocation = restTemplate.getForObject(url, IPLocation.class);
+        log.info("百度ip定位信息={}", ipLocation);
+        return ipLocation;
     }
 
 }
