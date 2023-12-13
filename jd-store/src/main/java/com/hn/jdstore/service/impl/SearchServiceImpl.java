@@ -32,28 +32,6 @@ public class SearchServiceImpl implements SearchService {
     @Override
     public List<ShopModel> searchAll(String content) {
 
-        // Page<HanmaProductEntity> productPageList = productService.getProductPageList(1, 30,
-        //         content);
-        // Set<Long> ids = new HashSet<>();
-        // List<ProductModel> productModels = productPageList.getContent().stream().map(e -> {
-        //     ProductModel pm = new ProductModel();
-        //     BeanUtils.copyProperties(e, pm);
-        //     ids.add(pm.getShopId());
-        //     return pm;
-        // }).toList();
-        //
-        // List<ShopModel> shops =
-        //         ids.stream().map(e -> {
-        //             ShopModel s = new ShopModel();
-        //             // mybatis可以优化成where条件查询
-        //             BeanUtils.copyProperties(shopService.findById(e), s);
-        //             s.setProductList(productModels.stream().filter(p -> p.getShopId().equals(s
-        //             .getId())).toList());
-        //             return s;
-        //         }).collect(Collectors.toList());
-        //
-        // searchModel.setShops(shops);
-
         Page<HanmaShopEntity> shopPageList = shopService.searchShopByNamePageList(1, 30, content);
         List<ShopModel> shopModels = shopPageList.getContent().stream().map(e -> {
             ShopModel sm = new ShopModel();

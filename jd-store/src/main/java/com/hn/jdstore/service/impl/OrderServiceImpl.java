@@ -8,6 +8,7 @@ import com.hn.common.exceptions.TemplateException;
 import com.hn.common.util.Util;
 import com.hn.jdstore.dao.OrderDao;
 import com.hn.jdstore.dao.OrderDetailDao;
+import com.hn.jdstore.dao.ProductDao;
 import com.hn.jdstore.dto.OrderDto;
 import com.hn.jdstore.entity.HanmaOrderDetailEntity;
 import com.hn.jdstore.entity.HanmaOrderEntity;
@@ -45,6 +46,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Resource
     private OrderDetailDao orderDetailDao;
+
+    @Resource
+    private ProductDao productDao;
 
     @Override
     public HanmaOrderEntity findById(Long id) {
@@ -157,5 +161,25 @@ public class OrderServiceImpl implements OrderService {
 
         od.setDetailList(detailEntityList);
         return od;
+    }
+
+    @Override
+    @Transactional
+    public void orderCancel(OrderDto orderDto, String userInfo) {
+
+        OrderDto od = getOrderDetail(orderDto);
+        if (od.getPayStatus().equals(0) && od.getOrderStatus().equals(0)) {
+
+            od.getDetailList().forEach(e -> {
+                HanmaProductEntity p = new HanmaProductEntity();
+                p.setId(e.getProductId());
+                p.setProductStock(e.getQuantity());
+                productDao.updateStock(p);
+            });
+
+            orderDao.orderCancel(od.getId());
+        } else {
+            throw new TemplateException(ResponseEnum.FAIL_404);
+        }
     }
 }

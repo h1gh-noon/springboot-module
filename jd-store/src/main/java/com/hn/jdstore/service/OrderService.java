@@ -20,4 +20,6 @@ public interface OrderService {
                                          OrderDto orderDto, UserDto userDto);
 
     OrderDto getOrderDetail(OrderDto orderDto);
+
+    void orderCancel(OrderDto orderDto, String userInfo);
 }

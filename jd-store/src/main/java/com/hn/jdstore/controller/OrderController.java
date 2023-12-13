@@ -121,4 +121,27 @@ public class OrderController {
 
     }
 
+    @PostMapping("/orderCancel")
+    @Operation(summary = "取消订单")
+    public CommonResponse<Boolean> orderCancel(
+            @RequestBody OrderDto orderDto,
+            @RequestHeader(RequestHeaderConstant.HEADER_TOKEN_INFO) String userInfo)
+            throws TemplateException {
+
+        UserDto userDto = JSON.parseObject(userInfo, UserDto.class);
+        List<String> permissions = Arrays.stream(userDto.getPermissions().split(",")).toList();
+
+        OrderDto orderDetail = orderService.getOrderDetail(orderDto);
+        // 权限验证
+        if (!Objects.equals(orderDetail.getUserId(), userDto.getId())
+                && !permissions.contains(PermissionConstant.SUPER_ADMIN)
+                && !permissions.contains(PermissionConstant.ADMIN)
+        ) {
+            throw new TemplateException(ResponseEnum.FAIL_404);
+        }
+        orderService.orderCancel(orderDto, userInfo);
+        return ResponseTool.getSuccessResponse();
+
+    }
+
 }
