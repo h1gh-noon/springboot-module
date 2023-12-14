@@ -5,7 +5,7 @@ import com.hn.common.api.PaginationData;
 import com.hn.common.dto.Validation;
 import com.hn.common.util.ResponseTool;
 import com.hn.common.util.Util;
-import com.hn.jdstore.domain.entity.HanmaShopDo;
+import com.hn.jdstore.domain.entity.ShopDo;
 import com.hn.jdstore.domain.vo.ShopInfoProductVo;
 import com.hn.jdstore.domain.vo.ShopVo;
 import com.hn.jdstore.service.ShopService;
@@ -38,18 +38,18 @@ public class ShopController {
     public CommonResponse<Long> shopAdd(@RequestBody ShopVo shopVo) {
 
         shopVo.setId(null);
-        HanmaShopDo hanmaShopDo = new HanmaShopDo();
-        BeanUtils.copyProperties(shopVo, hanmaShopDo);
+        ShopDo shopDo = new ShopDo();
+        BeanUtils.copyProperties(shopVo, shopDo);
         String time = Util.getTimestampStr();
-        hanmaShopDo.setCreateTime(time);
-        hanmaShopDo.setUpdateTime(time);
-        return ResponseTool.getSuccessResponse(shopService.update(hanmaShopDo));
+        shopDo.setCreateTime(time);
+        shopDo.setUpdateTime(time);
+        return ResponseTool.getSuccessResponse(shopService.update(shopDo));
     }
 
     @RequestMapping("/shopDelete")
     @Operation(summary = "删除店铺")
     public CommonResponse<Long> shopDelete(@RequestParam Long id) {
-        HanmaShopDo shopDo = new HanmaShopDo();
+        ShopDo shopDo = new ShopDo();
         shopDo.setId(id);
         shopService.delete(shopDo);
         return ResponseTool.getSuccessResponse();
@@ -58,11 +58,11 @@ public class ShopController {
     @PostMapping("/shopUpdate")
     @Operation(summary = "修改店铺")
     public CommonResponse<Long> shopUpdate(@RequestBody @Validated(Validation.Update.class) ShopVo shopVo) {
-        HanmaShopDo hanmaShopDo = new HanmaShopDo();
-        BeanUtils.copyProperties(shopVo, hanmaShopDo);
-        hanmaShopDo.setCreateTime(null);
-        hanmaShopDo.setUpdateTime(Util.getTimestampStr());
-        return ResponseTool.getSuccessResponse(shopService.update(hanmaShopDo));
+        ShopDo shopDo = new ShopDo();
+        BeanUtils.copyProperties(shopVo, shopDo);
+        shopDo.setCreateTime(null);
+        shopDo.setUpdateTime(Util.getTimestampStr());
+        return ResponseTool.getSuccessResponse(shopService.update(shopDo));
     }
 
     @RequestMapping("/getShopById")
@@ -83,13 +83,13 @@ public class ShopController {
         Integer cPage = Integer.valueOf(currentPage);
         Integer pSize = Integer.valueOf(pageSize);
 
-        Page<HanmaShopDo> hanmaShopList = shopService.getShopPageList(cPage,
+        Page<ShopDo> shopDoList = shopService.getShopPageList(cPage,
                 pSize,
                 shopVo);
-        log.info("hanmaShopList={}", hanmaShopList);
+        log.info("shopDoList={}", shopDoList);
 
         List<ShopVo> list = new ArrayList<>();
-        hanmaShopList.getContent().forEach(h -> {
+        shopDoList.getContent().forEach(h -> {
             ShopVo sm = new ShopVo();
             BeanUtils.copyProperties(h, sm);
             list.add(sm);
@@ -98,7 +98,7 @@ public class ShopController {
         PaginationData<List<ShopVo>> pagination = new PaginationData<>();
         pagination.setCurrentPage(cPage);
         pagination.setPageSize(pSize);
-        pagination.setTotal(hanmaShopList.getTotalElements());
+        pagination.setTotal(shopDoList.getTotalElements());
         pagination.setData(list);
         return ResponseTool.getSuccessResponse(pagination);
     }

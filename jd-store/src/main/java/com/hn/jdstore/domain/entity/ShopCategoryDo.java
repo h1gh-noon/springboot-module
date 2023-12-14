@@ -8,8 +8,8 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "hanma_shop_category")
-public class HanmaShopCategoryDo {
+@Table(name = "jd_shop_category")
+public class ShopCategoryDo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

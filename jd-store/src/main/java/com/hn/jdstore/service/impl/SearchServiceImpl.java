@@ -3,7 +3,7 @@ package com.hn.jdstore.service.impl;
 import com.alibaba.fastjson2.JSON;
 import com.hn.jdstore.dao.SearchDao;
 import com.hn.jdstore.domain.dto.ProductDto;
-import com.hn.jdstore.domain.entity.HanmaShopDo;
+import com.hn.jdstore.domain.entity.ShopDo;
 import com.hn.jdstore.domain.vo.ProductVo;
 import com.hn.jdstore.domain.vo.ShopVo;
 import com.hn.jdstore.service.ProductService;
@@ -32,7 +32,7 @@ public class SearchServiceImpl implements SearchService {
     @Override
     public List<ShopVo> searchAll(String content) {
 
-        Page<HanmaShopDo> shopPageList = shopService.searchShopByNamePageList(1, 30, content);
+        Page<ShopDo> shopPageList = shopService.searchShopByNamePageList(1, 30, content);
         List<ShopVo> shopVos = shopPageList.getContent().stream().map(e -> {
             ShopVo sm = new ShopVo();
             BeanUtils.copyProperties(e, sm);

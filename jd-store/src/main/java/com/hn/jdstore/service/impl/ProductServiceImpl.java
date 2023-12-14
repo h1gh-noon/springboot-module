@@ -1,7 +1,7 @@
 package com.hn.jdstore.service.impl;
 
 import com.hn.jdstore.dao.ProductDao;
-import com.hn.jdstore.domain.entity.HanmaProductDo;
+import com.hn.jdstore.domain.entity.ProductDo;
 import com.hn.jdstore.service.ProductService;
 import jakarta.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
@@ -20,35 +20,35 @@ public class ProductServiceImpl implements ProductService {
     private ProductDao productDao;
 
     @Override
-    public void delete(HanmaProductDo hanmaProduct) {
-        productDao.delete(hanmaProduct);
+    public void delete(ProductDo productDo) {
+        productDao.delete(productDo);
     }
 
     @Override
-    public Long update(HanmaProductDo hanmaProduct) {
-        return productDao.save(hanmaProduct).getId();
+    public Long update(ProductDo productDo) {
+        return productDao.save(productDo).getId();
     }
 
     @Override
-    public List<HanmaProductDo> update(List<HanmaProductDo> productDoList) {
+    public List<ProductDo> update(List<ProductDo> productDoList) {
         return productDao.saveAll(productDoList);
     }
 
     @Override
-    public HanmaProductDo findById(Long id) {
+    public ProductDo findById(Long id) {
         return productDao.findById(id).orElse(null);
     }
 
-    public List<HanmaProductDo> getProductListByShopId(Long shopId) {
-        HanmaProductDo p = new HanmaProductDo();
+    public List<ProductDo> getProductListByShopId(Long shopId) {
+        ProductDo p = new ProductDo();
         p.setShopId(shopId);
-        Example<HanmaProductDo> example = Example.of(p);
+        Example<ProductDo> example = Example.of(p);
         return productDao.findAll(example);
     }
 
     @Override
-    public Page<HanmaProductDo> getProductPageList(Integer currentPage, Integer pageSize,
-                                                   String name) {
+    public Page<ProductDo> getProductPageList(Integer currentPage, Integer pageSize,
+                                              String name) {
 
         Pageable p = PageRequest.of(currentPage - 1, pageSize);
         if (StringUtils.isEmpty(name)) {

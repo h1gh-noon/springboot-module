@@ -1,20 +1,20 @@
 package com.hn.jdstore.service;
 
-import com.hn.jdstore.domain.entity.HanmaProductCategoryDo;
+import com.hn.jdstore.domain.entity.ProductCategoryDo;
 
 import java.util.List;
 
 public interface ProductCategoryService {
 
 
-    void delete(HanmaProductCategoryDo productCategoryDo);
+    void delete(ProductCategoryDo productCategoryDo);
 
-    Long update(HanmaProductCategoryDo productCategoryDo);
+    Long update(ProductCategoryDo productCategoryDo);
 
-    HanmaProductCategoryDo findById(Long id);
+    ProductCategoryDo findById(Long id);
 
-    List<HanmaProductCategoryDo> findByShopId(Long shopId);
+    List<ProductCategoryDo> findByShopId(Long shopId);
 
-    List<HanmaProductCategoryDo> getProductCategoryList();
+    List<ProductCategoryDo> getProductCategoryList();
 
 }

@@ -1,7 +1,7 @@
 package com.hn.jdstore.service.impl;
 
 import com.hn.jdstore.dao.ProductCategoryDao;
-import com.hn.jdstore.domain.entity.HanmaProductCategoryDo;
+import com.hn.jdstore.domain.entity.ProductCategoryDo;
 import com.hn.jdstore.service.ProductCategoryService;
 import jakarta.annotation.Resource;
 import org.springframework.data.domain.Example;
@@ -17,30 +17,30 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
 
 
     @Override
-    public void delete(HanmaProductCategoryDo hanmaProductCategory) {
-        productCategoryDao.delete(hanmaProductCategory);
+    public void delete(ProductCategoryDo productCategoryDo) {
+        productCategoryDao.delete(productCategoryDo);
     }
 
     @Override
-    public Long update(HanmaProductCategoryDo hanmaProductCategory) {
-        return productCategoryDao.save(hanmaProductCategory).getId();
+    public Long update(ProductCategoryDo productCategoryDo) {
+        return productCategoryDao.save(productCategoryDo).getId();
     }
 
     @Override
-    public HanmaProductCategoryDo findById(Long id) {
+    public ProductCategoryDo findById(Long id) {
         return productCategoryDao.findById(id).orElse(null);
     }
 
     @Override
-    public List<HanmaProductCategoryDo> findByShopId(Long shopId) {
-        HanmaProductCategoryDo p = new HanmaProductCategoryDo();
+    public List<ProductCategoryDo> findByShopId(Long shopId) {
+        ProductCategoryDo p = new ProductCategoryDo();
         p.setShopId(shopId);
-        Example<HanmaProductCategoryDo> example = Example.of(p);
+        Example<ProductCategoryDo> example = Example.of(p);
         return productCategoryDao.findAll(example);
     }
 
     @Override
-    public List<HanmaProductCategoryDo> getProductCategoryList() {
+    public List<ProductCategoryDo> getProductCategoryList() {
         return productCategoryDao.findAll();
     }
 }

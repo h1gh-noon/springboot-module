@@ -1,7 +1,7 @@
 package com.hn.jdstore.service.impl;
 
 import com.hn.jdstore.dao.AddressDao;
-import com.hn.jdstore.domain.entity.HanmaAddressDo;
+import com.hn.jdstore.domain.entity.AddressDo;
 import com.hn.jdstore.domain.vo.AddressVo;
 import com.hn.jdstore.domain.vo.IPLocation;
 import com.hn.jdstore.service.AddressService;
@@ -30,24 +30,24 @@ public class AddressServiceImpl implements AddressService {
     private AddressDao addressDao;
 
     @Override
-    public void delete(HanmaAddressDo hanmaAddress) {
-        addressDao.delete(hanmaAddress);
+    public void delete(AddressDo addressDo) {
+        addressDao.delete(addressDo);
     }
 
     @Override
-    public Long update(HanmaAddressDo hanmaAddress) {
-        return addressDao.save(hanmaAddress).getId();
+    public Long update(AddressDo addressDo) {
+        return addressDao.save(addressDo).getId();
     }
 
     @Override
     public AddressVo findById(Long id) {
-        HanmaAddressDo hanmaAddressDo = addressDao.findById(id).orElse(null);
-        if (hanmaAddressDo == null) {
+        AddressDo addressDo = addressDao.findById(id).orElse(null);
+        if (addressDo == null) {
             return null;
         }
-        AddressVo hanmaAddressVo = new AddressVo();
-        BeanUtils.copyProperties(hanmaAddressDo, hanmaAddressVo);
-        return hanmaAddressVo;
+        AddressVo addressDoVo = new AddressVo();
+        BeanUtils.copyProperties(addressDo, addressDoVo);
+        return addressDoVo;
     }
 
     @Override

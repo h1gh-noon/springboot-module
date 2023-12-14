@@ -10,7 +10,7 @@ import com.hn.common.enums.ResponseEnum;
 import com.hn.common.exceptions.TemplateException;
 import com.hn.common.util.ResponseTool;
 import com.hn.jdstore.domain.dto.OrderDto;
-import com.hn.jdstore.domain.entity.HanmaOrderDo;
+import com.hn.jdstore.domain.entity.OrderDo;
 import com.hn.jdstore.domain.vo.OrderDetailVo;
 import com.hn.jdstore.domain.vo.OrderVo;
 import com.hn.jdstore.service.OrderService;
@@ -67,7 +67,7 @@ public class OrderController {
             throws TemplateException {
 
 
-        Page<HanmaOrderDo> orderDtos = orderService.orderPageList(currentPage, pageSize,
+        Page<OrderDo> orderDtos = orderService.orderPageList(currentPage, pageSize,
                 id, JSON.parseObject(userInfo, UserDto.class));
         log.info("orderDtos={}", orderDtos);
 

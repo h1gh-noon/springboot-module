@@ -4,7 +4,7 @@ import com.hn.common.api.CommonResponse;
 import com.hn.common.dto.Validation;
 import com.hn.common.util.ResponseTool;
 import com.hn.common.util.Util;
-import com.hn.jdstore.domain.entity.HanmaAddressDo;
+import com.hn.jdstore.domain.entity.AddressDo;
 import com.hn.jdstore.domain.vo.AddressVo;
 import com.hn.jdstore.domain.vo.IPLocation;
 import com.hn.jdstore.service.AddressService;
@@ -32,31 +32,33 @@ public class AddressController {
 
     @PostMapping("/addressAdd")
     @Operation(summary = "新增地址")
-    public CommonResponse<Long> addressAdd(@RequestBody HanmaAddressDo hanmaAddress) {
-        hanmaAddress.setId(null);
+    public CommonResponse<Long> addressAdd(@RequestBody AddressVo addressVo) {
+        addressVo.setId(null);
+        AddressDo addressDo = new AddressDo();
+        BeanUtils.copyProperties(addressVo, addressDo);
         String time = Util.getTimestampStr();
-        hanmaAddress.setCreateTime(time);
-        hanmaAddress.setUpdateTime(time);
-        return ResponseTool.getSuccessResponse(addressService.update(hanmaAddress));
+        addressDo.setCreateTime(time);
+        addressDo.setUpdateTime(time);
+        return ResponseTool.getSuccessResponse(addressService.update(addressDo));
     }
 
     @RequestMapping("/addressDelete")
     @Operation(summary = "删除地址")
     public CommonResponse<Long> addressDelete(@RequestParam Long id) {
-        HanmaAddressDo hanmaAddressDo = new HanmaAddressDo();
-        hanmaAddressDo.setId(id);
-        addressService.delete(hanmaAddressDo);
+        AddressDo addressDo = new AddressDo();
+        addressDo.setId(id);
+        addressService.delete(addressDo);
         return ResponseTool.getSuccessResponse();
     }
 
     @PostMapping("/addressUpdate")
     @Operation(summary = "修改地址")
     public CommonResponse<Long> addressUpdate(@RequestBody @Validated(Validation.Update.class) AddressVo addressVo) {
-        HanmaAddressDo hanmaAddress = new HanmaAddressDo();
-        BeanUtils.copyProperties(addressVo, hanmaAddress);
+        AddressDo addressDo = new AddressDo();
+        BeanUtils.copyProperties(addressVo, addressDo);
 
-        hanmaAddress.setUpdateTime(Util.getTimestampStr());
-        return ResponseTool.getSuccessResponse(addressService.update(hanmaAddress));
+        addressDo.setUpdateTime(Util.getTimestampStr());
+        return ResponseTool.getSuccessResponse(addressService.update(addressDo));
     }
 
     @RequestMapping("/getAddressById")

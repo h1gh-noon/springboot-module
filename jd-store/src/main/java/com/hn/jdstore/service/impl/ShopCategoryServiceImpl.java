@@ -1,7 +1,7 @@
 package com.hn.jdstore.service.impl;
 
 import com.hn.common.util.Util;
-import com.hn.jdstore.domain.entity.HanmaShopCategoryDo;
+import com.hn.jdstore.domain.entity.ShopCategoryDo;
 import com.hn.jdstore.service.ShopCategoryService;
 import com.hn.jdstore.dao.ShopCategoryDao;
 import jakarta.annotation.Resource;
@@ -17,31 +17,30 @@ public class ShopCategoryServiceImpl implements ShopCategoryService {
     private ShopCategoryDao shopCategoryDao;
 
     @Override
-    public void delete(HanmaShopCategoryDo hanmaShopCategory) {
-        shopCategoryDao.delete(hanmaShopCategory);
+    public void delete(ShopCategoryDo shopCategoryDo) {
+        shopCategoryDao.delete(shopCategoryDo);
     }
 
     @Override
-    public Long update(HanmaShopCategoryDo hanmaShopCategory) {
-        if (hanmaShopCategory.getId() == null) {
-            return shopCategoryDao.save(hanmaShopCategory).getId();
+    public Long update(ShopCategoryDo shopCategoryDo) {
+        if (shopCategoryDo.getId() == null) {
+            return shopCategoryDao.save(shopCategoryDo).getId();
         }
-        HanmaShopCategoryDo shopCategoryDo = findById(hanmaShopCategory.getId());
-        HanmaShopCategoryDo h = new HanmaShopCategoryDo();
+        ShopCategoryDo shopCategory = findById(shopCategoryDo.getId());
+        ShopCategoryDo h = new ShopCategoryDo();
         BeanUtils.copyProperties(shopCategoryDo, h);
-        BeanUtils.copyProperties(hanmaShopCategory, h);
-        h.setCreateTime(shopCategoryDo.getCreateTime());
+        BeanUtils.copyProperties(shopCategory, h);
         h.setUpdateTime(Util.getTimestampStr());
         return shopCategoryDao.save(h).getId();
     }
 
     @Override
-    public HanmaShopCategoryDo findById(Long id) {
+    public ShopCategoryDo findById(Long id) {
         return shopCategoryDao.findById(id).orElse(null);
     }
 
     @Override
-    public List<HanmaShopCategoryDo> getShopCategoryList() {
+    public List<ShopCategoryDo> getShopCategoryList() {
         return shopCategoryDao.findAll();
     }
 }

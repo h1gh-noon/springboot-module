@@ -5,7 +5,7 @@ import com.hn.common.api.PaginationData;
 import com.hn.common.dto.Validation;
 import com.hn.common.util.ResponseTool;
 import com.hn.common.util.Util;
-import com.hn.jdstore.domain.entity.HanmaProductDo;
+import com.hn.jdstore.domain.entity.ProductDo;
 import com.hn.jdstore.domain.vo.ProductVo;
 import com.hn.jdstore.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -36,7 +36,7 @@ public class ProductController {
     @Operation(summary = "添加商品")
     public CommonResponse<Long> productAdd(@RequestBody ProductVo productVo) {
         productVo.setId(null);
-        HanmaProductDo productDo = new HanmaProductDo();
+        ProductDo productDo = new ProductDo();
         BeanUtils.copyProperties(productVo, productDo);
         String t = Util.getTimestampStr();
         productDo.setCreateTime(t);
@@ -47,16 +47,16 @@ public class ProductController {
     @RequestMapping("/productDelete")
     @Operation(summary = "删除商品")
     public CommonResponse<Long> productDelete(@RequestParam Long id) {
-        HanmaProductDo hanmaProduct = new HanmaProductDo();
-        hanmaProduct.setId(id);
-        productService.delete(hanmaProduct);
+        ProductDo productDo = new ProductDo();
+        productDo.setId(id);
+        productService.delete(productDo);
         return ResponseTool.getSuccessResponse();
     }
 
     @PostMapping("/productUpdate")
     @Operation(summary = "修改商品")
     public CommonResponse<Long> productUpdate(@RequestBody @Validated(Validation.Update.class) ProductVo productVo) {
-        HanmaProductDo productDo = new HanmaProductDo();
+        ProductDo productDo = new ProductDo();
         BeanUtils.copyProperties(productVo, productDo);
         productDo.setUpdateTime(Util.getTimestampStr());
         return ResponseTool.getSuccessResponse(productService.update(productDo));
@@ -80,7 +80,7 @@ public class ProductController {
                        @Schema(description = "每页条数") Integer pageSize,
                        @RequestBody(required = false) String name) {
 
-        Page<HanmaProductDo> productDoPage = productService.getProductPageList(currentPage,
+        Page<ProductDo> productDoPage = productService.getProductPageList(currentPage,
                 pageSize,
                 name);
         log.info("productDoPage={}", productDoPage);

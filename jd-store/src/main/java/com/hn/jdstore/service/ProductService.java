@@ -1,6 +1,6 @@
 package com.hn.jdstore.service;
 
-import com.hn.jdstore.domain.entity.HanmaProductDo;
+import com.hn.jdstore.domain.entity.ProductDo;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -8,16 +8,16 @@ import java.util.List;
 public interface ProductService {
 
 
-    void delete(HanmaProductDo productDo);
+    void delete(ProductDo productDo);
 
-    Long update(HanmaProductDo productDo);
+    Long update(ProductDo productDo);
 
-    List<HanmaProductDo> update(List<HanmaProductDo> productDoList);
+    List<ProductDo> update(List<ProductDo> productDoList);
 
-    HanmaProductDo findById(Long id);
+    ProductDo findById(Long id);
 
-    List<HanmaProductDo> getProductListByShopId(Long shopId);
+    List<ProductDo> getProductListByShopId(Long shopId);
 
-    Page<HanmaProductDo> getProductPageList(Integer currentPage, Integer pageSize, String name);
+    Page<ProductDo> getProductPageList(Integer currentPage, Integer pageSize, String name);
 
 }

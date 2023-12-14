@@ -1,6 +1,6 @@
 package com.hn.jdstore.domain.dto;
 
-import com.hn.jdstore.domain.entity.HanmaOrderDetailDo;
+import com.hn.jdstore.domain.entity.OrderDetailDo;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -25,5 +25,5 @@ public class OrderDto {
     private String createTime;
     private String updateTime;
 
-    private List<HanmaOrderDetailDo> detailList;
+    private List<OrderDetailDo> detailList;
 }

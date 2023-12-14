@@ -8,22 +8,24 @@ import java.math.BigDecimal;
 
 @Data
 @Entity
-@Table(name = "hanma_product")
-public class HanmaProductDo {
+@Table(name = "jd_shop")
+public class ShopDo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private Long cateId;
     private String name;
     private Long sales;
-    private BigDecimal price;
-    private BigDecimal oldPrice;
-    private Long productStock;
+    private Long expressLimit;
+    private BigDecimal expressPrice;
+    private String descDetail;
     private String imgUrl;
-    private Long cateId;
-    private Long shopId;
+    private Long state;
     private Integer status;
+
     private String createTime;
+
     private String updateTime;
 
 }

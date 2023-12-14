@@ -1,6 +1,6 @@
 package com.hn.jdstore.service;
 
-import com.hn.jdstore.domain.entity.HanmaShopDo;
+import com.hn.jdstore.domain.entity.ShopDo;
 import com.hn.jdstore.domain.vo.ShopInfoProductVo;
 import com.hn.jdstore.domain.vo.ShopVo;
 import org.springframework.data.domain.Page;
@@ -8,15 +8,15 @@ import org.springframework.data.domain.Page;
 public interface ShopService {
 
 
-    void delete(HanmaShopDo shopDo);
+    void delete(ShopDo shopDo);
 
-    Long update(HanmaShopDo shopDo);
+    Long update(ShopDo shopDo);
 
-    HanmaShopDo findById(Long id);
+    ShopDo findById(Long id);
 
-    Page<HanmaShopDo> getShopPageList(Integer currentPage, Integer pageSize, ShopVo shopVo);
+    Page<ShopDo> getShopPageList(Integer currentPage, Integer pageSize, ShopVo shopVo);
 
-    Page<HanmaShopDo> searchShopByNamePageList(Integer currentPage, Integer pageSize, String name);
+    Page<ShopDo> searchShopByNamePageList(Integer currentPage, Integer pageSize, String name);
 
     ShopInfoProductVo getShopInfoProductList(Long shopId);
 

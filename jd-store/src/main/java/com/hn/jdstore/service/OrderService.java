@@ -2,22 +2,22 @@ package com.hn.jdstore.service;
 
 import com.hn.common.dto.UserDto;
 import com.hn.jdstore.domain.dto.OrderDto;
-import com.hn.jdstore.domain.entity.HanmaOrderDo;
+import com.hn.jdstore.domain.entity.OrderDo;
 import com.hn.jdstore.exception.SelfException;
 import org.springframework.data.domain.Page;
 
 public interface OrderService {
 
-    HanmaOrderDo findById(Long id);
+    OrderDo findById(Long id);
 
-    HanmaOrderDo findByOrderNo(String orderNo);
+    OrderDo findByOrderNo(String orderNo);
 
     OrderDto orderAdd(OrderDto orderDto, String userInfo) throws SelfException;
 
-    void orderPay(HanmaOrderDo orderDo);
+    void orderPay(OrderDo orderDo);
 
-    Page<HanmaOrderDo> orderPageList(Integer currentPage, Integer pageSize,
-                                     Long shopId, UserDto userDto);
+    Page<OrderDo> orderPageList(Integer currentPage, Integer pageSize,
+                                Long shopId, UserDto userDto);
 
     OrderDto getOrderDetail(Long id);
 

@@ -3,24 +3,22 @@ package com.hn.jdstore.domain.entity;
 import lombok.Data;
 import jakarta.persistence.*;
 
-import java.math.BigDecimal;
-
 
 @Data
 @Entity
-@Table(name = "hanma_order_detail")
-public class HanmaOrderDetailDo {
+@Table(name = "jd_product_category")
+public class ProductCategoryDo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long orderId;
-    private Long productId;
+    private Long shopId;
     private String name;
-    private BigDecimal price;
-    private Long quantity;
-    private String imgUrl;
+    private String type;
+    private Integer status;
+
     private String createTime;
+
     private String updateTime;
 
 }

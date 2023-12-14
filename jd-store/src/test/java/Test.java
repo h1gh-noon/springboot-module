@@ -1,6 +1,6 @@
 import com.hn.jdstore.JdStoreApplication;
 import com.hn.jdstore.dao.ProductDao;
-import com.hn.jdstore.domain.entity.HanmaProductDo;
+import com.hn.jdstore.domain.entity.ProductDo;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,7 +14,7 @@ public class Test {
 
     @org.junit.jupiter.api.Test
     void test() {
-        HanmaProductDo productDo =new HanmaProductDo();
+        ProductDo productDo =new ProductDo();
         productDo.setId(20L);
         productDo.setProductStock(1L);
         log.info("update={}", productDao.updateStock(productDo));

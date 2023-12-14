@@ -14,7 +14,7 @@ import com.hn.common.dto.UserDto;
 import com.hn.common.enums.ResponseEnum;
 import com.hn.common.exceptions.TemplateException;
 import com.hn.common.util.Util;
-import com.hn.jdstore.domain.entity.HanmaOrderDo;
+import com.hn.jdstore.domain.entity.OrderDo;
 import com.hn.jdstore.service.OrderService;
 import com.hn.jdstore.service.PayService;
 import jakarta.annotation.Resource;
@@ -43,7 +43,7 @@ public class PayServiceImpl implements PayService {
     public WxPayMpOrderResult pay(Long id, UserDto userDto, String ip) throws WxPayException {
 
 
-        HanmaOrderDo orderDo = orderService.findById(id);
+        OrderDo orderDo = orderService.findById(id);
         if (orderDo == null || orderDo.getOrderStatus() != 0 || orderDo.getPayStatus() != 0) {
             throw new TemplateException(ResponseEnum.FAIL_404);
         }
@@ -73,7 +73,7 @@ public class PayServiceImpl implements PayService {
             // String tradeNo = result.getTransactionId();
             String totalFee = BaseWxPayResult.fenToYuan(result.getTotalFee());
             log.info("微信回调 订单id={}, 金额={}", orderNo, totalFee);
-            HanmaOrderDo orderDo = orderService.findByOrderNo(orderNo);
+            OrderDo orderDo = orderService.findByOrderNo(orderNo);
             if (orderDo.getOrderAmount().equals(new BigDecimal(totalFee))
                     && orderDo.getOrderStatus().equals(0)) {
 

@@ -2,9 +2,9 @@ package com.hn.jdstore.service.impl;
 
 import com.hn.common.util.Util;
 import com.hn.jdstore.dao.ShopDao;
-import com.hn.jdstore.domain.entity.HanmaProductCategoryDo;
-import com.hn.jdstore.domain.entity.HanmaProductDo;
-import com.hn.jdstore.domain.entity.HanmaShopDo;
+import com.hn.jdstore.domain.entity.ProductCategoryDo;
+import com.hn.jdstore.domain.entity.ProductDo;
+import com.hn.jdstore.domain.entity.ShopDo;
 import com.hn.jdstore.domain.vo.ProductCategoryVo;
 import com.hn.jdstore.domain.vo.ProductVo;
 import com.hn.jdstore.domain.vo.ShopInfoProductVo;
@@ -33,18 +33,18 @@ public class ShopServiceImpl implements ShopService {
     private ProductService productService;
 
     @Override
-    public void delete(HanmaShopDo shopDo) {
+    public void delete(ShopDo shopDo) {
         shopDao.delete(shopDo);
     }
 
     @Override
-    public Long update(HanmaShopDo shopDo) {
+    public Long update(ShopDo shopDo) {
         if (shopDo.getId() == null) {
             return shopDao.save(shopDo).getId();
         }
 
-        HanmaShopDo h = new HanmaShopDo();
-        HanmaShopDo old = findById(shopDo.getId());
+        ShopDo h = new ShopDo();
+        ShopDo old = findById(shopDo.getId());
         BeanUtils.copyProperties(old, h);
         BeanUtils.copyProperties(shopDo, h);
 
@@ -56,17 +56,17 @@ public class ShopServiceImpl implements ShopService {
     }
 
     @Override
-    public HanmaShopDo findById(Long id) {
+    public ShopDo findById(Long id) {
         return shopDao.findById(id).orElse(null);
     }
 
     @Override
-    public Page<HanmaShopDo> getShopPageList(Integer currentPage, Integer pageSize, ShopVo shopVo) {
-        HanmaShopDo h = new HanmaShopDo();
+    public Page<ShopDo> getShopPageList(Integer currentPage, Integer pageSize, ShopVo shopVo) {
+        ShopDo h = new ShopDo();
         if (shopVo != null) {
             BeanUtils.copyProperties(shopVo, h);
         }
-        Example<HanmaShopDo> example = Example.of(h);
+        Example<ShopDo> example = Example.of(h);
         Sort sort = Sort.by(Sort.Direction.DESC, "sales");
 
         Pageable pageable = PageRequest.of(currentPage - 1, pageSize, sort);
@@ -74,7 +74,7 @@ public class ShopServiceImpl implements ShopService {
     }
 
     @Override
-    public Page<HanmaShopDo> searchShopByNamePageList(Integer currentPage, Integer pageSize, String name) {
+    public Page<ShopDo> searchShopByNamePageList(Integer currentPage, Integer pageSize, String name) {
         Sort sort = Sort.by(Sort.Direction.DESC, "sales");
 
         Pageable pageable = PageRequest.of(currentPage - 1, pageSize, sort);
@@ -84,9 +84,9 @@ public class ShopServiceImpl implements ShopService {
     @Override
     public ShopInfoProductVo getShopInfoProductList(Long shopId) {
 
-        HanmaShopDo shopDo = findById(shopId);
-        List<HanmaProductCategoryDo> productCategoryDoList = productCategoryService.findByShopId(shopId);
-        List<HanmaProductDo> productDoList = productService.getProductListByShopId(shopId);
+        ShopDo shopDo = findById(shopId);
+        List<ProductCategoryDo> productCategoryDoList = productCategoryService.findByShopId(shopId);
+        List<ProductDo> productDoList = productService.getProductListByShopId(shopId);
 
         ShopVo shopVo = new ShopVo();
         BeanUtils.copyProperties(shopDo, shopVo);

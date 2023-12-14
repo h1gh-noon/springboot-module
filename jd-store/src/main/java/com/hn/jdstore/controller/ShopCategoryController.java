@@ -4,7 +4,7 @@ import com.hn.common.api.CommonResponse;
 import com.hn.common.dto.Validation;
 import com.hn.common.util.ResponseTool;
 import com.hn.common.util.Util;
-import com.hn.jdstore.domain.entity.HanmaShopCategoryDo;
+import com.hn.jdstore.domain.entity.ShopCategoryDo;
 import com.hn.jdstore.domain.vo.ShopCategoryVo;
 import com.hn.jdstore.service.ShopCategoryService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,7 +33,7 @@ public class ShopCategoryController {
     @Operation(summary = "添加店铺分类")
     public CommonResponse<Long> shopCategoryAdd(@RequestBody @Validated(Validation.Save.class) ShopCategoryVo shopCategoryVo) {
         shopCategoryVo.setId(null);
-        HanmaShopCategoryDo shopCategoryDo = new HanmaShopCategoryDo();
+        ShopCategoryDo shopCategoryDo = new ShopCategoryDo();
         BeanUtils.copyProperties(shopCategoryVo, shopCategoryDo);
         String t = Util.getTimestampStr();
         shopCategoryDo.setCreateTime(t);
@@ -45,16 +45,16 @@ public class ShopCategoryController {
     @Operation(summary = "删除店铺分类")
     public CommonResponse<Long> shopCategoryDelete(@RequestParam Long id) {
 
-        HanmaShopCategoryDo hanmaShopCategory = new HanmaShopCategoryDo();
-        hanmaShopCategory.setId(id);
-        shopCategoryService.delete(hanmaShopCategory);
+        ShopCategoryDo shopCategoryDo = new ShopCategoryDo();
+        shopCategoryDo.setId(id);
+        shopCategoryService.delete(shopCategoryDo);
         return ResponseTool.getSuccessResponse();
     }
 
     @PostMapping("/shopCategoryUpdate")
     @Operation(summary = "修改店铺分类")
     public CommonResponse<Long> shopCategoryUpdate(@RequestBody @Validated(Validation.Update.class) ShopCategoryVo shopCategoryVo) {
-        HanmaShopCategoryDo shopCategoryDo = new HanmaShopCategoryDo();
+        ShopCategoryDo shopCategoryDo = new ShopCategoryDo();
         BeanUtils.copyProperties(shopCategoryVo, shopCategoryDo);
         shopCategoryDo.setUpdateTime(Util.getTimestampStr());
         return ResponseTool.getSuccessResponse(shopCategoryService.update(shopCategoryDo));
@@ -74,9 +74,9 @@ public class ShopCategoryController {
     public CommonResponse<List<ShopCategoryVo>> getShopCategoryList() {
 
         List<ShopCategoryVo> list = new ArrayList<>();
-        List<HanmaShopCategoryDo> hanmaShopCategoryList = shopCategoryService.getShopCategoryList();
-        log.info("hanmaShopCategoryList={}", hanmaShopCategoryList);
-        hanmaShopCategoryList.forEach(h -> {
+        List<ShopCategoryDo> shopCategoryDoList = shopCategoryService.getShopCategoryList();
+        log.info("shopCategoryDoList={}", shopCategoryDoList);
+        shopCategoryDoList.forEach(h -> {
             ShopCategoryVo shopCategoryVo = new ShopCategoryVo();
             BeanUtils.copyProperties(h, shopCategoryVo);
             list.add(shopCategoryVo);
