@@ -1,18 +1,12 @@
-package com.hn.jdstore.entity;
+package com.hn.jdstore.domain.dto;
 
 import lombok.Data;
-import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 
-
 @Data
-@Entity
-@Table(name = "hanma_product")
-public class HanmaProductEntity {
+public class ProductDto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private Long sales;
@@ -21,9 +15,13 @@ public class HanmaProductEntity {
     private Long productStock;
     private String imgUrl;
     private Long cateId;
+
     private Long shopId;
-    private Integer status;
-    private String createTime;
-    private String updateTime;
+    private String shopName;
+    private String shopImg;
+    private Long shopState;
+    private String shopDescDetail;
+    private Long shopExpressLimit;
+    private BigDecimal shopExpressPrice;
 
 }

@@ -4,7 +4,7 @@ import com.alibaba.fastjson2.JSON;
 import com.hn.common.constant.RequestHeaderConstant;
 import com.hn.common.enums.ResponseEnum;
 import com.hn.common.exceptions.TemplateException;
-import com.hn.user.entity.UserEntity;
+import com.hn.user.domain.entity.UserDo;
 import com.hn.user.enums.PermissionsEnum;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -57,7 +57,7 @@ public class PermissionsAspect {
             return pjp.proceed();
         }
         // 验证权限
-        UserEntity user = JSON.parseObject(headerInfo, UserEntity.class);
+        UserDo user = JSON.parseObject(headerInfo, UserDo.class);
         String permissions = user.getPermissions();
         if (permissions != null && !permissions.isEmpty()) {
             if (Arrays.stream(permissions.split(",")).anyMatch(e -> e.equals(PermissionsEnum.SUPER_ADMIN.getName()))) {

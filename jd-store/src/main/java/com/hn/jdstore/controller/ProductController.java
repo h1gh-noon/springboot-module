@@ -4,8 +4,8 @@ import com.hn.common.api.CommonResponse;
 import com.hn.common.api.PaginationData;
 import com.hn.common.util.ResponseTool;
 import com.hn.common.util.Util;
-import com.hn.jdstore.entity.HanmaProductEntity;
-import com.hn.jdstore.model.ProductModel;
+import com.hn.jdstore.domain.entity.HanmaProductDo;
+import com.hn.jdstore.domain.vo.ProductVo;
 import com.hn.jdstore.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -32,7 +32,7 @@ public class ProductController {
 
     @PostMapping("/productAdd")
     @Operation(summary = "添加商品")
-    public CommonResponse<Long> productAdd(@RequestBody HanmaProductEntity hanmaProduct) {
+    public CommonResponse<Long> productAdd(@RequestBody HanmaProductDo hanmaProduct) {
         hanmaProduct.setId(null);
         String t = Util.getTimestampStr();
         hanmaProduct.setCreateTime(t);
@@ -43,7 +43,7 @@ public class ProductController {
     @RequestMapping("/productDelete")
     @Operation(summary = "删除商品")
     public CommonResponse<Long> productDelete(@RequestParam Long id) {
-        HanmaProductEntity hanmaProduct = new HanmaProductEntity();
+        HanmaProductDo hanmaProduct = new HanmaProductDo();
         hanmaProduct.setId(id);
         productService.delete(hanmaProduct);
         return ResponseTool.getSuccessResponse();
@@ -51,7 +51,7 @@ public class ProductController {
 
     @PostMapping("/productUpdate")
     @Operation(summary = "修改商品")
-    public CommonResponse<Long> productUpdate(@RequestBody HanmaProductEntity hanmaProduct) {
+    public CommonResponse<Long> productUpdate(@RequestBody HanmaProductDo hanmaProduct) {
         hanmaProduct.setUpdateTime(null);
         hanmaProduct.setUpdateTime(Util.getTimestampStr());
         return ResponseTool.getSuccessResponse(productService.update(hanmaProduct));
@@ -59,38 +59,38 @@ public class ProductController {
 
     @RequestMapping("/getProductById")
     @Operation(summary = "根据id查询商品")
-    public CommonResponse<ProductModel> getProductById(@RequestParam Long id) {
+    public CommonResponse<ProductVo> getProductById(@RequestParam Long id) {
 
-        ProductModel productModel = new ProductModel();
-        BeanUtils.copyProperties(productService.findById(id), productModel);
-        return ResponseTool.getSuccessResponse(productModel);
+        ProductVo productVo = new ProductVo();
+        BeanUtils.copyProperties(productService.findById(id), productVo);
+        return ResponseTool.getSuccessResponse(productVo);
     }
 
     @RequestMapping("/getProductPageList")
     @Operation(summary = "查询商品分页列表")
-    public CommonResponse<PaginationData<List<ProductModel>>>
+    public CommonResponse<PaginationData<List<ProductVo>>>
     getProductPageList(@RequestParam(required = false,
             defaultValue = "1") @Schema(description = "当前页码") Integer currentPage,
                        @RequestParam(required = false,
                                defaultValue = "20") @Schema(description = "每页条数") Integer pageSize,
                        @RequestBody(required = false) String name) {
 
-        Page<HanmaProductEntity> productEntityPage = productService.getProductPageList(currentPage,
+        Page<HanmaProductDo> productDoPage = productService.getProductPageList(currentPage,
                 pageSize,
                 name);
-        log.info("productEntityPage={}", productEntityPage);
+        log.info("productDoPage={}", productDoPage);
 
-        List<ProductModel> list = new ArrayList<>();
-        productEntityPage.getContent().forEach(h -> {
-            ProductModel sm = new ProductModel();
+        List<ProductVo> list = new ArrayList<>();
+        productDoPage.getContent().forEach(h -> {
+            ProductVo sm = new ProductVo();
             BeanUtils.copyProperties(h, sm);
             list.add(sm);
         });
 
-        PaginationData<List<ProductModel>> pagination = new PaginationData<>();
+        PaginationData<List<ProductVo>> pagination = new PaginationData<>();
         pagination.setCurrentPage(currentPage);
         pagination.setPageSize(pageSize);
-        pagination.setTotal(productEntityPage.getTotalElements());
+        pagination.setTotal(productDoPage.getTotalElements());
         pagination.setData(list);
         return ResponseTool.getSuccessResponse(pagination);
     }

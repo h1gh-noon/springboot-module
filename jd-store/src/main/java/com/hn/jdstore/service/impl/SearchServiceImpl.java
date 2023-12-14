@@ -2,10 +2,10 @@ package com.hn.jdstore.service.impl;
 
 import com.alibaba.fastjson2.JSON;
 import com.hn.jdstore.dao.SearchDao;
-import com.hn.jdstore.dto.ProductDto;
-import com.hn.jdstore.entity.HanmaShopEntity;
-import com.hn.jdstore.model.ProductModel;
-import com.hn.jdstore.model.ShopModel;
+import com.hn.jdstore.domain.dto.ProductDto;
+import com.hn.jdstore.domain.entity.HanmaShopDo;
+import com.hn.jdstore.domain.vo.ProductVo;
+import com.hn.jdstore.domain.vo.ShopVo;
 import com.hn.jdstore.service.ProductService;
 import com.hn.jdstore.service.SearchService;
 import com.hn.jdstore.service.ShopService;
@@ -30,25 +30,25 @@ public class SearchServiceImpl implements SearchService {
 
 
     @Override
-    public List<ShopModel> searchAll(String content) {
+    public List<ShopVo> searchAll(String content) {
 
-        Page<HanmaShopEntity> shopPageList = shopService.searchShopByNamePageList(1, 30, content);
-        List<ShopModel> shopModels = shopPageList.getContent().stream().map(e -> {
-            ShopModel sm = new ShopModel();
+        Page<HanmaShopDo> shopPageList = shopService.searchShopByNamePageList(1, 30, content);
+        List<ShopVo> shopVos = shopPageList.getContent().stream().map(e -> {
+            ShopVo sm = new ShopVo();
             BeanUtils.copyProperties(e, sm);
             return sm;
         }).toList();
-        Set<ShopModel> resultShopModel = new HashSet<>(shopModels);
+        Set<ShopVo> resultShopVo = new HashSet<>(shopVos);
 
         List<Map<String, Object>> list = searchDao.searchAll("%" + content + "%");
         List<ProductDto> productDtos = JSON.parseArray(JSON.toJSONString(list), ProductDto.class);
         productDtos.forEach(e -> {
-            ShopModel shopModel =
-                    resultShopModel.stream().filter(s -> Objects.equals(s.getId(), e.getShopId())).findFirst().orElse(null);
-            ProductModel pm = new ProductModel();
+            ShopVo shopVo =
+                    resultShopVo.stream().filter(s -> Objects.equals(s.getId(), e.getShopId())).findFirst().orElse(null);
+            ProductVo pm = new ProductVo();
             BeanUtils.copyProperties(e, pm);
-            if (shopModel == null) {
-                ShopModel sm = new ShopModel();
+            if (shopVo == null) {
+                ShopVo sm = new ShopVo();
                 sm.setId(e.getShopId());
                 sm.setName(e.getShopName());
                 sm.setState(e.getShopState());
@@ -56,19 +56,19 @@ public class SearchServiceImpl implements SearchService {
                 sm.setExpressLimit(e.getShopExpressLimit());
                 sm.setExpressPrice(e.getShopExpressPrice());
                 sm.setImgUrl(e.getShopImg());
-                List<ProductModel> pList = new ArrayList<>();
+                List<ProductVo> pList = new ArrayList<>();
                 pList.add(pm);
                 sm.setProductList(pList);
-                resultShopModel.add(sm);
-            } else if (shopModel.getProductList() == null) {
-                List<ProductModel> pList = new ArrayList<>();
+                resultShopVo.add(sm);
+            } else if (shopVo.getProductList() == null) {
+                List<ProductVo> pList = new ArrayList<>();
                 pList.add(pm);
-                shopModel.setProductList(pList);
+                shopVo.setProductList(pList);
             } else {
-                shopModel.getProductList().add(pm);
+                shopVo.getProductList().add(pm);
             }
         });
 
-        return resultShopModel.stream().toList();
+        return resultShopVo.stream().toList();
     }
 }

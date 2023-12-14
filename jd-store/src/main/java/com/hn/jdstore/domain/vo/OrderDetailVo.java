@@ -1,4 +1,4 @@
-package com.hn.jdstore.model;
+package com.hn.jdstore.domain.vo;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 
 
 @Data
-public class OrderDetailModel {
+public class OrderDetailVo {
 
     @Schema(description = "商品id")
     private Long productId;

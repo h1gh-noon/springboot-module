@@ -3,8 +3,8 @@ package com.hn.jdstore.controller;
 import com.hn.common.api.CommonResponse;
 import com.hn.common.util.ResponseTool;
 import com.hn.common.util.Util;
-import com.hn.jdstore.entity.HanmaProductCategoryEntity;
-import com.hn.jdstore.model.ProductCategoryModel;
+import com.hn.jdstore.domain.entity.HanmaProductCategoryDo;
+import com.hn.jdstore.domain.vo.ProductCategoryVo;
 import com.hn.jdstore.service.ProductCategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -30,7 +30,7 @@ public class ProductCategoryController {
 
     @PostMapping("/productCategoryAdd")
     @Operation(summary = "添加商品分类")
-    public CommonResponse<Long> productCategoryAdd(@RequestBody HanmaProductCategoryEntity hanmaProductCategory) {
+    public CommonResponse<Long> productCategoryAdd(@RequestBody HanmaProductCategoryDo hanmaProductCategory) {
         hanmaProductCategory.setId(null);
         String t = Util.getTimestampStr();
         hanmaProductCategory.setCreateTime(t);
@@ -42,7 +42,7 @@ public class ProductCategoryController {
     @Operation(summary = "删除商品分类")
     public CommonResponse<Long> productCategoryDelete(@RequestParam Long id) {
 
-        HanmaProductCategoryEntity hanmaProductCategory = new HanmaProductCategoryEntity();
+        HanmaProductCategoryDo hanmaProductCategory = new HanmaProductCategoryDo();
         hanmaProductCategory.setId(id);
         productCategoryService.delete(hanmaProductCategory);
         return ResponseTool.getSuccessResponse();
@@ -50,7 +50,7 @@ public class ProductCategoryController {
 
     @PostMapping("/productCategoryUpdate")
     @Operation(summary = "修改商品分类")
-    public CommonResponse<Long> productCategoryUpdate(@RequestBody HanmaProductCategoryEntity hanmaProductCategory) {
+    public CommonResponse<Long> productCategoryUpdate(@RequestBody HanmaProductCategoryDo hanmaProductCategory) {
         hanmaProductCategory.setUpdateTime(null);
         hanmaProductCategory.setUpdateTime(Util.getTimestampStr());
         return ResponseTool.getSuccessResponse(productCategoryService.update(hanmaProductCategory));
@@ -58,25 +58,25 @@ public class ProductCategoryController {
 
     @RequestMapping("/getProductCategoryById")
     @Operation(summary = "根据id查询商品分类")
-    public CommonResponse<ProductCategoryModel> getProductCategoryById(@RequestParam Long id) {
+    public CommonResponse<ProductCategoryVo> getProductCategoryById(@RequestParam Long id) {
 
-        ProductCategoryModel productCategoryModel = new ProductCategoryModel();
-        BeanUtils.copyProperties(productCategoryService.findById(id), productCategoryModel);
-        return ResponseTool.getSuccessResponse(productCategoryModel);
+        ProductCategoryVo productCategoryVo = new ProductCategoryVo();
+        BeanUtils.copyProperties(productCategoryService.findById(id), productCategoryVo);
+        return ResponseTool.getSuccessResponse(productCategoryVo);
     }
 
     @RequestMapping("/getProductCategoryList")
     @Operation(summary = "查询商品分类列表")
-    public CommonResponse<List<ProductCategoryModel>> getProductCategoryList() {
+    public CommonResponse<List<ProductCategoryVo>> getProductCategoryList() {
 
-        List<HanmaProductCategoryEntity> hanmaProductCategoryList = productCategoryService.getProductCategoryList();
+        List<HanmaProductCategoryDo> hanmaProductCategoryList = productCategoryService.getProductCategoryList();
         log.info("hanmaProductCategoryList={}", hanmaProductCategoryList);
-        List<ProductCategoryModel> list = new ArrayList<>();
+        List<ProductCategoryVo> list = new ArrayList<>();
         if (hanmaProductCategoryList != null) {
             list = hanmaProductCategoryList.stream().map(h -> {
-                ProductCategoryModel productCategoryModel = new ProductCategoryModel();
-                BeanUtils.copyProperties(h, productCategoryModel);
-                return productCategoryModel;
+                ProductCategoryVo productCategoryVo = new ProductCategoryVo();
+                BeanUtils.copyProperties(h, productCategoryVo);
+                return productCategoryVo;
             }).collect(Collectors.toList());
         }
 

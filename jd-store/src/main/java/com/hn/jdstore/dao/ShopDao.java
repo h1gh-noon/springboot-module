@@ -1,14 +1,14 @@
 package com.hn.jdstore.dao;
 
-import com.hn.jdstore.entity.HanmaShopEntity;
+import com.hn.jdstore.domain.entity.HanmaShopDo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ShopDao extends JpaRepository<HanmaShopEntity, Long> {
+public interface ShopDao extends JpaRepository<HanmaShopDo, Long> {
 
-    Page<HanmaShopEntity> findByNameLike(String name, Pageable page);
+    Page<HanmaShopDo> findByNameLike(String name, Pageable page);
 
 }

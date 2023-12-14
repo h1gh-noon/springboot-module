@@ -1,7 +1,7 @@
 package com.hn.user.service.impl;
 
-import com.hn.user.dto.WechatUserInfoDto;
-import com.hn.user.entity.UserEntity;
+import com.hn.user.domain.request.WechatUserInfoRequest;
+import com.hn.user.domain.entity.UserDo;
 import com.hn.user.mapper.UserMapper;
 import com.hn.user.service.UserService;
 import com.hn.user.service.WechatUserService;
@@ -21,20 +21,20 @@ public class WechatUserServiceImpl implements WechatUserService {
     private UserService userService;
 
     @Override
-    public String wechatUserLogin(WechatUserInfoDto userInfoDto) {
+    public String wechatUserLogin(WechatUserInfoRequest userInfoDto) {
 
-        UserEntity userEntity = userMapper.getUserByOpenid(userInfoDto.getOpenid());
+        UserDo userDo = userMapper.getUserByOpenid(userInfoDto.getOpenid());
 
-        if (userEntity == null) {
+        if (userDo == null) {
             // 新增
-            userEntity = new UserEntity();
-            BeanUtils.copyProperties(userInfoDto, userEntity);
-            userEntity.setPassword("");
-            userEntity.setUsername(UUID.randomUUID().toString().replace("-", ""));
-            userMapper.userAdd(userEntity);
+            userDo = new UserDo();
+            BeanUtils.copyProperties(userInfoDto, userDo);
+            userDo.setPassword("");
+            userDo.setUsername(UUID.randomUUID().toString().replace("-", ""));
+            userMapper.userAdd(userDo);
         } else {
-            userEntity.setPassword(null);
+            userDo.setPassword(null);
         }
-        return userService.setUserToken(userEntity);
+        return userService.setUserToken(userDo);
     }
 }

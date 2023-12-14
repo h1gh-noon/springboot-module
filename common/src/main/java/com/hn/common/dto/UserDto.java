@@ -27,7 +27,6 @@ public class UserDto {
     private String nickname;
 
     @Schema(description = "微信头像")
-
     private String headimgurl;
 
     @Schema(description = "密码")

@@ -1,9 +1,9 @@
 package com.hn.user.service;
 
-import com.hn.user.dto.WechatUserInfoDto;
+import com.hn.user.domain.request.WechatUserInfoRequest;
 
 public interface WechatUserService {
 
-    String wechatUserLogin(WechatUserInfoDto userInfoDto);
+    String wechatUserLogin(WechatUserInfoRequest userInfoDto);
 
 }

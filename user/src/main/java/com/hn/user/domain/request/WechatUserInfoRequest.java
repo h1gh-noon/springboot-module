@@ -1,10 +1,10 @@
-package com.hn.user.dto;
+package com.hn.user.domain.request;
 
 
 import lombok.Data;
 
 @Data
-public class WechatUserInfoDto {
+public class WechatUserInfoRequest {
 
     private String openid;
     private String nickname;

@@ -2,7 +2,7 @@ package com.hn.jdstore.controller;
 
 import com.hn.common.api.CommonResponse;
 import com.hn.common.util.ResponseTool;
-import com.hn.jdstore.model.ShopModel;
+import com.hn.jdstore.domain.vo.ShopVo;
 import com.hn.jdstore.service.SearchService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -25,7 +25,7 @@ public class SearchController {
 
     @PostMapping("/searchAll")
     @Operation(summary = "首页搜索")
-    public CommonResponse<List<ShopModel>> searchAll(@RequestParam @NotBlank String content) {
+    public CommonResponse<List<ShopVo>> searchAll(@RequestParam @NotBlank String content) {
         return ResponseTool.getSuccessResponse(searchService.searchAll(content));
     }
 }

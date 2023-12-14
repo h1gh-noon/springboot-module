@@ -1,18 +1,14 @@
-package com.hn.jdstore.entity;
+package com.hn.jdstore.domain.dto;
 
+import com.hn.jdstore.domain.entity.HanmaOrderDetailDo;
 import lombok.Data;
-import jakarta.persistence.*;
 
 import java.math.BigDecimal;
-
+import java.util.List;
 
 @Data
-@Entity
-@Table(name = "hanma_order")
-public class HanmaOrderEntity {
+public class OrderDto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String orderNo;
     private Long userId;
@@ -29,4 +25,5 @@ public class HanmaOrderEntity {
     private String createTime;
     private String updateTime;
 
+    private List<HanmaOrderDetailDo> detailList;
 }

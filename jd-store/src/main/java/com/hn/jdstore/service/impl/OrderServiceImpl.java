@@ -9,11 +9,11 @@ import com.hn.common.util.Util;
 import com.hn.jdstore.dao.OrderDao;
 import com.hn.jdstore.dao.OrderDetailDao;
 import com.hn.jdstore.dao.ProductDao;
-import com.hn.jdstore.dto.OrderDto;
-import com.hn.jdstore.entity.HanmaOrderDetailEntity;
-import com.hn.jdstore.entity.HanmaOrderEntity;
-import com.hn.jdstore.entity.HanmaProductEntity;
-import com.hn.jdstore.entity.HanmaShopEntity;
+import com.hn.jdstore.domain.dto.OrderDto;
+import com.hn.jdstore.domain.entity.HanmaOrderDetailDo;
+import com.hn.jdstore.domain.entity.HanmaOrderDo;
+import com.hn.jdstore.domain.entity.HanmaProductDo;
+import com.hn.jdstore.domain.entity.HanmaShopDo;
 import com.hn.jdstore.enums.ExceptionMsgEnum;
 import com.hn.jdstore.exception.SelfException;
 import com.hn.jdstore.service.OrderService;
@@ -51,12 +51,12 @@ public class OrderServiceImpl implements OrderService {
     private ProductDao productDao;
 
     @Override
-    public HanmaOrderEntity findById(Long id) {
+    public HanmaOrderDo findById(Long id) {
         return orderDao.findById(id).orElse(null);
     }
 
     @Override
-    public HanmaOrderEntity findByOrderNo(String orderNo) {
+    public HanmaOrderDo findByOrderNo(String orderNo) {
         return orderDao.findByOrderNo(orderNo);
     }
 
@@ -66,8 +66,8 @@ public class OrderServiceImpl implements OrderService {
 
         UserDto userDto = JSON.parseObject(userInfo, UserDto.class);
 
-        List<HanmaOrderDetailEntity> orderDetailEntityList = orderDto.getDetailList();
-        if (orderDetailEntityList == null || orderDetailEntityList.isEmpty()) {
+        List<HanmaOrderDetailDo> orderDetailDoList = orderDto.getDetailList();
+        if (orderDetailDoList == null || orderDetailDoList.isEmpty()) {
             return null;
         }
 
@@ -83,8 +83,8 @@ public class OrderServiceImpl implements OrderService {
         orderDto.setUserId(userDto.getId());
         orderDto.setUserOpenid(userDto.getOpenid());
 
-        List<HanmaProductEntity> detailList = orderDetailEntityList.stream().map(e -> {
-            HanmaProductEntity p = productService.findById(e.getProductId());
+        List<HanmaProductDo> detailList = orderDetailDoList.stream().map(e -> {
+            HanmaProductDo p = productService.findById(e.getProductId());
             if (p == null || p.getStatus().equals(0) || p.getProductStock() < e.getQuantity()) {
                 // 未查到 || 未上架 || 库存不够
                 throw new SelfException(ExceptionMsgEnum.NO_STACK);
@@ -100,36 +100,36 @@ public class OrderServiceImpl implements OrderService {
             return p;
         }).collect(Collectors.toList());
 
-        HanmaShopEntity shopEntity = shopService.findById(orderDto.getShopId());
-        orderDto.setShopName(shopEntity.getName());
+        HanmaShopDo shopDo = shopService.findById(orderDto.getShopId());
+        orderDto.setShopName(shopDo.getName());
 
-        HanmaOrderEntity hanmaOrderEntity = new HanmaOrderEntity();
-        BeanUtils.copyProperties(orderDto, hanmaOrderEntity);
+        HanmaOrderDo hanmaOrderDo = new HanmaOrderDo();
+        BeanUtils.copyProperties(orderDto, hanmaOrderDo);
 
-        hanmaOrderEntity.setPayStatus(0);
-        orderDao.save(hanmaOrderEntity);
-        orderDto.setId(hanmaOrderEntity.getId());
-        orderDetailEntityList.forEach(e -> e.setOrderId(hanmaOrderEntity.getId()));
+        hanmaOrderDo.setPayStatus(0);
+        orderDao.save(hanmaOrderDo);
+        orderDto.setId(hanmaOrderDo.getId());
+        orderDetailDoList.forEach(e -> e.setOrderId(hanmaOrderDo.getId()));
 
         // 减少库存
         productService.update(detailList);
 
         // 创建订单详情
-        orderDto.setDetailList(orderDetailDao.saveAll(orderDetailEntityList));
+        orderDto.setDetailList(orderDetailDao.saveAll(orderDetailDoList));
 
         return orderDto;
     }
 
     @Override
-    public void orderPay(HanmaOrderEntity orderEntity) {
+    public void orderPay(HanmaOrderDo orderDo) {
 
-        orderDao.save(orderEntity);
+        orderDao.save(orderDo);
 
     }
 
     @Override
-    public Page<HanmaOrderEntity> orderPageList(Integer currentPage, Integer pageSize,
-                                                OrderDto orderDto, UserDto userDto) {
+    public Page<HanmaOrderDo> orderPageList(Integer currentPage, Integer pageSize,
+                                            OrderDto orderDto, UserDto userDto) {
 
         Pageable p = PageRequest.of(currentPage - 1, pageSize);
 
@@ -147,16 +147,16 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDto getOrderDetail(OrderDto orderDto) {
-        HanmaOrderEntity hanmaOrderEntity = findById(orderDto.getId());
-        if (hanmaOrderEntity == null) {
+        HanmaOrderDo hanmaOrderDo = findById(orderDto.getId());
+        if (hanmaOrderDo == null) {
             throw new TemplateException(ResponseEnum.FAIL_404);
         }
 
         OrderDto od = new OrderDto();
 
-        BeanUtils.copyProperties(hanmaOrderEntity, od);
+        BeanUtils.copyProperties(hanmaOrderDo, od);
 
-        List<HanmaOrderDetailEntity> detailEntityList =
+        List<HanmaOrderDetailDo> detailEntityList =
                 orderDetailDao.findAllByOrderId(orderDto.getId());
 
         od.setDetailList(detailEntityList);
@@ -171,7 +171,7 @@ public class OrderServiceImpl implements OrderService {
         if (od.getPayStatus().equals(0) && od.getOrderStatus().equals(0)) {
 
             od.getDetailList().forEach(e -> {
-                HanmaProductEntity p = new HanmaProductEntity();
+                HanmaProductDo p = new HanmaProductDo();
                 p.setId(e.getProductId());
                 p.setProductStock(e.getQuantity());
                 productDao.updateStock(p);

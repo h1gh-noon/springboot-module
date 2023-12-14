@@ -9,10 +9,10 @@ import com.hn.common.dto.UserDto;
 import com.hn.common.enums.ResponseEnum;
 import com.hn.common.exceptions.TemplateException;
 import com.hn.common.util.ResponseTool;
-import com.hn.jdstore.dto.OrderDto;
-import com.hn.jdstore.entity.HanmaOrderEntity;
-import com.hn.jdstore.model.OrderDetailModel;
-import com.hn.jdstore.model.OrderModel;
+import com.hn.jdstore.domain.dto.OrderDto;
+import com.hn.jdstore.domain.entity.HanmaOrderDo;
+import com.hn.jdstore.domain.vo.OrderDetailVo;
+import com.hn.jdstore.domain.vo.OrderVo;
 import com.hn.jdstore.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -40,25 +40,25 @@ public class OrderController {
 
     @PostMapping("/orderAdd")
     @Operation(summary = "创建订单")
-    public CommonResponse<OrderModel> orderAdd(@RequestBody OrderDto orderDto,
-                                               @RequestHeader(RequestHeaderConstant.HEADER_TOKEN_INFO) String userInfo) throws TemplateException {
+    public CommonResponse<OrderVo> orderAdd(@RequestBody OrderDto orderDto,
+                                            @RequestHeader(RequestHeaderConstant.HEADER_TOKEN_INFO) String userInfo) throws TemplateException {
         OrderDto resOrderDto = orderService.orderAdd(orderDto, userInfo);
 
-        OrderModel orderModel = new OrderModel();
-        BeanUtils.copyProperties(resOrderDto, orderModel);
+        OrderVo orderVo = new OrderVo();
+        BeanUtils.copyProperties(resOrderDto, orderVo);
 
-        List<OrderDetailModel> orderDetailModels = resOrderDto.getDetailList().stream().map(e -> {
-            OrderDetailModel o = new OrderDetailModel();
+        List<OrderDetailVo> orderDetailVos = resOrderDto.getDetailList().stream().map(e -> {
+            OrderDetailVo o = new OrderDetailVo();
             BeanUtils.copyProperties(e, o);
             return o;
         }).collect(Collectors.toList());
-        orderModel.setDetailList(orderDetailModels);
-        return ResponseTool.getSuccessResponse(orderModel);
+        orderVo.setDetailList(orderDetailVos);
+        return ResponseTool.getSuccessResponse(orderVo);
     }
 
     @PostMapping("/orderPageList")
     @Operation(summary = "订单列表")
-    public CommonResponse<PaginationData<List<OrderModel>>>
+    public CommonResponse<PaginationData<List<OrderVo>>>
     orderPageList(
             @RequestParam(required = false, defaultValue = "1") @Schema(description = "当前页码") Integer currentPage,
             @RequestParam(required = false, defaultValue = "20") @Schema(description = "每页条数") Integer pageSize,
@@ -67,18 +67,18 @@ public class OrderController {
             throws TemplateException {
 
 
-        Page<HanmaOrderEntity> orderDtos = orderService.orderPageList(currentPage, pageSize,
+        Page<HanmaOrderDo> orderDtos = orderService.orderPageList(currentPage, pageSize,
                 orderDto, JSON.parseObject(userInfo, UserDto.class));
         log.info("orderDtos={}", orderDtos);
 
-        List<OrderModel> list = new ArrayList<>();
+        List<OrderVo> list = new ArrayList<>();
         orderDtos.getContent().forEach(h -> {
-            OrderModel sm = new OrderModel();
+            OrderVo sm = new OrderVo();
             BeanUtils.copyProperties(h, sm);
             list.add(sm);
         });
 
-        PaginationData<List<OrderModel>> pagination = new PaginationData<>();
+        PaginationData<List<OrderVo>> pagination = new PaginationData<>();
         pagination.setCurrentPage(currentPage);
         pagination.setPageSize(pageSize);
         pagination.setTotal(orderDtos.getTotalElements());
@@ -90,7 +90,7 @@ public class OrderController {
 
     @PostMapping("/getOrderDetail")
     @Operation(summary = "订单详情")
-    public CommonResponse<OrderModel> getOrderDetail(
+    public CommonResponse<OrderVo> getOrderDetail(
             @RequestBody OrderDto orderDto,
             @RequestHeader(RequestHeaderConstant.HEADER_TOKEN_INFO) String userInfo)
             throws TemplateException {
@@ -107,17 +107,17 @@ public class OrderController {
             throw new TemplateException(ResponseEnum.FAIL_404);
         }
 
-        OrderModel orderModel = new OrderModel();
-        BeanUtils.copyProperties(orderDetail, orderModel);
-        List<OrderDetailModel> orderDetailModels = orderDetail.getDetailList().stream().map(e -> {
-            OrderDetailModel o = new OrderDetailModel();
+        OrderVo orderVo = new OrderVo();
+        BeanUtils.copyProperties(orderDetail, orderVo);
+        List<OrderDetailVo> orderDetailVos = orderDetail.getDetailList().stream().map(e -> {
+            OrderDetailVo o = new OrderDetailVo();
             BeanUtils.copyProperties(e, o);
             return o;
         }).collect(Collectors.toList());
 
-        orderModel.setDetailList(orderDetailModels);
+        orderVo.setDetailList(orderDetailVos);
 
-        return ResponseTool.getSuccessResponse(orderModel);
+        return ResponseTool.getSuccessResponse(orderVo);
 
     }
 

@@ -1,4 +1,4 @@
-package com.hn.jdstore.entity;
+package com.hn.jdstore.domain.entity;
 
 import com.hn.common.dto.Validation;
 import jakarta.persistence.*;
@@ -10,7 +10,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "hanma_shop_category")
-public class HanmaShopCategoryEntity {
+public class HanmaShopCategoryDo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

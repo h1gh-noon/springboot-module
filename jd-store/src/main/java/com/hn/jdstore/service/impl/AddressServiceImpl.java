@@ -1,9 +1,9 @@
 package com.hn.jdstore.service.impl;
 
 import com.hn.jdstore.dao.AddressDao;
-import com.hn.jdstore.entity.HanmaAddressEntity;
-import com.hn.jdstore.model.AddressModel;
-import com.hn.jdstore.model.IPLocation;
+import com.hn.jdstore.domain.entity.HanmaAddressDo;
+import com.hn.jdstore.domain.vo.AddressVo;
+import com.hn.jdstore.domain.vo.IPLocation;
 import com.hn.jdstore.service.AddressService;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,30 +30,30 @@ public class AddressServiceImpl implements AddressService {
     private AddressDao addressDao;
 
     @Override
-    public void delete(HanmaAddressEntity hanmaAddress) {
+    public void delete(HanmaAddressDo hanmaAddress) {
         addressDao.delete(hanmaAddress);
     }
 
     @Override
-    public Long update(HanmaAddressEntity hanmaAddress) {
+    public Long update(HanmaAddressDo hanmaAddress) {
         return addressDao.save(hanmaAddress).getId();
     }
 
     @Override
-    public AddressModel findById(Long id) {
-        HanmaAddressEntity hanmaAddressEntity = addressDao.findById(id).orElse(null);
-        if (hanmaAddressEntity == null) {
+    public AddressVo findById(Long id) {
+        HanmaAddressDo hanmaAddressDo = addressDao.findById(id).orElse(null);
+        if (hanmaAddressDo == null) {
             return null;
         }
-        AddressModel hanmaAddressModel = new AddressModel();
-        BeanUtils.copyProperties(hanmaAddressEntity, hanmaAddressModel);
-        return hanmaAddressModel;
+        AddressVo hanmaAddressVo = new AddressVo();
+        BeanUtils.copyProperties(hanmaAddressDo, hanmaAddressVo);
+        return hanmaAddressVo;
     }
 
     @Override
-    public List<AddressModel> getAddressList() {
+    public List<AddressVo> getAddressList() {
         return addressDao.findAll().stream().map(e -> {
-            AddressModel h = new AddressModel();
+            AddressVo h = new AddressVo();
             BeanUtils.copyProperties(e, h);
             return h;
         }).collect(Collectors.toList());

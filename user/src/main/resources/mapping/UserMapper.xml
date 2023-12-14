@@ -114,7 +114,7 @@
         </where>
     </select>
 
-    <insert id="userAdd" parameterType="com.hn.user.entity.UserEntity" useGeneratedKeys="true" keyProperty="id"
+    <insert id="userAdd" parameterType="com.hn.user.domain.entity.UserDo" useGeneratedKeys="true" keyProperty="id"
             keyColumn="id">
         insert into user(username,
         password,
@@ -132,7 +132,7 @@
         #{nickname}, #{headimgurl}, #{phone}, #{permissions})
     </insert>
 
-    <update id="userUpdate" parameterType="com.hn.user.entity.UserEntity">
+    <update id="userUpdate" parameterType="com.hn.user.domain.entity.UserDo">
         update user
         <set>
             <if test="username!=null">
@@ -158,7 +158,7 @@
         and is_del = 0
     </update>
 
-    <update id="userUpdateStatus" parameterType="com.hn.user.entity.UserEntity">
+    <update id="userUpdateStatus" parameterType="com.hn.user.domain.entity.UserDo">
         update user
         set status=#{status}
         where
@@ -171,13 +171,13 @@
         and is_del=0
     </update>
 
-    <!--    <delete id="userDelete" parameterType="com.user.userserver.entity.UserEntity">-->
+    <!--    <delete id="userDelete" parameterType="com.user.userserver.entity.UserDo">-->
     <!--        delete from user-->
     <!--        where id = #{id}-->
     <!--           or username = #{username}-->
     <!--    </delete>-->
 
-    <update id="userDelete" parameterType="com.hn.user.entity.UserEntity">
+    <update id="userDelete" parameterType="com.hn.user.domain.entity.UserDo">
         update user
         set is_del=1
         where

@@ -1,4 +1,4 @@
-package com.hn.jdstore.model;
+package com.hn.jdstore.domain.vo;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -9,7 +9,7 @@ import java.util.Objects;
 
 
 @Data
-public class ShopModel {
+public class ShopVo {
 
   @Schema(description = "店铺id")
   private Long id;
@@ -42,14 +42,14 @@ public class ShopModel {
   private Integer status;
 
   @Schema(description = "商品列表")
-  private List<ProductModel> productList;
+  private List<ProductVo> productList;
 
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
-    ShopModel shopModel = (ShopModel) o;
-    return Objects.equals(id, shopModel.id);
+    ShopVo shopVo = (ShopVo) o;
+    return Objects.equals(id, shopVo.id);
   }
 
   @Override

@@ -7,8 +7,9 @@ import com.hn.common.dto.UserDto;
 import com.hn.common.dto.Validation;
 import com.hn.common.exceptions.TemplateException;
 import com.hn.common.util.ResponseTool;
-import com.hn.user.entity.UserEntity;
-import com.hn.user.model.UserModel;
+import com.hn.user.domain.entity.UserDo;
+import com.hn.user.domain.vo.UserVo;
+import com.hn.user.domain.request.UserListRequest;
 import com.hn.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -32,17 +33,17 @@ public class UserController {
 
     @RequestMapping("/getUserById")
     @Operation(summary = "查询-根据id查询用户")
-    public CommonResponse<UserModel> getUserById(@RequestParam String id) {
+    public CommonResponse<UserVo> getUserById(@RequestParam String id) {
 
-        UserEntity userEntity = userService.getUserById(Long.parseLong(id));
-        UserModel u = new UserModel();
-        BeanUtils.copyProperties(userEntity, u);
+        UserDo userDo = userService.getUserById(Long.parseLong(id));
+        UserVo u = new UserVo();
+        BeanUtils.copyProperties(userDo, u);
         return ResponseTool.getSuccessResponse(u);
     }
 
     /**
      * @param currentPage: 1, pageSize: 20
-     * @param userDto      @RequestBody 筛选条件
+     * @param userListQuery      @RequestBody 筛选条件
      *                     {
      *                     username: String, // 模糊查询
      *                     phone: String, // 模糊查询
@@ -54,24 +55,24 @@ public class UserController {
      */
     @PostMapping("/getUserPageList")
     @Operation(summary = "查询-用户列表分页", description = "用户列表分页-条件查询 条件放到body中")
-    public CommonResponse<PaginationData<List<UserModel>>> getUserPageList(
+    public CommonResponse<PaginationData<List<UserVo>>> getUserPageList(
             @RequestParam(required = false, defaultValue = "1") @Schema(description = "当前页码") String currentPage,
             @RequestParam(required = false, defaultValue = "20") @Schema(description = "每页条数") String pageSize,
             @RequestParam(required = false) @Schema(title = "排序", description = "排序 默认顺序不传 降序: `字段名-sort_down` 升序: " +
                     "`字段名-sort_up`") String sort,
-            @RequestBody(required = false) UserDto userDto) throws IllegalAccessException {
+            @RequestBody(required = false) UserListRequest userListQuery) throws IllegalAccessException {
 
 
         Integer cPage = Integer.valueOf(currentPage);
         Integer pSize = Integer.valueOf(pageSize);
 
         PaginationData<List<UserDto>> userPageList = userService.getUserPageList(cPage, pSize,
-                SortConstant.sortFieldValid(sort), userDto);
+                SortConstant.sortFieldValid(sort), userListQuery);
 
-        PaginationData<List<UserModel>> p = new PaginationData<>();
+        PaginationData<List<UserVo>> p = new PaginationData<>();
         p.setTotal(userPageList.getTotal());
         p.setData(userPageList.getData().stream().map(e -> {
-            UserModel u = new UserModel();
+            UserVo u = new UserVo();
             BeanUtils.copyProperties(e, u);
             return u;
         }).collect(Collectors.toList()));

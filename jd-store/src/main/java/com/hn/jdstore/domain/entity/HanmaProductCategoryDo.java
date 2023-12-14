@@ -1,4 +1,4 @@
-package com.hn.jdstore.entity;
+package com.hn.jdstore.domain.entity;
 
 import lombok.Data;
 import jakarta.persistence.*;
@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 @Data
 @Entity
 @Table(name = "hanma_product_category")
-public class HanmaProductCategoryEntity {
+public class HanmaProductCategoryDo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

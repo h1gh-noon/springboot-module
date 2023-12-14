@@ -1,6 +1,6 @@
 package com.hn.jdstore.dao;
 
-import com.hn.jdstore.entity.HanmaShopEntity;
+import com.hn.jdstore.domain.entity.HanmaShopDo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public interface SearchDao extends JpaRepository<HanmaShopEntity, String> {
+public interface SearchDao extends JpaRepository<HanmaShopDo, String> {
 
     @Query(value = "select p.id, p.name, p.sales, p.price, p.old_price, p.product_stock, p" +
             ".img_url, s.id shopId," +

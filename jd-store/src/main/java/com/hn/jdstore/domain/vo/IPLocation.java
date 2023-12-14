@@ -1,4 +1,4 @@
-package com.hn.jdstore.model;
+package com.hn.jdstore.domain.vo;
 
 import lombok.Data;
 

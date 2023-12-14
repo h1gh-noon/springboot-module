@@ -3,7 +3,7 @@ package com.hn.user.controller;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.hn.common.util.ResponseTool;
-import com.hn.user.dto.WechatUserInfoDto;
+import com.hn.user.domain.request.WechatUserInfoRequest;
 import com.hn.user.service.WechatUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -105,9 +105,9 @@ public class WechatLoginController {
             String openid = resObj.getString("openid");
             String getUserInfoBuild = "https://api.weixin.qq.com/sns/userinfo?access_token=%s&openid=%s&lang=zh_CN";
 
-            WechatUserInfoDto userInfoDto = JSON.parseObject(
+            WechatUserInfoRequest userInfoDto = JSON.parseObject(
                     restTemplate.getForObject(String.format(getUserInfoBuild,
-                            accToken, openid), String.class), WechatUserInfoDto.class);
+                            accToken, openid), String.class), WechatUserInfoRequest.class);
 
             if (userInfoDto != null && userInfoDto.getErrcode() == null) {
                 // success

@@ -10,11 +10,12 @@ import com.hn.common.exceptions.TemplateException;
 import com.hn.common.util.PBKDF2Util;
 import com.hn.common.util.RedisUtil;
 import com.hn.common.util.Util;
-import com.hn.user.dto.LoginDto;
-import com.hn.user.entity.UserEntity;
+import com.hn.user.domain.entity.UserDo;
+import com.hn.user.domain.request.LoginRequest;
+import com.hn.user.domain.request.UserListRequest;
+import com.hn.user.domain.vo.LoginInfoVo;
+import com.hn.user.domain.vo.UserVo;
 import com.hn.user.mapper.UserMapper;
-import com.hn.user.model.LoginInfoModel;
-import com.hn.user.model.UserModel;
 import com.hn.user.service.UserService;
 import jakarta.annotation.Resource;
 import org.apache.logging.log4j.util.Strings;
@@ -47,21 +48,21 @@ public class UserServiceImpl implements UserService {
     public static final Long REDIS_USER_MAX_TOKEN_COUNT = 5L; // 用户登录的最多设备数量
 
     @Override
-    public UserEntity getUserById(Long id) {
+    public UserDo getUserById(Long id) {
         return userMapper.getUserById(id);
     }
 
     @Override
-    public UserEntity getUserByName(String username) {
+    public UserDo getUserByName(String username) {
         return userMapper.getUserByName(username);
     }
 
     @Override
     public PaginationData<List<UserDto>> getUserPageList(Integer currentPage, Integer pageSize, String sort,
-                                                         UserDto userDto) throws IllegalAccessException {
+                                                         UserListRequest userListQuery) throws IllegalAccessException {
         PaginationData<List<UserDto>> paginationData = new PaginationData<>();
         Integer limitRows = (currentPage - 1) * pageSize;
-        Map<String, Object> maps = Util.getObjectToMap(userDto);
+        Map<String, Object> maps = Util.getObjectToMap(userListQuery);
 
         if (sort != null) {
             String[] sorts = sort.split("-");
@@ -82,7 +83,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public int hasUserByName(String username) {
-        UserEntity user = userMapper.getUserByName(username);
+        UserDo user = userMapper.getUserByName(username);
         return user == null ? 0 : 1;
     }
 
@@ -93,17 +94,17 @@ public class UserServiceImpl implements UserService {
             return 0;
         }
         userDto.setPassword(PBKDF2Util.encode(userDto.getPassword()));
-        UserEntity userEntity = new UserEntity();
-        BeanUtils.copyProperties(userDto, userEntity);
-        int n = userMapper.userAdd(userEntity);
-        userDto.setId(userEntity.getId());
+        UserDo userDo = new UserDo();
+        BeanUtils.copyProperties(userDto, userDo);
+        int n = userMapper.userAdd(userDo);
+        userDto.setId(userDo.getId());
         return n;
     }
 
     @Override
     public int userUpdate(UserDto userDto) throws TemplateException {
         if (userDto.getUsername() != null) {
-            UserEntity u = userMapper.getUserByName(userDto.getUsername());
+            UserDo u = userMapper.getUserByName(userDto.getUsername());
             if (!Objects.equals(u.getId(), userDto.getId())) {
                 // 修改用户名 且 目标用户名已存在
                 throw new TemplateException(ResponseEnum.HAS_USERNAME);
@@ -112,48 +113,48 @@ public class UserServiceImpl implements UserService {
         if (userDto.getPassword() != null) {
             userDto.setPassword(PBKDF2Util.encode(userDto.getPassword()));
         }
-        UserEntity user = new UserEntity();
+        UserDo user = new UserDo();
         BeanUtils.copyProperties(userDto, user);
         return userMapper.userUpdate(user);
     }
 
     @Override
     public int userUpdateStatus(UserDto userDto) {
-        UserEntity userEntity = new UserEntity();
-        userEntity.setId(userDto.getId());
-        userEntity.setUsername(userDto.getUsername());
-        userEntity.setStatus(userDto.getStatus());
-        return userMapper.userUpdateStatus(userEntity);
+        UserDo userDo = new UserDo();
+        userDo.setId(userDto.getId());
+        userDo.setUsername(userDto.getUsername());
+        userDo.setStatus(userDto.getStatus());
+        return userMapper.userUpdateStatus(userDo);
     }
 
     @Override
     public int userDelete(UserDto userDto) {
-        UserEntity userEntity = new UserEntity();
-        userEntity.setId(userDto.getId());
-        return userMapper.userDelete(userEntity);
+        UserDo userDo = new UserDo();
+        userDo.setId(userDto.getId());
+        return userMapper.userDelete(userDo);
     }
 
     @Override
-    public LoginInfoModel userLogin(LoginDto loginDto) {
-        UserEntity user = getUserByName(loginDto.getUsername());
-        if (PBKDF2Util.verification(loginDto.getPassword(), user.getPassword())) {
+    public LoginInfoVo userLogin(LoginRequest loginRequest) {
+        UserDo user = getUserByName(loginRequest.getUsername());
+        if (PBKDF2Util.verification(loginRequest.getPassword(), user.getPassword())) {
             // 验证通过 清空密码
             user.setPassword(null);
             String token = setUserToken(user);
-            LoginInfoModel loginInfoModel = new LoginInfoModel();
+            LoginInfoVo loginInfoVo = new LoginInfoVo();
 
-            UserModel userModel = new UserModel();
-            BeanUtils.copyProperties(user, userModel);
-            loginInfoModel.setUserInfo(userModel);
-            loginInfoModel.setToken(token);
-            return loginInfoModel;
+            UserVo userVo = new UserVo();
+            BeanUtils.copyProperties(user, userVo);
+            loginInfoVo.setUserInfo(userVo);
+            loginInfoVo.setToken(token);
+            return loginInfoVo;
 
         }
         return null;
     }
 
     @Override
-    public String setUserToken(UserEntity user) {
+    public String setUserToken(UserDo user) {
         String token = Util.getRandomToken();
         List<String> list = new ArrayList<>();
         list.add(RedisConstant.USER_TOKEN + token);
@@ -188,13 +189,13 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    public UserEntity getUserByToken(String token) {
+    public UserDo getUserByToken(String token) {
         if (Strings.isEmpty(token)) {
             return null;
         }
         Object obj = redisUtil.get(RedisConstant.USER_TOKEN + token);
         if (obj != null) {
-            return JSON.parseObject((String) obj, UserEntity.class);
+            return JSON.parseObject((String) obj, UserDo.class);
         }
         return null;
     }

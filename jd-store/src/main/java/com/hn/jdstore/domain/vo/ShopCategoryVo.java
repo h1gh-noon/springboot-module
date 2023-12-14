@@ -1,4 +1,4 @@
-package com.hn.jdstore.model;
+package com.hn.jdstore.domain.vo;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @Schema
-public class ShopCategoryModel {
+public class ShopCategoryVo {
 
     @Schema(description = "店铺分类id")
     private Long id;

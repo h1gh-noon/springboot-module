@@ -1,4 +1,4 @@
-package com.hn.user.dto;
+package com.hn.user.domain.request;
 
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class LoginDto {
+public class LoginRequest {
 
     @Schema(description = "用户名", defaultValue = "admin")
     @NotBlank
@@ -18,7 +18,7 @@ public class LoginDto {
     @NotBlank
     private String password;
 
-    public LoginDto(String username, String password) {
+    public LoginRequest(String username, String password) {
         this.username = username;
         this.password = password;
     }

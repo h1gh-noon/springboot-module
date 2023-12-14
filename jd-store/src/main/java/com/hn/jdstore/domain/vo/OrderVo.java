@@ -1,4 +1,4 @@
-package com.hn.jdstore.model;
+package com.hn.jdstore.domain.vo;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -8,7 +8,7 @@ import java.util.List;
 
 
 @Data
-public class OrderModel {
+public class OrderVo {
 
     @Schema(description = "订单id")
     private Long id;
@@ -53,6 +53,6 @@ public class OrderModel {
     private String createTime;
     private String updateTime;
 
-    private List<OrderDetailModel> detailList;
+    private List<OrderDetailVo> detailList;
 
 }

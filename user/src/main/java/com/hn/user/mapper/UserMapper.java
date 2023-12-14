@@ -1,6 +1,6 @@
 package com.hn.user.mapper;
 
-import com.hn.user.entity.UserEntity;
+import com.hn.user.domain.entity.UserDo;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -9,22 +9,22 @@ import java.util.Map;
 @Mapper
 public interface UserMapper {
 
-    UserEntity getUserById(Long id);
+    UserDo getUserById(Long id);
 
-    UserEntity getUserByName(String username);
+    UserDo getUserByName(String username);
 
-    UserEntity getUserByOpenid(String openid);
+    UserDo getUserByOpenid(String openid);
 
-    List<UserEntity> getUserPageList(Map<String, Object> map);
+    List<UserDo> getUserPageList(Map<String, Object> map);
 
     Long userCount(Map<String, Object> map);
 
-    int userAdd(UserEntity user);
+    int userAdd(UserDo user);
 
-    int userUpdate(UserEntity user);
+    int userUpdate(UserDo user);
 
-    int userUpdateStatus(UserEntity user);
+    int userUpdateStatus(UserDo user);
 
-    int userDelete(UserEntity user);
+    int userDelete(UserDo user);
 
 }

@@ -1,11 +1,11 @@
-package com.hn.jdstore.model;
+package com.hn.jdstore.domain.vo;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 
 @Data
-public class AddressModel {
+public class AddressVo {
 
     @Schema(description = "地址id")
     private Long id;

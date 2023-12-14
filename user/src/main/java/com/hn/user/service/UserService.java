@@ -4,19 +4,20 @@ package com.hn.user.service;
 import com.hn.common.api.PaginationData;
 import com.hn.common.dto.UserDto;
 import com.hn.common.exceptions.TemplateException;
-import com.hn.user.dto.LoginDto;
-import com.hn.user.entity.UserEntity;
-import com.hn.user.model.LoginInfoModel;
+import com.hn.user.domain.request.LoginRequest;
+import com.hn.user.domain.entity.UserDo;
+import com.hn.user.domain.vo.LoginInfoVo;
+import com.hn.user.domain.request.UserListRequest;
 
 import java.util.List;
 
 public interface UserService {
 
-    UserEntity getUserById(Long id);
+    UserDo getUserById(Long id);
 
-    UserEntity getUserByName(String username);
+    UserDo getUserByName(String username);
 
-    UserEntity getUserByToken(String token);
+    UserDo getUserByToken(String token);
 
     boolean authUserByToken(String token);
 
@@ -26,7 +27,7 @@ public interface UserService {
 
 
     PaginationData<List<UserDto>> getUserPageList(Integer currentPage, Integer pageSize, String sort,
-                                                  UserDto userDto) throws IllegalAccessException;
+                                                  UserListRequest userListQuery) throws IllegalAccessException;
 
     int hasUserByName(String username);
 
@@ -38,8 +39,8 @@ public interface UserService {
 
     int userDelete(UserDto userDto);
 
-    LoginInfoModel userLogin(LoginDto loginDto);
+    LoginInfoVo userLogin(LoginRequest loginRequest);
 
-    String setUserToken(UserEntity user);
+    String setUserToken(UserDo user);
 
 }

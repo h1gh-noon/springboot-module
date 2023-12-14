@@ -7,7 +7,7 @@ spring:
     name: service-user
 mybatis:
   mapper-locations: classpath:mapping/*Mapper.xml
-  type-aliases-package: com.hn.user.entity
+  type-aliases-package: com.hn.user.domain.entity
   configuration:
     map-underscore-to-camel-case: true
 

@@ -1,7 +1,7 @@
 package com.hn.jdstore.service.impl;
 
 import com.hn.common.util.Util;
-import com.hn.jdstore.entity.HanmaShopCategoryEntity;
+import com.hn.jdstore.domain.entity.HanmaShopCategoryDo;
 import com.hn.jdstore.service.ShopCategoryService;
 import com.hn.jdstore.dao.ShopCategoryDao;
 import jakarta.annotation.Resource;
@@ -17,31 +17,31 @@ public class ShopCategoryServiceImpl implements ShopCategoryService {
     private ShopCategoryDao shopCategoryDao;
 
     @Override
-    public void delete(HanmaShopCategoryEntity hanmaShopCategory) {
+    public void delete(HanmaShopCategoryDo hanmaShopCategory) {
         shopCategoryDao.delete(hanmaShopCategory);
     }
 
     @Override
-    public Long update(HanmaShopCategoryEntity hanmaShopCategory) {
+    public Long update(HanmaShopCategoryDo hanmaShopCategory) {
         if (hanmaShopCategory.getId() == null) {
             return shopCategoryDao.save(hanmaShopCategory).getId();
         }
-        HanmaShopCategoryEntity shopCategoryEntity = findById(hanmaShopCategory.getId());
-        HanmaShopCategoryEntity h = new HanmaShopCategoryEntity();
-        BeanUtils.copyProperties(shopCategoryEntity, h);
+        HanmaShopCategoryDo shopCategoryDo = findById(hanmaShopCategory.getId());
+        HanmaShopCategoryDo h = new HanmaShopCategoryDo();
+        BeanUtils.copyProperties(shopCategoryDo, h);
         BeanUtils.copyProperties(hanmaShopCategory, h);
-        h.setCreateTime(shopCategoryEntity.getCreateTime());
+        h.setCreateTime(shopCategoryDo.getCreateTime());
         h.setUpdateTime(Util.getTimestampStr());
         return shopCategoryDao.save(h).getId();
     }
 
     @Override
-    public HanmaShopCategoryEntity findById(Long id) {
+    public HanmaShopCategoryDo findById(Long id) {
         return shopCategoryDao.findById(id).orElse(null);
     }
 
     @Override
-    public List<HanmaShopCategoryEntity> getShopCategoryList() {
+    public List<HanmaShopCategoryDo> getShopCategoryList() {
         return shopCategoryDao.findAll();
     }
 }

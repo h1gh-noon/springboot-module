@@ -5,9 +5,9 @@ import com.hn.common.api.CommonResponse;
 import com.hn.common.constant.RequestHeaderConstant;
 import com.hn.common.dto.UserDto;
 import com.hn.common.util.ResponseTool;
-import com.hn.user.dto.LoginDto;
-import com.hn.user.model.LoginInfoModel;
-import com.hn.user.model.UserModel;
+import com.hn.user.domain.request.LoginRequest;
+import com.hn.user.domain.vo.LoginInfoVo;
+import com.hn.user.domain.vo.UserVo;
 import com.hn.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -25,19 +25,19 @@ public class LoginController {
     /**
      * 登录
      *
-     * @param loginDto { username: String, password: String 接收md5大写32位密文** }
+     * @param loginRequest { username: String, password: String 接收md5大写32位密文** }
      * @return CommonResponse
      */
     @Operation(summary = "登录接口", description = "登录 data中返回token")
     @PostMapping("/userLogin")
-    public CommonResponse<LoginInfoModel> userLogin(@RequestBody LoginDto loginDto) {
+    public CommonResponse<LoginInfoVo> userLogin(@RequestBody LoginRequest loginRequest) {
 
-        LoginInfoModel loginInfoModel = userService.userLogin(loginDto);
-        if (loginInfoModel == null) {
+        LoginInfoVo loginInfoVo = userService.userLogin(loginRequest);
+        if (loginInfoVo == null) {
             return ResponseTool.getErrorResponse();
         } else {
             // success
-            return ResponseTool.getSuccessResponse(loginInfoModel);
+            return ResponseTool.getSuccessResponse(loginInfoVo);
         }
     }
 
@@ -49,9 +49,9 @@ public class LoginController {
      */
     @Operation(summary = "根据token获取用户信息")
     @RequestMapping("/userInfo")
-    public CommonResponse<UserModel> userInfo(@RequestHeader(name = RequestHeaderConstant.HEADER_TOKEN_INFO) String tokenInfo) {
+    public CommonResponse<UserVo> userInfo(@RequestHeader(name = RequestHeaderConstant.HEADER_TOKEN_INFO) String tokenInfo) {
         // success
-        return ResponseTool.getSuccessResponse(JSON.parseObject(tokenInfo, UserModel.class));
+        return ResponseTool.getSuccessResponse(JSON.parseObject(tokenInfo, UserVo.class));
     }
 
     /**

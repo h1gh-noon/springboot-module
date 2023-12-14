@@ -1,4 +1,4 @@
-package com.hn.user.entity;
+package com.hn.user.domain.entity;
 
 
 import lombok.Data;
@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class UserEntity {
+public class UserDo {
 
     private Long id;
     private String username;
@@ -21,8 +21,8 @@ public class UserEntity {
     private String createTime;
     private String updateTime;
 
-    public UserEntity(String username, String password, String phone, String permissions, Integer status, Integer isDel,
-                      String createTime, String updateTime) {
+    public UserDo(String username, String password, String phone, String permissions, Integer status, Integer isDel,
+                  String createTime, String updateTime) {
         this.username = username;
         this.password = password;
         this.phone = phone;

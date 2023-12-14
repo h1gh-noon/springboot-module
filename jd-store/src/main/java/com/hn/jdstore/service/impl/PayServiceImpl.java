@@ -14,7 +14,7 @@ import com.hn.common.dto.UserDto;
 import com.hn.common.enums.ResponseEnum;
 import com.hn.common.exceptions.TemplateException;
 import com.hn.common.util.Util;
-import com.hn.jdstore.entity.HanmaOrderEntity;
+import com.hn.jdstore.domain.entity.HanmaOrderDo;
 import com.hn.jdstore.service.OrderService;
 import com.hn.jdstore.service.PayService;
 import jakarta.annotation.Resource;
@@ -43,15 +43,15 @@ public class PayServiceImpl implements PayService {
     public WxPayMpOrderResult pay(Long id, UserDto userDto, String ip) throws WxPayException {
 
 
-        HanmaOrderEntity orderEntity = orderService.findById(id);
-        if (orderEntity == null || orderEntity.getOrderStatus() != 0 || orderEntity.getPayStatus() != 0) {
+        HanmaOrderDo orderDo = orderService.findById(id);
+        if (orderDo == null || orderDo.getOrderStatus() != 0 || orderDo.getPayStatus() != 0) {
             throw new TemplateException(ResponseEnum.FAIL_404);
         }
 
         WxPayUnifiedOrderRequest orderRequest = new WxPayUnifiedOrderRequest();
         orderRequest.setBody("主题");
-        orderRequest.setOutTradeNo(orderEntity.getOrderNo());
-        orderRequest.setTotalFee(BaseWxPayRequest.yuanToFen(orderEntity.getOrderAmount().toString()));//元转成分
+        orderRequest.setOutTradeNo(orderDo.getOrderNo());
+        orderRequest.setTotalFee(BaseWxPayRequest.yuanToFen(orderDo.getOrderAmount().toString()));//元转成分
         orderRequest.setOpenid(userDto.getOpenid());
         orderRequest.setSpbillCreateIp(ip);
         orderRequest.setTradeType(WxPayConstants.TradeType.JSAPI);
@@ -73,20 +73,20 @@ public class PayServiceImpl implements PayService {
             // String tradeNo = result.getTransactionId();
             String totalFee = BaseWxPayResult.fenToYuan(result.getTotalFee());
             log.info("微信回调 订单id={}, 金额={}", orderNo, totalFee);
-            HanmaOrderEntity orderEntity = orderService.findByOrderNo(orderNo);
-            if (orderEntity.getOrderAmount().equals(new BigDecimal(totalFee))
-                    && orderEntity.getOrderStatus().equals(0)) {
+            HanmaOrderDo orderDo = orderService.findByOrderNo(orderNo);
+            if (orderDo.getOrderAmount().equals(new BigDecimal(totalFee))
+                    && orderDo.getOrderStatus().equals(0)) {
 
-                orderEntity.setOrderStatus(1);
-                orderEntity.setPayStatus(1);
+                orderDo.setOrderStatus(1);
+                orderDo.setPayStatus(1);
 
                 LocalDateTime pTime = LocalDateTime.parse(result.getTimeEnd(),
                         DateTimeFormatter.ofPattern(
                                 "yyyyMMddHHmmss"));
-                orderEntity.setPayTime(Util.getTimestampStr(pTime));
+                orderDo.setPayTime(Util.getTimestampStr(pTime));
 
-                orderEntity.setUpdateTime(Util.getTimestampStr());
-                orderService.orderPay(orderEntity);
+                orderDo.setUpdateTime(Util.getTimestampStr());
+                orderService.orderPay(orderDo);
                 log.info("付款处理完成");
                 return WxPayNotifyResponse.success("处理成功!");
             }

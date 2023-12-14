@@ -1,5 +1,5 @@
 import com.hn.user.UserServerApplication;
-import com.hn.user.dto.WechatUserInfoDto;
+import com.hn.user.domain.request.WechatUserInfoRequest;
 import com.hn.user.service.WechatUserService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +14,7 @@ public class Test {
 
     @org.junit.jupiter.api.Test
     void test() {
-        WechatUserInfoDto userInfoDto = new WechatUserInfoDto();
+        WechatUserInfoRequest userInfoDto = new WechatUserInfoRequest();
         userInfoDto.setNickname("zz");
         userInfoDto.setOpenid("aa");
         userInfoDto.setHeadimgurl("img");

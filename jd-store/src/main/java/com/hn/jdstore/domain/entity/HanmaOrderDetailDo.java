@@ -1,4 +1,4 @@
-package com.hn.jdstore.entity;
+package com.hn.jdstore.domain.entity;
 
 import lombok.Data;
 import jakarta.persistence.*;
@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 @Data
 @Entity
 @Table(name = "hanma_order_detail")
-public class HanmaOrderDetailEntity {
+public class HanmaOrderDetailDo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

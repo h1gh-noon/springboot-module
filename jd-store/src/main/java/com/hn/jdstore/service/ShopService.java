@@ -1,23 +1,23 @@
 package com.hn.jdstore.service;
 
-import com.hn.jdstore.entity.HanmaShopEntity;
-import com.hn.jdstore.model.ShopInfoProductModel;
-import com.hn.jdstore.model.ShopModel;
+import com.hn.jdstore.domain.entity.HanmaShopDo;
+import com.hn.jdstore.domain.vo.ShopInfoProductVo;
+import com.hn.jdstore.domain.vo.ShopVo;
 import org.springframework.data.domain.Page;
 
 public interface ShopService {
 
 
-    void delete(HanmaShopEntity hanmaShopEntity);
+    void delete(HanmaShopDo shopDo);
 
-    Long update(HanmaShopEntity hanmaShopEntity);
+    Long update(HanmaShopDo shopDo);
 
-    HanmaShopEntity findById(Long id);
+    HanmaShopDo findById(Long id);
 
-    Page<HanmaShopEntity> getShopPageList(Integer currentPage, Integer pageSize, ShopModel shopModel);
+    Page<HanmaShopDo> getShopPageList(Integer currentPage, Integer pageSize, ShopVo shopVo);
 
-    Page<HanmaShopEntity> searchShopByNamePageList(Integer currentPage, Integer pageSize, String name);
+    Page<HanmaShopDo> searchShopByNamePageList(Integer currentPage, Integer pageSize, String name);
 
-    ShopInfoProductModel getShopInfoProductList(Long shopId);
+    ShopInfoProductVo getShopInfoProductList(Long shopId);
 
 }
