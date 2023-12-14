@@ -41,7 +41,8 @@ public class UserDto {
     private String createTime;
     private String updateTime;
 
-    public UserDto(String username, String password, String phone, String permissions, Integer status, Integer isDel,
+    public UserDto(String username, String password, String phone, String permissions,
+                   Integer status, Integer isDel,
                    String createTime, String updateTime) {
         this.username = username;
         this.password = password;

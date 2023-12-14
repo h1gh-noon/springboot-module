@@ -1,6 +1,7 @@
 package com.hn.jdstore.controller;
 
 import com.hn.common.api.CommonResponse;
+import com.hn.common.dto.Validation;
 import com.hn.common.util.ResponseTool;
 import com.hn.common.util.Util;
 import com.hn.jdstore.domain.entity.HanmaProductCategoryDo;
@@ -12,6 +13,7 @@ import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -30,12 +32,14 @@ public class ProductCategoryController {
 
     @PostMapping("/productCategoryAdd")
     @Operation(summary = "添加商品分类")
-    public CommonResponse<Long> productCategoryAdd(@RequestBody HanmaProductCategoryDo hanmaProductCategory) {
-        hanmaProductCategory.setId(null);
+    public CommonResponse<Long> productCategoryAdd(@RequestBody ProductCategoryVo productCategoryVo) {
+        productCategoryVo.setId(null);
+        HanmaProductCategoryDo hanmaProductCategoryDo = new HanmaProductCategoryDo();
+        BeanUtils.copyProperties(productCategoryVo, hanmaProductCategoryDo);
         String t = Util.getTimestampStr();
-        hanmaProductCategory.setCreateTime(t);
-        hanmaProductCategory.setUpdateTime(t);
-        return ResponseTool.getSuccessResponse(productCategoryService.update(hanmaProductCategory));
+        hanmaProductCategoryDo.setUpdateTime(t);
+        hanmaProductCategoryDo.setCreateTime(t);
+        return ResponseTool.getSuccessResponse(productCategoryService.update(hanmaProductCategoryDo));
     }
 
     @RequestMapping("/productCategoryDelete")
@@ -50,10 +54,11 @@ public class ProductCategoryController {
 
     @PostMapping("/productCategoryUpdate")
     @Operation(summary = "修改商品分类")
-    public CommonResponse<Long> productCategoryUpdate(@RequestBody HanmaProductCategoryDo hanmaProductCategory) {
-        hanmaProductCategory.setUpdateTime(null);
-        hanmaProductCategory.setUpdateTime(Util.getTimestampStr());
-        return ResponseTool.getSuccessResponse(productCategoryService.update(hanmaProductCategory));
+    public CommonResponse<Long> productCategoryUpdate(@RequestBody @Validated(Validation.Update.class) ProductCategoryVo productCategoryVo) {
+        HanmaProductCategoryDo hanmaProductCategoryDo = new HanmaProductCategoryDo();
+        BeanUtils.copyProperties(productCategoryVo, hanmaProductCategoryDo);
+        hanmaProductCategoryDo.setUpdateTime(Util.getTimestampStr());
+        return ResponseTool.getSuccessResponse(productCategoryService.update(hanmaProductCategoryDo));
     }
 
     @RequestMapping("/getProductCategoryById")
@@ -69,7 +74,8 @@ public class ProductCategoryController {
     @Operation(summary = "查询商品分类列表")
     public CommonResponse<List<ProductCategoryVo>> getProductCategoryList() {
 
-        List<HanmaProductCategoryDo> hanmaProductCategoryList = productCategoryService.getProductCategoryList();
+        List<HanmaProductCategoryDo> hanmaProductCategoryList =
+                productCategoryService.getProductCategoryList();
         log.info("hanmaProductCategoryList={}", hanmaProductCategoryList);
         List<ProductCategoryVo> list = new ArrayList<>();
         if (hanmaProductCategoryList != null) {

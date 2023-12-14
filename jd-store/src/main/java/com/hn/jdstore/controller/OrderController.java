@@ -62,13 +62,13 @@ public class OrderController {
     orderPageList(
             @RequestParam(required = false, defaultValue = "1") @Schema(description = "当前页码") Integer currentPage,
             @RequestParam(required = false, defaultValue = "20") @Schema(description = "每页条数") Integer pageSize,
-            @RequestBody OrderDto orderDto,
+            @RequestParam @Schema(description = "订单id") Long id,
             @RequestHeader(RequestHeaderConstant.HEADER_TOKEN_INFO) String userInfo)
             throws TemplateException {
 
 
         Page<HanmaOrderDo> orderDtos = orderService.orderPageList(currentPage, pageSize,
-                orderDto, JSON.parseObject(userInfo, UserDto.class));
+                id, JSON.parseObject(userInfo, UserDto.class));
         log.info("orderDtos={}", orderDtos);
 
         List<OrderVo> list = new ArrayList<>();
@@ -91,14 +91,14 @@ public class OrderController {
     @PostMapping("/getOrderDetail")
     @Operation(summary = "订单详情")
     public CommonResponse<OrderVo> getOrderDetail(
-            @RequestBody OrderDto orderDto,
+            @RequestParam @Schema(description = "订单id") Long id,
             @RequestHeader(RequestHeaderConstant.HEADER_TOKEN_INFO) String userInfo)
             throws TemplateException {
 
         UserDto userDto = JSON.parseObject(userInfo, UserDto.class);
         List<String> permissions = Arrays.stream(userDto.getPermissions().split(",")).toList();
 
-        OrderDto orderDetail = orderService.getOrderDetail(orderDto);
+        OrderDto orderDetail = orderService.getOrderDetail(id);
         // 权限验证
         if (!Objects.equals(orderDetail.getUserId(), userDto.getId())
                 && !permissions.contains(PermissionConstant.SUPER_ADMIN)
@@ -124,14 +124,14 @@ public class OrderController {
     @PostMapping("/orderCancel")
     @Operation(summary = "取消订单")
     public CommonResponse<Boolean> orderCancel(
-            @RequestBody OrderDto orderDto,
+            @RequestParam @Schema(description = "订单id") Long id,
             @RequestHeader(RequestHeaderConstant.HEADER_TOKEN_INFO) String userInfo)
             throws TemplateException {
 
         UserDto userDto = JSON.parseObject(userInfo, UserDto.class);
         List<String> permissions = Arrays.stream(userDto.getPermissions().split(",")).toList();
 
-        OrderDto orderDetail = orderService.getOrderDetail(orderDto);
+        OrderDto orderDetail = orderService.getOrderDetail(id);
         // 权限验证
         if (!Objects.equals(orderDetail.getUserId(), userDto.getId())
                 && !permissions.contains(PermissionConstant.SUPER_ADMIN)
@@ -139,7 +139,7 @@ public class OrderController {
         ) {
             throw new TemplateException(ResponseEnum.FAIL_404);
         }
-        orderService.orderCancel(orderDto, userInfo);
+        orderService.orderCancel(id, userInfo);
         return ResponseTool.getSuccessResponse();
 
     }

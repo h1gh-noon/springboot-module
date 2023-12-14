@@ -31,12 +31,14 @@ public class ShopCategoryController {
 
     @PostMapping("/shopCategoryAdd")
     @Operation(summary = "添加店铺分类")
-    public CommonResponse<Long> shopCategoryAdd(@RequestBody @Validated(Validation.Save.class) HanmaShopCategoryDo hanmaShopCategory) {
-        hanmaShopCategory.setId(null);
+    public CommonResponse<Long> shopCategoryAdd(@RequestBody @Validated(Validation.Save.class) ShopCategoryVo shopCategoryVo) {
+        shopCategoryVo.setId(null);
+        HanmaShopCategoryDo shopCategoryDo = new HanmaShopCategoryDo();
+        BeanUtils.copyProperties(shopCategoryVo, shopCategoryDo);
         String t = Util.getTimestampStr();
-        hanmaShopCategory.setCreateTime(t);
-        hanmaShopCategory.setUpdateTime(t);
-        return ResponseTool.getSuccessResponse(shopCategoryService.update(hanmaShopCategory));
+        shopCategoryDo.setCreateTime(t);
+        shopCategoryDo.setUpdateTime(t);
+        return ResponseTool.getSuccessResponse(shopCategoryService.update(shopCategoryDo));
     }
 
     @RequestMapping("/shopCategoryDelete")
@@ -51,10 +53,11 @@ public class ShopCategoryController {
 
     @PostMapping("/shopCategoryUpdate")
     @Operation(summary = "修改店铺分类")
-    public CommonResponse<Long> shopCategoryUpdate(@RequestBody HanmaShopCategoryDo hanmaShopCategory) {
-        hanmaShopCategory.setUpdateTime(null);
-        hanmaShopCategory.setUpdateTime(Util.getTimestampStr());
-        return ResponseTool.getSuccessResponse(shopCategoryService.update(hanmaShopCategory));
+    public CommonResponse<Long> shopCategoryUpdate(@RequestBody @Validated(Validation.Update.class) ShopCategoryVo shopCategoryVo) {
+        HanmaShopCategoryDo shopCategoryDo = new HanmaShopCategoryDo();
+        BeanUtils.copyProperties(shopCategoryVo, shopCategoryDo);
+        shopCategoryDo.setUpdateTime(Util.getTimestampStr());
+        return ResponseTool.getSuccessResponse(shopCategoryService.update(shopCategoryDo));
     }
 
     @RequestMapping("/getShopCategoryById")

@@ -17,9 +17,9 @@ public interface OrderService {
     void orderPay(HanmaOrderDo orderDo);
 
     Page<HanmaOrderDo> orderPageList(Integer currentPage, Integer pageSize,
-                                     OrderDto orderDto, UserDto userDto);
+                                     Long shopId, UserDto userDto);
 
-    OrderDto getOrderDetail(OrderDto orderDto);
+    OrderDto getOrderDetail(Long id);
 
-    void orderCancel(OrderDto orderDto, String userInfo);
+    void orderCancel(Long id, String userInfo);
 }

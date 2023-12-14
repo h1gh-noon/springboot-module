@@ -1,6 +1,8 @@
 package com.hn.jdstore.domain.vo;
 
+import com.hn.common.dto.Validation;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -10,6 +12,7 @@ import java.math.BigDecimal;
 public class ProductVo {
 
     @Schema(description = "商品id")
+    @NotNull(groups = Validation.Update.class)
     private Long id;
 
     @Schema(description = "商品名")
@@ -32,9 +35,6 @@ public class ProductVo {
 
     @Schema(description = "商品类型id")
     private Long cateId;
-
-    @Schema(description = "商品类型")
-    private String type;
 
     @Schema(description = "所属店铺id")
     private Long shopId;

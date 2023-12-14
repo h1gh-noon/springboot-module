@@ -129,7 +129,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Page<HanmaOrderDo> orderPageList(Integer currentPage, Integer pageSize,
-                                            OrderDto orderDto, UserDto userDto) {
+                                            Long shopId, UserDto userDto) {
 
         Pageable p = PageRequest.of(currentPage - 1, pageSize);
 
@@ -138,7 +138,7 @@ public class OrderServiceImpl implements OrderService {
             return orderDao.findAll(p);
         } else if (permissions.contains(PermissionConstant.ADMIN)) {
             // 须验证对应的权限再进行查询
-            return orderDao.findByShopId(orderDto.getShopId(), p);
+            return orderDao.findByShopId(shopId, p);
         } else {
             return orderDao.findByUserId(userDto.getId(), p);
         }
@@ -146,8 +146,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderDto getOrderDetail(OrderDto orderDto) {
-        HanmaOrderDo hanmaOrderDo = findById(orderDto.getId());
+    public OrderDto getOrderDetail(Long id) {
+        HanmaOrderDo hanmaOrderDo = findById(id);
         if (hanmaOrderDo == null) {
             throw new TemplateException(ResponseEnum.FAIL_404);
         }
@@ -157,7 +157,7 @@ public class OrderServiceImpl implements OrderService {
         BeanUtils.copyProperties(hanmaOrderDo, od);
 
         List<HanmaOrderDetailDo> detailEntityList =
-                orderDetailDao.findAllByOrderId(orderDto.getId());
+                orderDetailDao.findAllByOrderId(id);
 
         od.setDetailList(detailEntityList);
         return od;
@@ -165,9 +165,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public void orderCancel(OrderDto orderDto, String userInfo) {
+    public void orderCancel(Long id, String userInfo) {
 
-        OrderDto od = getOrderDetail(orderDto);
+        OrderDto od = getOrderDetail(id);
         if (od.getPayStatus().equals(0) && od.getOrderStatus().equals(0)) {
 
             od.getDetailList().forEach(e -> {

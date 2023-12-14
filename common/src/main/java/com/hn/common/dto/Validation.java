@@ -10,8 +10,6 @@ public class Validation {
     public interface Login {
     }
 
-    public interface Select {
-    }
 
     public interface Other {
     }

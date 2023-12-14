@@ -2,6 +2,7 @@ package com.hn.jdstore.controller;
 
 import com.hn.common.api.CommonResponse;
 import com.hn.common.api.PaginationData;
+import com.hn.common.dto.Validation;
 import com.hn.common.util.ResponseTool;
 import com.hn.common.util.Util;
 import com.hn.jdstore.domain.entity.HanmaProductDo;
@@ -15,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -32,12 +34,14 @@ public class ProductController {
 
     @PostMapping("/productAdd")
     @Operation(summary = "添加商品")
-    public CommonResponse<Long> productAdd(@RequestBody HanmaProductDo hanmaProduct) {
-        hanmaProduct.setId(null);
+    public CommonResponse<Long> productAdd(@RequestBody ProductVo productVo) {
+        productVo.setId(null);
+        HanmaProductDo productDo = new HanmaProductDo();
+        BeanUtils.copyProperties(productVo, productDo);
         String t = Util.getTimestampStr();
-        hanmaProduct.setCreateTime(t);
-        hanmaProduct.setUpdateTime(t);
-        return ResponseTool.getSuccessResponse(productService.update(hanmaProduct));
+        productDo.setCreateTime(t);
+        productDo.setUpdateTime(t);
+        return ResponseTool.getSuccessResponse(productService.update(productDo));
     }
 
     @RequestMapping("/productDelete")
@@ -51,10 +55,11 @@ public class ProductController {
 
     @PostMapping("/productUpdate")
     @Operation(summary = "修改商品")
-    public CommonResponse<Long> productUpdate(@RequestBody HanmaProductDo hanmaProduct) {
-        hanmaProduct.setUpdateTime(null);
-        hanmaProduct.setUpdateTime(Util.getTimestampStr());
-        return ResponseTool.getSuccessResponse(productService.update(hanmaProduct));
+    public CommonResponse<Long> productUpdate(@RequestBody @Validated(Validation.Update.class) ProductVo productVo) {
+        HanmaProductDo productDo = new HanmaProductDo();
+        BeanUtils.copyProperties(productVo, productDo);
+        productDo.setUpdateTime(Util.getTimestampStr());
+        return ResponseTool.getSuccessResponse(productService.update(productDo));
     }
 
     @RequestMapping("/getProductById")
@@ -69,10 +74,10 @@ public class ProductController {
     @RequestMapping("/getProductPageList")
     @Operation(summary = "查询商品分页列表")
     public CommonResponse<PaginationData<List<ProductVo>>>
-    getProductPageList(@RequestParam(required = false,
-            defaultValue = "1") @Schema(description = "当前页码") Integer currentPage,
-                       @RequestParam(required = false,
-                               defaultValue = "20") @Schema(description = "每页条数") Integer pageSize,
+    getProductPageList(@RequestParam(required = false, defaultValue = "1")
+                       @Schema(description = "当前页码") Integer currentPage,
+                       @RequestParam(required = false, defaultValue = "20")
+                       @Schema(description = "每页条数") Integer pageSize,
                        @RequestBody(required = false) String name) {
 
         Page<HanmaProductDo> productDoPage = productService.getProductPageList(currentPage,

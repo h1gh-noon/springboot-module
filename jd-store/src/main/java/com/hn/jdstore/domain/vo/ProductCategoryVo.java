@@ -1,6 +1,8 @@
 package com.hn.jdstore.domain.vo;
 
+import com.hn.common.dto.Validation;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 
@@ -8,6 +10,7 @@ import lombok.Data;
 public class ProductCategoryVo {
 
     @Schema(description = "分类id")
+    @NotNull(groups = Validation.Update.class)
     private Long id;
 
     @Schema(description = "所属店铺id")

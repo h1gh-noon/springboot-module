@@ -1,6 +1,7 @@
 package com.hn.jdstore.controller;
 
 import com.hn.common.api.CommonResponse;
+import com.hn.common.dto.Validation;
 import com.hn.common.util.ResponseTool;
 import com.hn.common.util.Util;
 import com.hn.jdstore.domain.entity.HanmaAddressDo;
@@ -14,6 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -49,8 +51,10 @@ public class AddressController {
 
     @PostMapping("/addressUpdate")
     @Operation(summary = "修改地址")
-    public CommonResponse<Long> addressUpdate(@RequestBody HanmaAddressDo hanmaAddress) {
-        hanmaAddress.setCreateTime(null);
+    public CommonResponse<Long> addressUpdate(@RequestBody @Validated(Validation.Update.class) AddressVo addressVo) {
+        HanmaAddressDo hanmaAddress = new HanmaAddressDo();
+        BeanUtils.copyProperties(addressVo, hanmaAddress);
+
         hanmaAddress.setUpdateTime(Util.getTimestampStr());
         return ResponseTool.getSuccessResponse(addressService.update(hanmaAddress));
     }

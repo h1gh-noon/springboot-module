@@ -2,6 +2,7 @@ package com.hn.jdstore.controller;
 
 import com.hn.common.api.CommonResponse;
 import com.hn.common.api.PaginationData;
+import com.hn.common.dto.Validation;
 import com.hn.common.util.ResponseTool;
 import com.hn.common.util.Util;
 import com.hn.jdstore.domain.entity.HanmaShopDo;
@@ -16,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -33,12 +35,15 @@ public class ShopController {
 
     @PostMapping("/shopAdd")
     @Operation(summary = "添加店铺")
-    public CommonResponse<Long> shopAdd(@RequestBody HanmaShopDo hanmaShop) {
-        hanmaShop.setId(null);
+    public CommonResponse<Long> shopAdd(@RequestBody ShopVo shopVo) {
+
+        shopVo.setId(null);
+        HanmaShopDo hanmaShopDo = new HanmaShopDo();
+        BeanUtils.copyProperties(shopVo, hanmaShopDo);
         String time = Util.getTimestampStr();
-        hanmaShop.setCreateTime(time);
-        hanmaShop.setUpdateTime(time);
-        return ResponseTool.getSuccessResponse(shopService.update(hanmaShop));
+        hanmaShopDo.setCreateTime(time);
+        hanmaShopDo.setUpdateTime(time);
+        return ResponseTool.getSuccessResponse(shopService.update(hanmaShopDo));
     }
 
     @RequestMapping("/shopDelete")
@@ -52,10 +57,12 @@ public class ShopController {
 
     @PostMapping("/shopUpdate")
     @Operation(summary = "修改店铺")
-    public CommonResponse<Long> shopUpdate(@RequestBody HanmaShopDo hanmaShop) {
-        hanmaShop.setCreateTime(null);
-        hanmaShop.setUpdateTime(Util.getTimestampStr());
-        return ResponseTool.getSuccessResponse(shopService.update(hanmaShop));
+    public CommonResponse<Long> shopUpdate(@RequestBody @Validated(Validation.Update.class) ShopVo shopVo) {
+        HanmaShopDo hanmaShopDo = new HanmaShopDo();
+        BeanUtils.copyProperties(shopVo, hanmaShopDo);
+        hanmaShopDo.setCreateTime(null);
+        hanmaShopDo.setUpdateTime(Util.getTimestampStr());
+        return ResponseTool.getSuccessResponse(shopService.update(hanmaShopDo));
     }
 
     @RequestMapping("/getShopById")
