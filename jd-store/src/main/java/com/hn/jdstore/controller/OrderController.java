@@ -15,6 +15,7 @@ import com.hn.jdstore.domain.vo.OrderDetailVo;
 import com.hn.jdstore.domain.vo.OrderVo;
 import com.hn.jdstore.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
@@ -41,7 +42,7 @@ public class OrderController {
     @PostMapping("/orderAdd")
     @Operation(summary = "创建订单")
     public CommonResponse<OrderVo> orderAdd(@RequestBody OrderDto orderDto,
-                                            @RequestHeader(RequestHeaderConstant.HEADER_TOKEN_INFO) String userInfo) throws TemplateException {
+                                            @Parameter(hidden = true) @RequestHeader(RequestHeaderConstant.HEADER_TOKEN_INFO) String userInfo) throws TemplateException {
         OrderDto resOrderDto = orderService.orderAdd(orderDto, userInfo);
 
         OrderVo orderVo = new OrderVo();
@@ -63,7 +64,7 @@ public class OrderController {
             @RequestParam(required = false, defaultValue = "1") @Schema(description = "当前页码") Integer currentPage,
             @RequestParam(required = false, defaultValue = "20") @Schema(description = "每页条数") Integer pageSize,
             @RequestParam @Schema(description = "订单id") Long id,
-            @RequestHeader(RequestHeaderConstant.HEADER_TOKEN_INFO) String userInfo)
+            @Parameter(hidden = true) @RequestHeader(RequestHeaderConstant.HEADER_TOKEN_INFO) String userInfo)
             throws TemplateException {
 
 
@@ -92,7 +93,7 @@ public class OrderController {
     @Operation(summary = "订单详情")
     public CommonResponse<OrderVo> getOrderDetail(
             @RequestParam @Schema(description = "订单id") Long id,
-            @RequestHeader(RequestHeaderConstant.HEADER_TOKEN_INFO) String userInfo)
+            @Parameter(hidden = true) @RequestHeader(RequestHeaderConstant.HEADER_TOKEN_INFO) String userInfo)
             throws TemplateException {
 
         UserDto userDto = JSON.parseObject(userInfo, UserDto.class);
@@ -125,7 +126,7 @@ public class OrderController {
     @Operation(summary = "取消订单")
     public CommonResponse<Boolean> orderCancel(
             @RequestParam @Schema(description = "订单id") Long id,
-            @RequestHeader(RequestHeaderConstant.HEADER_TOKEN_INFO) String userInfo)
+            @Parameter(hidden = true) @RequestHeader(RequestHeaderConstant.HEADER_TOKEN_INFO) String userInfo)
             throws TemplateException {
 
         UserDto userDto = JSON.parseObject(userInfo, UserDto.class);

@@ -58,7 +58,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public PaginationData<List<UserDto>> getUserPageList(Integer currentPage, Integer pageSize, String sort,
+    public PaginationData<List<UserDto>> getUserPageList(Integer currentPage, Integer pageSize,
+                                                         String sort,
                                                          UserListRequest userListQuery) throws IllegalAccessException {
         PaginationData<List<UserDto>> paginationData = new PaginationData<>();
         Integer limitRows = (currentPage - 1) * pageSize;
@@ -124,31 +125,52 @@ public class UserServiceImpl implements UserService {
         userDo.setId(userDto.getId());
         userDo.setUsername(userDto.getUsername());
         userDo.setStatus(userDto.getStatus());
-        return userMapper.userUpdateStatus(userDo);
+        int n = userMapper.userUpdateStatus(userDo);
+        // 从redis中删除
+        redisRemoveUser(RedisConstant.USER_TOKEN_LIST + userDo.getId());
+        return n;
     }
 
     @Override
     public int userDelete(UserDto userDto) {
         UserDo userDo = new UserDo();
         userDo.setId(userDto.getId());
-        return userMapper.userDelete(userDo);
+        int n = userMapper.userDelete(userDo);
+        // 从redis中删除
+        redisRemoveUser(RedisConstant.USER_TOKEN_LIST + userDo.getId());
+        return n;
+    }
+
+    public void redisRemoveUser(String userKey) {
+        List<String> range =
+                stringRedisTemplate.opsForList().range(userKey, 0, -1);
+
+        if (range != null) {
+            range.forEach(e -> {
+                stringRedisTemplate.delete(e);
+            });
+            stringRedisTemplate.delete(userKey);
+        }
     }
 
     @Override
     public LoginInfoVo userLogin(LoginRequest loginRequest) {
+
         UserDo user = getUserByName(loginRequest.getUsername());
-        if (PBKDF2Util.verification(loginRequest.getPassword(), user.getPassword())) {
-            // 验证通过 清空密码
-            user.setPassword(null);
-            String token = setUserToken(user);
-            LoginInfoVo loginInfoVo = new LoginInfoVo();
+        if (!user.getStatus().equals(0)) {
+            if (PBKDF2Util.verification(loginRequest.getPassword(), user.getPassword())) {
+                // 验证通过 清空密码
+                user.setPassword(null);
+                String token = setUserToken(user);
+                LoginInfoVo loginInfoVo = new LoginInfoVo();
 
-            UserVo userVo = new UserVo();
-            BeanUtils.copyProperties(user, userVo);
-            loginInfoVo.setUserInfo(userVo);
-            loginInfoVo.setToken(token);
-            return loginInfoVo;
+                UserVo userVo = new UserVo();
+                BeanUtils.copyProperties(user, userVo);
+                loginInfoVo.setUserInfo(userVo);
+                loginInfoVo.setToken(token);
+                return loginInfoVo;
 
+            }
         }
         return null;
     }
@@ -173,7 +195,8 @@ public class UserServiceImpl implements UserService {
             @Override
             public Object execute(RedisOperations operations) throws DataAccessException {
                 operations.multi();
-                operations.opsForValue().set(RedisConstant.USER_TOKEN + token, JSON.toJSONString(user));
+                operations.opsForValue().set(RedisConstant.USER_TOKEN + token,
+                        JSON.toJSONString(user));
                 operations.expire(RedisConstant.USER_TOKEN + token, 3600 * 24, TimeUnit.SECONDS);
                 operations.opsForList().rightPushAll(userKey, list);
                 if (finalOldToken != null) {

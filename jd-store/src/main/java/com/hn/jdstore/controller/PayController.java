@@ -8,6 +8,7 @@ import com.hn.common.dto.UserDto;
 import com.hn.common.util.IPUtil;
 import com.hn.common.util.ResponseTool;
 import com.hn.jdstore.service.PayService;
+import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -25,7 +26,7 @@ public class PayController {
 
     @PostMapping("/pay")
     public CommonResponse<Object> pay(Long id,
-                                      @RequestHeader(RequestHeaderConstant.HEADER_TOKEN_INFO) String userInfo,
+                                      @Parameter(hidden = true) @RequestHeader(RequestHeaderConstant.HEADER_TOKEN_INFO) String userInfo,
                                       HttpServletRequest httpServletRequest) throws WxPayException {
         return ResponseTool.getSuccessResponse(payService.pay(id, JSON.parseObject(userInfo,
                         UserDto.class),

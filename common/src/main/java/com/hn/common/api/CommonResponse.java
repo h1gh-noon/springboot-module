@@ -20,7 +20,7 @@ public class CommonResponse<T> {
     @Schema(description = "响应信息", example = "操作成功")
     private String msg;
 
-    @Schema(description = "响应数据", accessMode = Schema.AccessMode.READ_ONLY)
+    @Schema(description = "响应数据")
     private T data;
 
     public CommonResponse(Integer code) {
