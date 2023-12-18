@@ -74,8 +74,10 @@ public class PayServiceImpl implements PayService {
             String totalFee = BaseWxPayResult.fenToYuan(result.getTotalFee());
             log.info("微信回调 订单id={}, 金额={}", orderNo, totalFee);
             OrderDo orderDo = orderService.findByOrderNo(orderNo);
-            if (orderDo.getOrderAmount().equals(new BigDecimal(totalFee))
-                    && orderDo.getOrderStatus().equals(0)) {
+            if (!orderDo.getPayStatus().equals(0)) {
+                return WxPayNotifyResponse.success("处理成功!");
+            }
+            if (orderDo.getOrderAmount().equals(new BigDecimal(totalFee))) {
 
                 orderDo.setOrderStatus(1);
                 orderDo.setPayStatus(1);
