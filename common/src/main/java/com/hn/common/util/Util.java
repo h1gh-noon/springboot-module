@@ -3,10 +3,7 @@ package com.hn.common.util;
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 import static io.micrometer.common.util.StringUtils.isNotBlank;
 
@@ -123,6 +120,35 @@ public class Util {
         } else {
             return "";
         }
+    }
+
+    /**
+     * 下划线转驼峰
+     */
+    public static <T> Map<String, T> underlineToCamelByMap(Map<String, T> map) {
+
+        Map<String, T> resultMap = new HashMap<>();
+
+        map.keySet().forEach(e -> {
+            resultMap.put(underlineToCamel(e), map.get(e));
+        });
+        return resultMap;
+    }
+
+    /**
+     * 下划线转驼峰
+     */
+    public static <T> List<Map<String, T>> underlineToCamelByListMap(List<Map<String, T>> list) {
+
+        List<Map<String, T>> resultList = new ArrayList<>();
+        list.forEach(map -> {
+            Map<String, T> resultMap = new HashMap<>();
+            map.keySet().forEach(e -> {
+                resultMap.put(underlineToCamel(e), map.get(e));
+            });
+            resultList.add(resultMap);
+        });
+        return resultList;
     }
 
     public static <K, V> void removeNonValue(Map<K, V> map) {

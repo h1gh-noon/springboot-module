@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @Controller
@@ -101,6 +102,23 @@ public class ShopController {
         pagination.setTotal(shopDoList.getTotalElements());
         pagination.setData(list);
         return ResponseTool.getSuccessResponse(pagination);
+    }
+
+    @PostMapping("/getShopList")
+    @Operation(summary = "获取店铺列表分页")
+    public CommonResponse<List<ShopVo>> getShopList(
+            @RequestBody(required = false) ShopVo shopVo) {
+
+        List<ShopDo> shopDoList = shopService.getShopList(shopVo);
+        log.info("shopDoList={}", shopDoList);
+
+        List<ShopVo> list = shopDoList.stream().map(h -> {
+            ShopVo sm = new ShopVo();
+            BeanUtils.copyProperties(h, sm);
+            return sm;
+        }).collect(Collectors.toList());
+
+        return ResponseTool.getSuccessResponse(list);
     }
 
     @RequestMapping("/getShopInfoProductList/{shopId}")

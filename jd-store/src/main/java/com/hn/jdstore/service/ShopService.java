@@ -5,6 +5,8 @@ import com.hn.jdstore.domain.vo.ShopInfoProductVo;
 import com.hn.jdstore.domain.vo.ShopVo;
 import org.springframework.data.domain.Page;
 
+import java.util.List;
+
 public interface ShopService {
 
 
@@ -15,6 +17,8 @@ public interface ShopService {
     ShopDo findById(Long id);
 
     Page<ShopDo> getShopPageList(Integer currentPage, Integer pageSize, ShopVo shopVo);
+
+    List<ShopDo> getShopList(ShopVo shopVo);
 
     Page<ShopDo> searchShopByNamePageList(Integer currentPage, Integer pageSize, String name);
 

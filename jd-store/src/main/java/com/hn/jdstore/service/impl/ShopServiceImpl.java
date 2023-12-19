@@ -74,7 +74,19 @@ public class ShopServiceImpl implements ShopService {
     }
 
     @Override
-    public Page<ShopDo> searchShopByNamePageList(Integer currentPage, Integer pageSize, String name) {
+    public List<ShopDo> getShopList(ShopVo shopVo) {
+        ShopDo h = new ShopDo();
+        if (shopVo != null) {
+            BeanUtils.copyProperties(shopVo, h);
+        }
+        Example<ShopDo> example = Example.of(h);
+        Sort sort = Sort.by(Sort.Direction.DESC, "sales");
+        return shopDao.findAll(example, sort);
+    }
+
+    @Override
+    public Page<ShopDo> searchShopByNamePageList(Integer currentPage, Integer pageSize,
+                                                 String name) {
         Sort sort = Sort.by(Sort.Direction.DESC, "sales");
 
         Pageable pageable = PageRequest.of(currentPage - 1, pageSize, sort);

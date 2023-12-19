@@ -36,8 +36,14 @@ public class ProductVo {
     @Schema(description = "商品类型id")
     private Long cateId;
 
+    @Schema(description = "商品类型")
+    private String cateName;
+
     @Schema(description = "所属店铺id")
     private Long shopId;
+
+    @Schema(description = "所属店铺")
+    private String shopName;
 
     @Schema(description = "状态 0下架 1上架")
     private Integer status;

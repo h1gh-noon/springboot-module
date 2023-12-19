@@ -1,9 +1,9 @@
 package com.hn.jdstore.service;
 
 import com.hn.jdstore.domain.entity.ProductDo;
-import org.springframework.data.domain.Page;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ProductService {
 
@@ -18,6 +18,8 @@ public interface ProductService {
 
     List<ProductDo> getProductListByShopId(Long shopId);
 
-    Page<ProductDo> getProductPageList(Integer currentPage, Integer pageSize, String name);
+    List<Map<String, Object>> getProductPageList(Integer currentPage, Integer pageSize);
+
+    Long getProductPageTotal();
 
 }

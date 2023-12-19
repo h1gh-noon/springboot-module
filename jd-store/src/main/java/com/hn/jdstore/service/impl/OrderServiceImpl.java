@@ -100,6 +100,9 @@ public class OrderServiceImpl implements OrderService {
             return p;
         }).collect(Collectors.toList());
 
+        // 减少库存
+        productService.update(detailList);
+
         ShopDo shopDo = shopService.findById(orderDto.getShopId());
         orderDto.setShopName(shopDo.getName());
 
@@ -110,9 +113,6 @@ public class OrderServiceImpl implements OrderService {
         orderDao.save(orderDo);
         orderDto.setId(orderDo.getId());
         orderDetailDoList.forEach(e -> e.setOrderId(orderDo.getId()));
-
-        // 减少库存
-        productService.update(detailList);
 
         // 创建订单详情
         orderDto.setDetailList(orderDetailDao.saveAll(orderDetailDoList));

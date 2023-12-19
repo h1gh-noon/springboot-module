@@ -4,14 +4,11 @@ import com.hn.jdstore.dao.ProductDao;
 import com.hn.jdstore.domain.entity.ProductDo;
 import com.hn.jdstore.service.ProductService;
 import jakarta.annotation.Resource;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -47,13 +44,15 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<ProductDo> getProductPageList(Integer currentPage, Integer pageSize,
-                                              String name) {
+    public List<Map<String, Object>> getProductPageList(Integer currentPage, Integer pageSize) {
 
-        Pageable p = PageRequest.of(currentPage - 1, pageSize);
-        if (StringUtils.isEmpty(name)) {
-            return productDao.findAll(p);
-        }
-        return productDao.findByNameLike("%" + name + "%", p);
+        return productDao.getProductList((currentPage - 1) * pageSize, pageSize);
+    }
+
+    @Override
+    public Long getProductPageTotal() {
+        List<Map<String, Object>> productPageTotal = productDao.getProductPageTotal();
+
+        return (Long) productPageTotal.get(0).get("total");
     }
 }

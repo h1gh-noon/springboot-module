@@ -1,13 +1,17 @@
 package com.hn.jdstore.service.impl;
 
+import com.alibaba.fastjson2.JSON;
+import com.hn.common.util.Util;
 import com.hn.jdstore.dao.ProductCategoryDao;
 import com.hn.jdstore.domain.entity.ProductCategoryDo;
+import com.hn.jdstore.domain.vo.ProductCategoryVo;
 import com.hn.jdstore.service.ProductCategoryService;
 import jakarta.annotation.Resource;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ProductCategoryServiceImpl implements ProductCategoryService {
@@ -40,7 +44,9 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
     }
 
     @Override
-    public List<ProductCategoryDo> getProductCategoryList() {
-        return productCategoryDao.findAll();
+    public List<ProductCategoryVo> getProductCategoryList() {
+        List<Map<String, Object>> productCategoryList = productCategoryDao.getProductCategoryList();
+        String json = JSON.toJSONString(Util.underlineToCamelByListMap(productCategoryList));
+        return JSON.parseArray(json, ProductCategoryVo.class);
     }
 }

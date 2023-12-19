@@ -1,5 +1,6 @@
 package com.hn.jdstore.controller;
 
+import com.alibaba.fastjson2.JSON;
 import com.hn.common.api.CommonResponse;
 import com.hn.common.api.PaginationData;
 import com.hn.common.dto.Validation;
@@ -14,13 +15,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @Controller
@@ -77,26 +77,19 @@ public class ProductController {
     getProductPageList(@RequestParam(required = false, defaultValue = "1")
                        @Schema(description = "当前页码") Integer currentPage,
                        @RequestParam(required = false, defaultValue = "20")
-                       @Schema(description = "每页条数") Integer pageSize,
-                       @RequestBody(required = false) String name) {
+                       @Schema(description = "每页条数") Integer pageSize) {
 
-        Page<ProductDo> productDoPage = productService.getProductPageList(currentPage,
-                pageSize,
-                name);
-        log.info("productDoPage={}", productDoPage);
-
-        List<ProductVo> list = new ArrayList<>();
-        productDoPage.getContent().forEach(h -> {
-            ProductVo sm = new ProductVo();
-            BeanUtils.copyProperties(h, sm);
-            list.add(sm);
-        });
-
+        List<Map<String, Object>> pageList = productService.getProductPageList(currentPage,
+                pageSize);
+        log.info("pageList={}", pageList);
+        String json = JSON.toJSONString(Util.underlineToCamelByListMap(pageList));
+        System.out.println(json);
+        List<ProductVo> productVos = JSON.parseArray(json, ProductVo.class);
         PaginationData<List<ProductVo>> pagination = new PaginationData<>();
         pagination.setCurrentPage(currentPage);
         pagination.setPageSize(pageSize);
-        pagination.setTotal(productDoPage.getTotalElements());
-        pagination.setData(list);
+        pagination.setTotal(productService.getProductPageTotal());
+        pagination.setData(productVos);
         return ResponseTool.getSuccessResponse(pagination);
     }
 

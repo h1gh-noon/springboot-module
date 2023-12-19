@@ -16,9 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @Controller
@@ -74,19 +72,10 @@ public class ProductCategoryController {
     @Operation(summary = "查询商品分类列表")
     public CommonResponse<List<ProductCategoryVo>> getProductCategoryList() {
 
-        List<ProductCategoryDo> productCategoryDoList =
+        List<ProductCategoryVo> productCategoryList =
                 productCategoryService.getProductCategoryList();
-        log.info("productCategoryDoList={}", productCategoryDoList);
-        List<ProductCategoryVo> list = new ArrayList<>();
-        if (productCategoryDoList != null) {
-            list = productCategoryDoList.stream().map(h -> {
-                ProductCategoryVo productCategoryVo = new ProductCategoryVo();
-                BeanUtils.copyProperties(h, productCategoryVo);
-                return productCategoryVo;
-            }).collect(Collectors.toList());
-        }
-
-        return ResponseTool.getSuccessResponse(list);
+        log.info("productCategoryList={}", productCategoryList);
+        return ResponseTool.getSuccessResponse(productCategoryList);
     }
 
 }
