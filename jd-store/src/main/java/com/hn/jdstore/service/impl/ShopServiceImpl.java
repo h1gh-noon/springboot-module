@@ -1,5 +1,7 @@
 package com.hn.jdstore.service.impl;
 
+import com.hn.common.enums.ResponseEnum;
+import com.hn.common.exceptions.TemplateException;
 import com.hn.common.util.Util;
 import com.hn.jdstore.dao.ShopDao;
 import com.hn.jdstore.domain.entity.ProductCategoryDo;
@@ -97,8 +99,19 @@ public class ShopServiceImpl implements ShopService {
     public ShopInfoProductVo getShopInfoProductList(Long shopId) {
 
         ShopDo shopDo = findById(shopId);
+        if (shopDo == null || !shopDo.getStatus().equals(1)) {
+            throw new TemplateException(ResponseEnum.FAIL_404);
+        }
+
         List<ProductCategoryDo> productCategoryDoList = productCategoryService.findByShopId(shopId);
+        if (productCategoryDoList == null) {
+            throw new TemplateException(ResponseEnum.FAIL_404);
+        }
+
         List<ProductDo> productDoList = productService.getProductListByShopId(shopId);
+        if (productDoList == null) {
+            throw new TemplateException(ResponseEnum.FAIL_404);
+        }
 
         ShopVo shopVo = new ShopVo();
         BeanUtils.copyProperties(shopDo, shopVo);

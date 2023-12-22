@@ -39,6 +39,7 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
     public List<ProductCategoryDo> findByShopId(Long shopId) {
         ProductCategoryDo p = new ProductCategoryDo();
         p.setShopId(shopId);
+        p.setStatus(1);
         Example<ProductCategoryDo> example = Example.of(p);
         return productCategoryDao.findAll(example);
     }

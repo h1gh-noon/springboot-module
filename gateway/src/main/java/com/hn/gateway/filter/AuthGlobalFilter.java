@@ -9,6 +9,7 @@ import com.hn.common.util.ResponseTool;
 import com.hn.gateway.config.UrlWhiteList;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
@@ -48,7 +49,7 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
         String path = exchange.getRequest().getURI().getPath();
 
         String token = exchange.getRequest().getHeaders().getFirst(RequestHeaderConstant.HEADER_TOKEN);
-        if (token == null || token.isEmpty()) {
+        if (Strings.isEmpty(token)) {
             // token为空 清空两个请求头
             ServerHttpRequest request =
                     exchange.getRequest().mutate().header(RequestHeaderConstant.HEADER_TOKEN)

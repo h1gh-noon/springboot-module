@@ -39,6 +39,7 @@ public class ProductServiceImpl implements ProductService {
     public List<ProductDo> getProductListByShopId(Long shopId) {
         ProductDo p = new ProductDo();
         p.setShopId(shopId);
+        p.setStatus(1);
         Example<ProductDo> example = Example.of(p);
         return productDao.findAll(example);
     }

@@ -32,14 +32,7 @@ public class LoginController {
     @Operation(summary = "登录接口", description = "登录 data中返回token")
     @PostMapping("/userLogin")
     public CommonResponse<LoginInfoVo> userLogin(@RequestBody LoginRequest loginRequest) {
-
-        LoginInfoVo loginInfoVo = userService.userLogin(loginRequest);
-        if (loginInfoVo == null) {
-            return ResponseTool.getErrorResponse();
-        } else {
-            // success
-            return ResponseTool.getSuccessResponse(loginInfoVo);
-        }
+        return ResponseTool.getSuccessResponse(userService.userLogin(loginRequest));
     }
 
     /**

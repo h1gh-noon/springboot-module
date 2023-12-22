@@ -106,7 +106,7 @@ public class UserServiceImpl implements UserService {
     public int userUpdate(UserDto userDto) throws TemplateException {
         if (userDto.getUsername() != null) {
             UserDo u = userMapper.getUserByName(userDto.getUsername());
-            if (!Objects.equals(u.getId(), userDto.getId())) {
+            if (u != null && !Objects.equals(u.getId(), userDto.getId())) {
                 // 修改用户名 且 目标用户名已存在
                 throw new TemplateException(ResponseEnum.HAS_USERNAME);
             }
@@ -157,22 +157,23 @@ public class UserServiceImpl implements UserService {
     public LoginInfoVo userLogin(LoginRequest loginRequest) {
 
         UserDo user = getUserByName(loginRequest.getUsername());
-        if (!user.getStatus().equals(0)) {
-            if (PBKDF2Util.verification(loginRequest.getPassword(), user.getPassword())) {
-                // 验证通过 清空密码
-                user.setPassword(null);
-                String token = setUserToken(user);
-                LoginInfoVo loginInfoVo = new LoginInfoVo();
-
-                UserVo userVo = new UserVo();
-                BeanUtils.copyProperties(user, userVo);
-                loginInfoVo.setUserInfo(userVo);
-                loginInfoVo.setToken(token);
-                return loginInfoVo;
-
-            }
+        if (user == null || user.getIsDel().equals(1) || user.getStatus().equals(0)) {
+            // 不存在 || 已被删除 || 已禁用
+            throw new TemplateException(ResponseEnum.FAIL_404);
         }
-        return null;
+        if (PBKDF2Util.verification(loginRequest.getPassword(), user.getPassword())) {
+            // 验证通过 清空密码
+            user.setPassword(null);
+            String token = setUserToken(user);
+            LoginInfoVo loginInfoVo = new LoginInfoVo();
+
+            UserVo userVo = new UserVo();
+            BeanUtils.copyProperties(user, userVo);
+            loginInfoVo.setUserInfo(userVo);
+            loginInfoVo.setToken(token);
+            return loginInfoVo;
+        }
+        throw new TemplateException(ResponseEnum.FAIL_404);
     }
 
     @Override

@@ -8,6 +8,7 @@ import com.hn.user.domain.entity.UserDo;
 import com.hn.user.enums.PermissionsEnum;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.logging.log4j.util.Strings;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -38,7 +39,8 @@ public class PermissionsAspect {
     private Object doAround(ProceedingJoinPoint pjp) throws Throwable {
         log.info("user...");
         // 获取request
-        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        ServletRequestAttributes attributes =
+                (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
 
         String headerInfo = request.getHeader(RequestHeaderConstant.HEADER_TOKEN_INFO);
@@ -53,16 +55,16 @@ public class PermissionsAspect {
         //     }
         // } else {
         // 手动白名单
-        if (pathMatcher.match("/**/auth/hasUserByName", requestUri)){
+        if (pathMatcher.match("/**/auth/hasUserByName", requestUri)) {
             return pjp.proceed();
         }
         // 验证权限
         UserDo user = JSON.parseObject(headerInfo, UserDo.class);
         String permissions = user.getPermissions();
-        if (permissions != null && !permissions.isEmpty()) {
-            if (Arrays.stream(permissions.split(",")).anyMatch(e -> e.equals(PermissionsEnum.SUPER_ADMIN.getName()))) {
-                return pjp.proceed();
-            }
+        if (!Strings.isEmpty(permissions)
+                && Arrays.stream(permissions.split(","))
+                .anyMatch(e -> e.equals(PermissionsEnum.SUPER_ADMIN.getName()))) {
+            return pjp.proceed();
         }
 
         // }
