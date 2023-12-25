@@ -8,6 +8,7 @@ import com.hn.common.dto.UserDto;
 import com.hn.common.util.IPUtil;
 import com.hn.common.util.ResponseTool;
 import com.hn.jdstore.service.PayService;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
@@ -33,6 +34,7 @@ public class PayController {
                 IPUtil.getRequestIp(httpServletRequest)));
     }
 
+    @Hidden
     @PostMapping("/notify")
     public String notify(
             HttpServletRequest request, HttpServletResponse response) {

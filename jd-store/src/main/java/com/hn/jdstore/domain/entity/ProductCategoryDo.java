@@ -14,7 +14,6 @@ public class ProductCategoryDo {
     private Long id;
     private Long shopId;
     private String name;
-    private String type;
     private Integer status;
 
     private String createTime;

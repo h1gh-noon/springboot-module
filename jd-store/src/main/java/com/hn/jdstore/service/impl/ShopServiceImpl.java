@@ -104,14 +104,8 @@ public class ShopServiceImpl implements ShopService {
         }
 
         List<ProductCategoryDo> productCategoryDoList = productCategoryService.findByShopId(shopId);
-        if (productCategoryDoList == null) {
-            throw new TemplateException(ResponseEnum.FAIL_404);
-        }
 
         List<ProductDo> productDoList = productService.getProductListByShopId(shopId);
-        if (productDoList == null) {
-            throw new TemplateException(ResponseEnum.FAIL_404);
-        }
 
         ShopVo shopVo = new ShopVo();
         BeanUtils.copyProperties(shopDo, shopVo);

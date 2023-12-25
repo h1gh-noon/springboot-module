@@ -22,9 +22,6 @@ public class ProductCategoryVo {
     @Schema(description = "分类名")
     private String name;
 
-    @Schema(description = "商品类型")
-    private String type;
-
     @Schema(description = "状态 0审核 1正常")
     private Integer status;
 

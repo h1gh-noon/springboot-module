@@ -27,7 +27,7 @@ public interface ProductDao extends JpaRepository<ProductDo, Long> {
 
     @Query(value = "SELECT p.id, p.name, p.cate_id, pc.name cateName, p.img_url, p.price, p" +
             ".old_price, p.product_stock, p.status, p.sales, p.shop_id, s.name shopName FROM " +
-            "jd_shop s, jd_product p, jd_product_category pc WHERE s.status=1 AND pc.status=1 AND" +
+            "jd_shop s, jd_product p, jd_product_category pc WHERE" +
             " s.id=p.shop_id AND p.cate_id=pc.id LIMIT :skip,:size",
             nativeQuery = true)
     @Modifying

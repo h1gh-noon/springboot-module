@@ -13,7 +13,7 @@ import java.util.Map;
 @Repository
 public interface ProductCategoryDao extends JpaRepository<ProductCategoryDo, Long> {
 
-    @Query(value = "SELECT pc.id, pc.name, pc.shop_id, s.name shopName, pc.status, pc.type, pc.create_time FROM jd_product_category pc, jd_shop s WHERE pc.shop_id=s.id", nativeQuery = true)
+    @Query(value = "SELECT pc.id, pc.name, pc.shop_id, s.name shopName, pc.status, pc.create_time FROM jd_product_category pc, jd_shop s WHERE pc.shop_id=s.id", nativeQuery = true)
     @Modifying
     @Transactional
     List<Map<String, Object>> getProductCategoryList();
